@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "478211938002",
+    "project_id": "umfeed-3e8eb",
+    "storage_bucket": "umfeed-3e8eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478211938002:android:1d3b6b01110fb29e1dbf0b",
+        "android_client_info": {
+          "package_name": "com.example.umfeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478211938002-bgajj1mvb9g3mk8qu62e03ppet2kh7fs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.umfeed",
+            "certificate_hash": "32791f3544eeffe7ee70f8d7ebc8cecd3a49329b"
+          }
+        },
+        {
+          "client_id": "478211938002-703u44t0sfalfhhg144hpc28bk93vtcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA9LMg5Nswt_Ie2Ev0Wrr7rKKdj-f-arE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478211938002-703u44t0sfalfhhg144hpc28bk93vtcv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
