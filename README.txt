@@ -21,7 +21,7 @@ models/
   chat/
     ChatMessage.java         // Chat history
 
-viewmodels/ (repository)
+viewmodels/ 
   MainViewModel.java
   
 
@@ -103,7 +103,6 @@ services/
 
 
 
-(Login/Register put where?)
 res/layout/
 ctivity_main.xml                    # Main container with bottom nav
 activity_splash.xml                  # Splash screen (might no need)
