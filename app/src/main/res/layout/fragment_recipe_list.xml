@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.MainActivity">
+
+    <!-- Background -->
+    <View
+        android:id="@+id/backgroundView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E8F0FE"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Search View -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:queryHint="Search for healthy recipes..."
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/emptyStateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No recipes found"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Filter Chips -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/filterChipGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:singleSelection="true"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipHighProtein"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:text="@string/high_protein"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLowFats"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:text="@string/low_fats"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLowCalories"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:text="@string/low_calories" />
+    </com.google.android.material.chip.ChipGroup>
+
+
+
+    <!-- Recipe Cards RecyclerView -->
+
+    <!-- Bottom Navigation Bar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipesRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/item_recipe_card" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -26,6 +27,11 @@ android {
             )
         }
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -34,12 +40,19 @@ android {
 
 dependencies {
 
-    implementation("com.google.firebase:firebase-analytics")
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
+    implementation(libs.firebase.analytics)
+    implementation(libs.google.firebase.firestore)
+    implementation(libs.firebase.auth)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">UMFeed</string>
+    <string name="saved_recipes">Saved Recipes</string>
+    <string name="no_saved_recipes">No saved recipes yet</string>
+    <string name="nutrition_facts">Nutrition Facts</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="cooking_steps">Cooking Steps</string>
+    <string name="calories_format">%d calories</string>
+    <string name="carbs_format">Carbohydrates: %.1fg</string>
+    <string name="protein_format">Protein: %.1fg</string>
+    <string name="fats_format">Fats: %.1fg</string>
+    <string name="high_protein">High Protein</string>
+    <string name="low_fats">Low Fats</string>
+    <string name="low_calories">Low Calories</string>
+    <string name="recipe_image">Recipe Image</string>
 </resources>

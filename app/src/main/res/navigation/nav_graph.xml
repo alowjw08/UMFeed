@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <!-- Authentication Flow -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.umfeed.views.auth.LoginActivity"
+        android:label="Login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_login_to_forgot_password"
+            app:destination="@id/forgotPasswordFragment" />
+        <action
+            android:id="@+id/action_login_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <deepLink app:uri="umfeed://login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.umfeed.views.auth.RegisterActivity"
+        android:label="Register">
+        <action
+            android:id="@+id/action_register_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.umfeed.views.auth.ForgotPasswordActivity"
+        android:label="Forgot Password">
+        <action
+            android:id="@+id/action_forgot_password_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/forgotPasswordFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Main Navigation -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.umfeed.views.MainActivity"
+        android:label="Home">
+        <action
+            android:id="@+id/action_home_to_donation"
+            app:destination="@id/donationFragment" />
+        <action
+            android:id="@+id/action_home_to_leaderboard"
+            app:destination="@id/leaderboardFragment" />
+        <action
+            android:id="@+id/action_home_to_recipes"
+            app:destination="@id/recipeListFragment" />
+        <action
+            android:id="@+id/action_home_to_menu_list"
+            app:destination="@id/menuListFragment" />
+        <deepLink app:uri="umfeed://home" />
+    </fragment>
+
+    <!-- Food Donation Flow -->
+    <fragment
+        android:id="@+id/donationFragment"
+        android:name="com.example.umfeed.views.donation.DonationFragment"
+        android:label="Donate Food">
+        <action
+            android:id="@+id/action_donation_to_foodbank_list"
+            app:destination="@id/foodBankListFragment" />
+        <action
+            android:id="@+id/action_donation_to_reservations"
+            app:destination="@id/reservationListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/foodBankListFragment"
+        android:name="com.example.umfeed.views.foodbank.FoodBankFragment"
+        android:label="Food Banks">
+        <action
+            android:id="@+id/action_foodbank_list_to_detail"
+            app:destination="@id/foodBankDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/foodBankDetailFragment"
+        android:name="com.example.umfeed.views.foodbank.FoodBankDetailFragment"
+        android:label="Food Bank Detail">
+        <argument
+            android:name="foodBankId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_foodbank_detail_to_reservation"
+            app:destination="@id/reservationFragment" />
+        <deepLink app:uri="umfeed://foodbank/{foodBankId}" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reservationFragment"
+        android:name="com.example.umfeed.views.donation.ReservationFragment"
+        android:label="Reserve Food">
+        <argument
+            android:name="foodBankId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reservationListFragment"
+        android:name="com.example.umfeed.views.donation.ReservationListFragment"
+        android:label="My Reservations" />
+
+    <!-- Recipe Flow -->
+    <fragment
+        android:id="@+id/recipeListFragment"
+        android:name="com.example.umfeed.views.recipe.RecipeListFragment"
+        android:label="Healthy Recipes">
+        <action
+            android:id="@+id/action_recipe_list_to_detail"
+            app:destination="@id/recipeDetailFragment" />
+        <deepLink app:uri="umfeed://recipes" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.example.umfeed.views.recipe.RecipeDetailFragment"
+        android:label="Recipe Detail">
+        <argument
+            android:name="recipeId"
+            app:argType="string" />
+        <deepLink app:uri="umfeed://recipe/{recipeId}" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/savedRecipesFragment"
+        android:name="com.example.umfeed.views.recipe.SavedRecipesFragment"
+        android:label="Saved Recipes">
+        <action
+            android:id="@+id/action_saved_recipes_to_recipe_detail"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+
+
+
+    <!-- Menu Rahmah Flow -->
+    <fragment
+        android:id="@+id/menuListFragment"
+        android:name="com.example.umfeed.views.menu.MenuRahmahFragment"
+        android:label="Menu Rahmah">
+        <action
+            android:id="@+id/action_menu_list_to_detail"
+            app:destination="@id/menuDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/menuDetailFragment"
+        android:name="com.example.umfeed.views.menu.MenuDetailFragment"
+        android:label="Menu Detail">
+        <argument
+            android:name="menuId"
+            app:argType="string" />
+        <deepLink app:uri="umfeed://menu/{menuId}" />
+    </fragment>
+
+    <!-- Leaderboard Flow -->
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.umfeed.views.leaderboard.LeaderboardFragment"
+        android:label="Leaderboard">
+        <action
+            android:id="@+id/action_leaderboard_to_profile"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.umfeed.views.UserProfileFragment"
+        android:label="User Profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <deepLink app:uri="umfeed://user/{userId}" />
+    </fragment>
+
+    <!-- Chat -->
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.umfeed.views.chat.ChatFragment"
+        android:label="Chat" />
+
+    <!-- Profile Section -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.umfeed.views.profile.ProfileFragment"
+        android:label="Profile">
+        <action
+            android:id="@+id/action_profile_to_saved_recipes"
+            app:destination="@id/savedRecipesFragment" />
+        <action
+            android:id="@+id/action_profile_to_donated_items"
+            app:destination="@id/donatedItemsFragment" />
+        <action
+            android:id="@+id/action_profile_to_forgot_password"
+            app:destination="@id/forgotPasswordFragment" />
+        <action
+            android:id="@+id/action_profile_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/donatedItemsFragment"
+        android:name="com.example.umfeed.views.profile.DonatedItemsFragment"
+        android:label="Donated Items" />
+
+    <!-- Dialog Fragments -->
+    <dialog
+        android:id="@+id/pinVerificationDialog"
+        android:name="com.example.umfeed.views.foodbank.PinVerificationDialogFragment"
+        android:label="Pin Verification" />
+
+    <dialog
+        android:id="@+id/b40StatusDialog"
+        android:name="com.example.umfeed.views.profile.B40StatusDialogFragment"
+        android:label="B40 Status" />
+
+</navigation>
