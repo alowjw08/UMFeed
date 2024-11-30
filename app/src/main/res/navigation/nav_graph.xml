@@ -48,7 +48,7 @@
     <!-- Main Navigation -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.umfeed.views.MainActivity"
+        android:name="com.example.umfeed.views.HomeFragment"
         android:label="Home">
         <action
             android:id="@+id/action_home_to_donation"

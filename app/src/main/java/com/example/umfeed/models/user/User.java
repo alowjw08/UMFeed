@@ -18,6 +18,10 @@ public class User {
     // Default constructor required for Firestore
     public User() {}
 
+    public User (String email) {
+        this.email = email;
+    }
+
     public User(String firstName, String lastName, String email,
                 boolean b40Status, int totalDonations,
                 Timestamp createdAt, Timestamp lastLoginAt,
