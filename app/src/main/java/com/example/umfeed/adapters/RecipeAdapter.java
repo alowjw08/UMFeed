@@ -22,7 +22,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
         void onRecipeClick(Recipe recipe); // Changed from OnRecipeClick to onRecipeClick
     }
 
-    protected RecipeAdapter(OnRecipeClickListener listener) {
+    public RecipeAdapter(OnRecipeClickListener listener) {
         super(new DiffUtil.ItemCallback<Recipe>(){
             @Override
             public boolean areItemsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {

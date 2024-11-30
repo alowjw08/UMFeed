@@ -13,4 +13,8 @@
     <string name="low_fats">Low Fats</string>
     <string name="low_calories">Low Calories</string>
     <string name="recipe_image">Recipe Image</string>
+    <string name="leaderboard">Leaderboard\n</string>
+    <string name="food_donation">Food\nDonation</string>
+    <string name="healthy_recipe">Healthy\nRecipe</string>
+    <string name="all_menu_rahmah">All Menu Rahmah</string>
 </resources>

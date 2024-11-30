@@ -74,6 +74,6 @@ public class SavedRecipesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.loadSavedRecipes(); // Refresh data when returning to this screen
+        viewModel.loadSavedRecipes();
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 public class MenuRahmah {
     private String id;          // For navigation/reference
     private String name;
+    private String imageUrl;
     private boolean isVegetarian;
     private boolean isHalal;
     private List<String> allergens;
@@ -17,11 +18,12 @@ public class MenuRahmah {
     // Default constructor needed for Firestore
     public MenuRahmah() {}
 
-    public MenuRahmah(String id, String name, boolean isVegetarian,
+    public MenuRahmah(String id, String name, String imageUrl, boolean isVegetarian,
                       boolean isHalal, List<String> allergens,
                       double price, StallInfo stall) {
         this.id = id;
         this.name = name;
+        this.imageUrl = imageUrl;
         this.isVegetarian = isVegetarian;
         this.isHalal = isHalal;
         this.allergens = allergens;
@@ -61,6 +63,12 @@ public class MenuRahmah {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public boolean isVegetarian() {
