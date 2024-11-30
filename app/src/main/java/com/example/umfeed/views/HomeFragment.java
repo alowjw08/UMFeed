@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
         greetingText = view.findViewById(R.id.greeting_text);
 
         // Setup featured menus RecyclerView
-        RecyclerView featuredMenusRecyclerView = view.findViewById(R.id);
+        RecyclerView featuredMenusRecyclerView = view.findViewById(R.id.featured_menus_recycler_view);
         featuredMenusRecyclerView.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         );
