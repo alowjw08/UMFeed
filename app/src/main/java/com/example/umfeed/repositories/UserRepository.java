@@ -1,16 +1,24 @@
 package com.example.umfeed.repositories;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.firebase.Firebase;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.umfeed.models.user.User;
 
+import java.sql.Time;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -20,10 +28,87 @@ public class UserRepository {
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
     private final Executor executor;
+    private final SignInClient oneTapClient;
     public UserRepository() {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         executor = Executors.newSingleThreadExecutor();
+        oneTapClient = null;
+    }
+
+    public UserRepository(Context context) {
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        executor = Executors.newSingleThreadExecutor();
+        oneTapClient = Identity.getSignInClient(context);
+    }
+
+    public SignInClient getOneTapClient() {
+        return oneTapClient;
+    }
+
+    public BeginSignInRequest getSignInRequest() {
+        return BeginSignInRequest.builder()
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        .setServerClientId("478211938002-703u44t0sfalfhhg144hpc28bk93vtcv.apps.googleusercontent.com")
+                        .setFilterByAuthorizedAccounts(true)
+                        .build())
+                .build();
+    }
+
+    public LiveData<Result<FirebaseUser>> signInWithGoogle(String idToken) {
+        MutableLiveData<Result<FirebaseUser>> resultMutableLiveData = new MutableLiveData<>();
+
+        executor.execute(() -> {
+            AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+            auth.signInWithCredential(credential)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            createOrUpdateGoogleUserProfile(user);
+                            resultMutableLiveData.setValue(Result.success(user));
+                        } else {
+                            resultMutableLiveData.setValue(Result.failure(task.getException()));
+                        }
+                    });
+        });
+        return resultMutableLiveData;
+    }
+
+    private void createOrUpdateGoogleUserProfile(FirebaseUser firebaseUser) {
+        if (firebaseUser == null) return;
+
+        db.collection("users").document(firebaseUser.getUid()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        User newUser = new User();
+                        newUser.setEmail(firebaseUser.getEmail());
+                        newUser.setFirstName(firebaseUser.getDisplayName());
+                        newUser.setCreatedAt(Timestamp.now());
+                        newUser.setLastLoginAt(Timestamp.now());
+                        newUser.setTotalDonations(0);
+                        verifyB40Status(firebaseUser.getEmail(), newUser::setB40Status);
+
+                        User.UserBadges badges = new User.UserBadges(false, false, false);
+                        newUser.setCurrentBadges(badges);
+
+                        db.collection("users").document(firebaseUser.getUid())
+                                .set(newUser)
+                                .addOnFailureListener(e -> {
+                                    Log.e("UserRepository", "Error in creating google user profile", e);
+                                });
+                    } else {
+                        db.collection("users").document(firebaseUser.getUid())
+                                .update("lastLoginAt", Timestamp.now())
+                                .addOnFailureListener(e -> {
+                                    Log.e("UserRepository", "Error updating last login", e);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("UserRepository", "Error in checking user profile", e);
+                });
     }
 
     public LiveData<Result<FirebaseUser>> loginWithEmail(String email, String password) {
@@ -43,6 +128,8 @@ public class UserRepository {
 
         return resultLiveData;
     }
+
+
 
     public LiveData<Result<FirebaseUser>> register(String email, String password) {
         MutableLiveData<Result<FirebaseUser>> resultLiveData = new MutableLiveData<>();
@@ -145,6 +232,37 @@ public class UserRepository {
             auth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            resultMutableLiveData.setValue(Result.success(null));
+                        } else {
+                            resultMutableLiveData.setValue(Result.failure(task.getException()));
+                        }
+                    });
+        });
+        return resultMutableLiveData;
+    }
+
+    public LiveData<Result<Void>> verifyResetCode(String email, String code) {
+        MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
+        executor.execute(() -> {
+            auth.verifyPasswordResetCode(code)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            resultMutableLiveData.setValue(Result.success(null));
+                        } else {
+                            resultMutableLiveData.setValue(Result.failure(task.getException()));
+                        }
+                    });
+        });
+        return resultMutableLiveData;
+    }
+
+    public LiveData<Result<Void>> completePasswordReset(String email, String newPassword) {
+        MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
+
+        executor.execute(() -> {
+            auth.confirmPasswordReset(email, newPassword)
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()) {
                             resultMutableLiveData.setValue(Result.success(null));
                         } else {
                             resultMutableLiveData.setValue(Result.failure(task.getException()));

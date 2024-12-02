@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.adapters.FeaturedMenuAdapter;
+import com.example.umfeed.repositories.MenuRepository;
+import com.example.umfeed.repositories.UserRepository;
 import com.example.umfeed.viewmodels.MainViewModel;
 import com.example.umfeed.utils.TimeUtils;
+import com.example.umfeed.viewmodels.MainViewModelFactory;
 
 public class HomeFragment extends Fragment {
     private MainViewModel viewModel;
@@ -25,10 +28,20 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        // Create repositories
+        UserRepository userRepository = new UserRepository();
+        MenuRepository menuRepository = new MenuRepository();
+
+        // Create factory
+        MainViewModelFactory factory = new MainViewModelFactory(userRepository, menuRepository);
+
+        // Get ViewModel using factory
+        viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+
         featuredMenuAdapter = new FeaturedMenuAdapter(menuId ->
                 Navigation.findNavController(requireView())
-                        .navigate(MainActivityDirections.actionHomeToMenuList())
+                        .navigate(HomeFragmentDirections.actionHomeToMenuList())
         );
     }
 

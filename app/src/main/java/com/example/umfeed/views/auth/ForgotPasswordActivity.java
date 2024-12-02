@@ -4,12 +4,18 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.example.umfeed.R;
 import com.example.umfeed.databinding.ActivityForgotPasswordBinding;
 import com.example.umfeed.viewmodels.auth.ForgotPasswordViewModel;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private ActivityForgotPasswordBinding binding;
     private ForgotPasswordViewModel viewModel;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +24,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(ForgotPasswordViewModel.class);
+
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+        }
+
         setupViews();
         observeViewModel();
     }
@@ -44,8 +57,19 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 binding.successText.setVisibility(View.VISIBLE);
                 binding.emailInput.setEnabled(false);
                 binding.resetButton.setEnabled(false);
+
+                String email = binding.emailInput.getText().toString().trim();
+                navigateToVerifyCode(email);
             }
         });
+    }
+
+    private void navigateToVerifyCode(String email) {
+        if (navController != null) {
+            Bundle args = new Bundle();
+            args.putString("email", email);
+            navController.navigate(R.id.verifyCodeFragment, args);
+        }
     }
 
     private void attemptReset() {

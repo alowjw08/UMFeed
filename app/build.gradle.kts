@@ -40,6 +40,12 @@ android {
 
 dependencies {
 
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+    implementation(libs.material.v1100)
+    implementation (libs.activity.v180)
+    implementation (libs.fragment)
+    implementation(libs.play.services.auth)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.firebase.auth.ktx)

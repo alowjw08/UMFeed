@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MenuRahmah {
     private String id;          // For navigation/reference
@@ -29,6 +30,27 @@ public class MenuRahmah {
         this.allergens = allergens;
         this.price = price;
         this.stall = stall;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuRahmah that = (MenuRahmah) o;
+        return isVegetarian == that.isVegetarian &&
+                isHalal == that.isHalal &&
+                Double.compare(that.price, price) == 0 &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(imageUrl, that.imageUrl) &&
+                Objects.equals(allergens, that.allergens) &&
+                Objects.equals(stall, that.stall);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, imageUrl, isVegetarian, isHalal,
+                allergens, price, stall);
     }
     public static final DiffUtil.ItemCallback<MenuRahmah> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<MenuRahmah>() {
