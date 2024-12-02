@@ -98,8 +98,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        viewModel.getFeaturedMenus().observe(getViewLifecycleOwner(), menus -> {
-            featuredMenuAdapter.submitList(menus);
-        });
+        viewModel.getFeaturedMenus().observe(getViewLifecycleOwner(), menus -> featuredMenuAdapter.submitList(menus));
     }
 }

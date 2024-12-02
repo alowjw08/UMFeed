@@ -42,7 +42,6 @@ dependencies {
 
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(libs.material.v1100)
     implementation (libs.activity.v180)
     implementation (libs.fragment)
     implementation(libs.play.services.auth)

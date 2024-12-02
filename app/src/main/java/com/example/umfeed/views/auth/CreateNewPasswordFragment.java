@@ -10,9 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
-import com.example.umfeed.R;
 import com.example.umfeed.databinding.FragmentCreatePasswordBinding;
 import com.example.umfeed.viewmodels.auth.CreateNewPasswordViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

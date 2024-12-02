@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.firebase.Firebase;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +17,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.umfeed.models.user.User;
 
-import java.sql.Time;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -28,6 +26,7 @@ public class UserRepository {
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
     private final Executor executor;
+    private static final String WEB_CLIENT_ID = "478211938002-703u44t0sfalfhhg144hpc28bk93vtcv.apps.googleusercontent.com";
     private final SignInClient oneTapClient;
     public UserRepository() {
         db = FirebaseFirestore.getInstance();
@@ -51,7 +50,7 @@ public class UserRepository {
         return BeginSignInRequest.builder()
                 .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
-                        .setServerClientId("478211938002-703u44t0sfalfhhg144hpc28bk93vtcv.apps.googleusercontent.com")
+                        .setServerClientId(WEB_CLIENT_ID)
                         .setFilterByAuthorizedAccounts(true)
                         .build())
                 .build();
@@ -95,36 +94,28 @@ public class UserRepository {
 
                         db.collection("users").document(firebaseUser.getUid())
                                 .set(newUser)
-                                .addOnFailureListener(e -> {
-                                    Log.e("UserRepository", "Error in creating google user profile", e);
-                                });
+                                .addOnFailureListener(e -> Log.e("UserRepository", "Error in creating google user profile", e));
                     } else {
                         db.collection("users").document(firebaseUser.getUid())
                                 .update("lastLoginAt", Timestamp.now())
-                                .addOnFailureListener(e -> {
-                                    Log.e("UserRepository", "Error updating last login", e);
-                                });
+                                .addOnFailureListener(e -> Log.e("UserRepository", "Error updating last login", e));
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("UserRepository", "Error in checking user profile", e);
-                });
+                .addOnFailureListener(e -> Log.e("UserRepository", "Error in checking user profile", e));
     }
 
     public LiveData<Result<FirebaseUser>> loginWithEmail(String email, String password) {
         MutableLiveData<Result<FirebaseUser>> resultLiveData = new MutableLiveData<>();
 
-        executor.execute(() -> {
-            auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            updateLastLogin();
-                            resultLiveData.setValue(Result.success(auth.getCurrentUser()));
-                        } else {
-                            resultLiveData.setValue(Result.failure(task.getException()));
-                        }
-                    });
-        });
+        executor.execute(() -> auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        updateLastLogin();
+                        resultLiveData.setValue(Result.success(auth.getCurrentUser()));
+                    } else {
+                        resultLiveData.setValue(Result.failure(task.getException()));
+                    }
+                }));
 
         return resultLiveData;
     }
@@ -134,18 +125,16 @@ public class UserRepository {
     public LiveData<Result<FirebaseUser>> register(String email, String password) {
         MutableLiveData<Result<FirebaseUser>> resultLiveData = new MutableLiveData<>();
 
-        executor.execute(() -> {
-            auth.createUserWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()) {
-                            FirebaseUser firebaseUser = auth.getCurrentUser();
-                            createUserProfile(firebaseUser);
-                            resultLiveData.setValue(Result.success(firebaseUser));
-                        } else {
-                            resultLiveData.setValue(Result.failure(task.getException()));
-                        }
-                    });
-        });
+        executor.execute(() -> auth.createUserWithEmailAndPassword(email,password)
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                        createUserProfile(firebaseUser);
+                        resultLiveData.setValue(Result.success(firebaseUser));
+                    } else {
+                        resultLiveData.setValue(Result.failure(task.getException()));
+                    }
+                }));
 
         return resultLiveData;
     }
@@ -163,12 +152,8 @@ public class UserRepository {
                             "firstName", firstName,
                             "lastName", lastName
                     )
-                    .addOnSuccessListener(aVoid -> {
-                        resultLiveData.postValue(Result.success(currentUser));
-                    })
-                    .addOnFailureListener(e -> {
-                        resultLiveData.postValue(Result.failure(e));
-                    });
+                    .addOnSuccessListener(aVoid -> resultLiveData.postValue(Result.success(currentUser)))
+                    .addOnFailureListener(e -> resultLiveData.postValue(Result.failure(e)));
         });
         return resultLiveData;
     }
@@ -228,47 +213,41 @@ public class UserRepository {
     public LiveData<Result<Void>> resetPassword(String email) {
         MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
 
-        executor.execute(() -> {
-            auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            resultMutableLiveData.setValue(Result.success(null));
-                        } else {
-                            resultMutableLiveData.setValue(Result.failure(task.getException()));
-                        }
-                    });
-        });
+        executor.execute(() -> auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        resultMutableLiveData.setValue(Result.success(null));
+                    } else {
+                        resultMutableLiveData.setValue(Result.failure(task.getException()));
+                    }
+                }));
         return resultMutableLiveData;
     }
 
     public LiveData<Result<Void>> verifyResetCode(String email, String code) {
         MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
-        executor.execute(() -> {
-            auth.verifyPasswordResetCode(code)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            resultMutableLiveData.setValue(Result.success(null));
-                        } else {
-                            resultMutableLiveData.setValue(Result.failure(task.getException()));
-                        }
-                    });
-        });
+        executor.execute(() -> auth.verifyPasswordResetCode(code)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        resultMutableLiveData.setValue(Result.success(null));
+                    } else {
+                        resultMutableLiveData.setValue(Result.failure(task.getException()));
+                    }
+                }));
         return resultMutableLiveData;
     }
 
     public LiveData<Result<Void>> completePasswordReset(String email, String newPassword) {
         MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
 
-        executor.execute(() -> {
-            auth.confirmPasswordReset(email, newPassword)
-                    .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()) {
-                            resultMutableLiveData.setValue(Result.success(null));
-                        } else {
-                            resultMutableLiveData.setValue(Result.failure(task.getException()));
-                        }
-                    });
-        });
+        executor.execute(() -> auth.confirmPasswordReset(email, newPassword)
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        resultMutableLiveData.setValue(Result.success(null));
+                    } else {
+                        resultMutableLiveData.setValue(Result.failure(task.getException()));
+                    }
+                }));
         return resultMutableLiveData;
     }
 
