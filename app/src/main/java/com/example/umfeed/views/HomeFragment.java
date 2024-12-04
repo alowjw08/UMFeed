@@ -1,5 +1,6 @@
 package com.example.umfeed.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.example.umfeed.repositories.UserRepository;
 import com.example.umfeed.viewmodels.MainViewModel;
 import com.example.umfeed.utils.TimeUtils;
 import com.example.umfeed.viewmodels.MainViewModelFactory;
+import com.example.umfeed.views.auth.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeFragment extends Fragment {
     private MainViewModel viewModel;
@@ -52,6 +55,12 @@ public class HomeFragment extends Fragment {
         initializeViews(view);
         setupClickListeners(view);
         observeViewModel();
+
+        view.findViewById(R.id.temp_sign_out_button).setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(requireActivity(), LoginActivity.class));
+            requireActivity().finish();
+        });
 
         return view;
     }

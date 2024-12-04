@@ -1,5 +1,7 @@
 package com.example.umfeed.models.recipe;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +16,8 @@ public class Recipe {
     private List<String> allergens;
     private List<String> steps;
     private List<String> categories;
-    private NutritionFacts nutritionFact;
+    @PropertyName("nutritionFacts") // Add Firestore annotation
+    private NutritionFacts nutritionFacts;
 
     public Recipe() {
     }
@@ -107,12 +110,14 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public NutritionFacts getNutritionFact() {
-        return nutritionFact;
+    @PropertyName("nutritionFacts")
+    public NutritionFacts getNutritionFacts() {
+        return nutritionFacts;
     }
 
-    public void setNutritionFact(NutritionFacts nutritionFact) {
-        this.nutritionFact = nutritionFact;
+    @PropertyName("nutritionFacts")
+    public void setNutritionFacts(NutritionFacts nutritionFacts) {
+        this.nutritionFacts = nutritionFacts;
     }
 
     @Override

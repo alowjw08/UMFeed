@@ -1,5 +1,7 @@
 package com.example.umfeed.repositories;
 
+import android.util.Log;
+
 import com.example.umfeed.models.recipe.Recipe;
 import com.example.umfeed.models.user.SavedRecipe;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RecipeRepository {
     private final FirebaseFirestore db;
@@ -29,15 +32,28 @@ public class RecipeRepository {
     }
 
     public Task<QuerySnapshot> getAllRecipes() {
-        return db.collection("recipes").get();
+        return db.collection("recipes").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Recipe> recipeList = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Recipe recipe = document.toObject(Recipe.class);
+                        // Make sure to set the ID from the document
+                        recipe.setId(document.getId());
+                        recipeList.add(recipe);
+                    }
+                    // Log for debugging
+                    Log.d("RecipeRepository", "Loaded " + recipeList.size() + " recipes");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("RecipeRepository", "Error loading recipes", e);
+                });
     }
-
     public Task<QuerySnapshot> getRecipesByCategory(String category) {
         return db.collection("recipes").whereArrayContains("categories", category).get();
     }
 
     public Task<List<Recipe>> getSavedRecipes() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         CollectionReference savedRecipesRef = db.collection("users")
                 .document(userId)
@@ -65,7 +81,7 @@ public class RecipeRepository {
                 })
                 .continueWith(task -> {
                     if (!task.isSuccessful()) {
-                        throw task.getException();
+                        throw Objects.requireNonNull(task.getException());
                     }
 
                     List<Recipe> recipes = new ArrayList<>();

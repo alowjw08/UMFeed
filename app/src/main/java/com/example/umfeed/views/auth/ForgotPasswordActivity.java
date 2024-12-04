@@ -56,19 +56,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 binding.successText.setVisibility(View.VISIBLE);
                 binding.emailInput.setEnabled(false);
                 binding.resetButton.setEnabled(false);
-
-                String email = binding.emailInput.getText().toString().trim();
-                navigateToVerifyCode(email);
             }
         });
-    }
-
-    private void navigateToVerifyCode(String email) {
-        if (navController != null) {
-            Bundle args = new Bundle();
-            args.putString("email", email);
-            navController.navigate(R.id.verifyCodeFragment, args);
-        }
     }
 
     private void attemptReset() {

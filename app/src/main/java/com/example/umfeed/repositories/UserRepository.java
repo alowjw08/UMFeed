@@ -224,33 +224,6 @@ public class UserRepository {
         return resultMutableLiveData;
     }
 
-    public LiveData<Result<Void>> verifyResetCode(String email, String code) {
-        MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
-        executor.execute(() -> auth.verifyPasswordResetCode(code)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        resultMutableLiveData.setValue(Result.success(null));
-                    } else {
-                        resultMutableLiveData.setValue(Result.failure(task.getException()));
-                    }
-                }));
-        return resultMutableLiveData;
-    }
-
-    public LiveData<Result<Void>> completePasswordReset(String email, String newPassword) {
-        MutableLiveData<Result<Void>> resultMutableLiveData = new MutableLiveData<>();
-
-        executor.execute(() -> auth.confirmPasswordReset(email, newPassword)
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()) {
-                        resultMutableLiveData.setValue(Result.success(null));
-                    } else {
-                        resultMutableLiveData.setValue(Result.failure(task.getException()));
-                    }
-                }));
-        return resultMutableLiveData;
-    }
-
     public void signOut() {
         auth.signOut();
     }

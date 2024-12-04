@@ -3,29 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
-
-    <!-- Authentication Flow for Password Reset -->
-    <fragment
-        android:id="@+id/verifyCodeFragment"
-        android:name="com.example.umfeed.views.auth.VerifyCodeFragment"
-        android:label="Verify Code">
-        <argument
-            android:name="email"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_verifyCode_to_createPassword"
-            app:destination="@id/createNewPasswordFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/createNewPasswordFragment"
-        android:name="com.example.umfeed.views.auth.CreateNewPasswordFragment"
-        android:label="Create New Password">
-        <argument
-            android:name="email"
-            app:argType="string" />
-    </fragment>
-
     <!-- Main Navigation -->
     <fragment
         android:id="@+id/homeFragment"

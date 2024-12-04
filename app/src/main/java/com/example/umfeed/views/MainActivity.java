@@ -12,7 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.umfeed.R;
 import com.example.umfeed.viewmodels.auth.LoginViewModel;
 import com.example.umfeed.views.auth.LoginActivity;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         auth = FirebaseAuth.getInstance();
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
@@ -36,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
+        }
+
+        if (!isFinishing()) {
+            FirebaseApp.initializeApp(this);
         }
 
         setupNavigation();
@@ -59,16 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
-        // Hide bottom navigation on auth related fragments
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.verifyCodeFragment ||
-                    destination.getId() == R.id.createNewPasswordFragment) {
-                bottomNavigationView.setVisibility(View.GONE);
-            } else {
-                bottomNavigationView.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     @Override

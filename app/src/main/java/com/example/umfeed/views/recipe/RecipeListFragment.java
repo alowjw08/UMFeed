@@ -2,10 +2,12 @@ package com.example.umfeed.views.recipe;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -58,10 +60,9 @@ public class RecipeListFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate(action);
         });
 
+        binding.recipesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         binding.recipesRecyclerView.setAdapter(adapter);
-        binding.recipesRecyclerView.setLayoutManager(
-                new GridLayoutManager(requireContext(), 2)
-        );
+        binding.recipesRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void setupSearchView() {
@@ -120,29 +121,35 @@ public class RecipeListFragment extends Fragment {
 
     private void observeViewModel() {
         viewModel.getRecipes().observe(getViewLifecycleOwner(), recipes -> {
-            adapter.submitList(recipes);
+            // Add debug logging
+            Log.d("RecipeListFragment", "Received " + (recipes != null ? recipes.size() : 0) + " recipes");
+
+            if (recipes != null && !recipes.isEmpty()) {
+                binding.recipesRecyclerView.setVisibility(View.VISIBLE);
+                binding.emptyStateView.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                adapter.submitList(recipes);
+            } else {
+                binding.recipesRecyclerView.setVisibility(View.GONE);
+                binding.emptyStateView.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
+            }
         });
 
+        // Add error handling
+        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), "Error: " + error, Toast.LENGTH_LONG).show();
+                binding.progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        // Show loading state
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
-
-        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
-            if (error != null) {
-                Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG).show();
-            }
-        });
-        viewModel.getRecipes().observe(getViewLifecycleOwner(), recipes -> {
-            adapter.submitList(recipes);
-
-            // Show/hide empty state
-            binding.emptyStateView.setVisibility(
-                    recipes.isEmpty() ? View.VISIBLE : View.GONE
-            );
-
-            binding.progressBar.setVisibility(View.GONE);
-        });
     }
+
 
     @Override
     public void onDestroyView() {

@@ -1,5 +1,6 @@
 package com.example.umfeed.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -23,14 +24,19 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
     }
 
     public RecipeAdapter(OnRecipeClickListener listener) {
-        super(new DiffUtil.ItemCallback<Recipe>(){
+        super(new DiffUtil.ItemCallback<Recipe>() {
             @Override
             public boolean areItemsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
+                if (oldItem == null || newItem == null) return false;
+                if (oldItem.getId() == null || newItem.getId() == null) {
+                    return oldItem == newItem;
+                }
                 return oldItem.getId().equals(newItem.getId());
             }
 
             @Override
             public boolean areContentsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
+                if (oldItem == null || newItem == null) return false;
                 return oldItem.equals(newItem);
             }
         });
@@ -49,10 +55,11 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = getItem(position);
+        Log.d("RecipeAdapter", "Binding recipe: " + recipe.getName());
         holder.bind(recipe, listener);
     }
 
-    static class RecipeViewHolder extends RecyclerView.ViewHolder {
+    public static class RecipeViewHolder extends RecyclerView.ViewHolder {
         private final ItemRecipeCardBinding binding;
 
         public RecipeViewHolder(@NonNull ItemRecipeCardBinding binding) {
@@ -61,26 +68,35 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
         }
 
         public void bind(Recipe recipe, OnRecipeClickListener listener) {
-            if (recipe != null) {
-                binding.recipeName.setText(recipe.getName());
-                binding.caloriesText.setText(
-                        itemView.getContext().getString(R.string.calories_format, recipe.getCalories())
-                );
-
-                // Load image using Glide with null check
-                if (recipe.getImageUrl() != null) {
-                    Glide.with(itemView.getContext())
-                            .load(recipe.getImageUrl())
-                            .placeholder(R.drawable.placeholder_recipe)
-                            .error(R.drawable.error_recipe)
-                            .into(binding.recipeImage);
-                }
-
-                // Set click listener with null check
-                if (listener != null) {
-                    itemView.setOnClickListener(v -> listener.onRecipeClick(recipe));
-                }
+            if (recipe == null) {
+                Log.w("RecipeAdapter", "Attempted to bind null recipe");
+                return;
             }
+
+            binding.recipeName.setText(recipe.getName());
+            binding.caloriesText.setText(
+                    itemView.getContext().getString(R.string.calories_format,
+                            recipe.getCalories())
+            );
+
+            // Load image using Glide with null check
+            String imageUrl = recipe.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.placeholder_recipe)
+                        .error(R.drawable.error_recipe)
+                        .into(binding.recipeImage);
+            } else {
+                binding.recipeImage.setImageResource(R.drawable.placeholder_recipe);
+            }
+
+            // Set click listener
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onRecipeClick(recipe);
+                }
+            });
         }
     }
 
