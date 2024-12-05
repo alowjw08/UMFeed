@@ -17,4 +17,6 @@
     <string name="food_donation">Food\nDonation</string>
     <string name="healthy_recipe">Healthy\nRecipe</string>
     <string name="all_menu_rahmah">All Menu Rahmah</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
