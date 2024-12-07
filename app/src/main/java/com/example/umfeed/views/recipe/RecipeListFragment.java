@@ -20,6 +20,7 @@ import androidx.appcompat.widget.SearchView;
 import com.example.umfeed.adapters.RecipeAdapter;
 import com.example.umfeed.databinding.FragmentRecipeListBinding;
 import com.example.umfeed.viewmodels.recipe.RecipeViewModel;
+import com.example.umfeed.viewmodels.recipe.SavedRecipeViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -53,6 +54,7 @@ public class RecipeListFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
+        SavedRecipeViewModel savedRecipeViewModel = new ViewModelProvider(this).get(SavedRecipeViewModel.class);
         Log.d("RecipeListFragment", "Setting up RecyclerView");
 
         adapter = new RecipeAdapter(recipe -> {

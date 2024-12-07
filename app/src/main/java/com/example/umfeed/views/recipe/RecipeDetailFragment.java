@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,12 +23,14 @@ import com.example.umfeed.models.recipe.Recipe;
 import com.example.umfeed.viewmodels.recipe.RecipeViewModel;
 import com.example.umfeed.viewmodels.recipe.SavedRecipeViewModel;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.snackbar.Snackbar;
 
 public class RecipeDetailFragment extends Fragment {
     private RecipeViewModel viewModel;
     private SavedRecipeViewModel savedRecipeViewModel;
     private FragmentRecipeDetailBinding binding;
     private String recipeId;
+    private static final String TAG = "RecipeDetailFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,17 +57,69 @@ public class RecipeDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupViews();
         observeViewModel();
+        setupObservers();
         viewModel.loadRecipeDetails(recipeId);
+
+        if (recipeId != null) {
+            Log.d(TAG, "Checking initial save state for recipe: " + recipeId);
+            savedRecipeViewModel.checkIsSaved(recipeId);
+        }
     }
 
     private void setupViews() {
-        binding.saveButton.setOnClickListener(v -> {
-            savedRecipeViewModel.saveRecipe(recipeId);
-        });
+        savedRecipeViewModel.checkIsSaved(recipeId);
 
+        binding.saveButton.setOnClickListener(v -> {
+            if (recipeId == null) {
+                Log.e(TAG, "Cannot save recipe: recipeId is null");
+                Snackbar.make(binding.getRoot(), "Cannot save recipe", Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+
+            Log.d(TAG, "Save button clicked for recipe: " + recipeId);
+            savedRecipeViewModel.toggleSaveRecipe(recipeId);
+        });
         binding.likeButton.setOnClickListener(v -> {
             viewModel.likeRecipe(recipeId);
         });
+    }
+
+    private void setupObservers() {
+        // Observe saved state
+        savedRecipeViewModel.getIsSaved().observe(getViewLifecycleOwner(), isSaved -> {
+            Log.d(TAG, "Save state changed: " + isSaved);
+            updateSaveButtonIcon(isSaved);
+        });
+
+        savedRecipeViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            Log.d(TAG, "Loading state changed: " + isLoading);
+            binding.saveButton.setEnabled(!isLoading);
+
+            // Only show loading if we have a saved state to return to
+            if (isLoading) {
+                binding.saveProgressBar.setVisibility(View.VISIBLE);
+            } else {
+                binding.saveProgressBar.setVisibility(View.GONE);
+            }
+        });
+
+        savedRecipeViewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Log.e(TAG, "Error updating save state: " + error);
+                Snackbar.make(binding.getRoot(), "Failed to update saved status: " + error,
+                        Snackbar.LENGTH_LONG).show();
+                binding.saveButton.setEnabled(true);
+                binding.saveProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+    private void updateSaveButtonIcon(boolean isSaved) {
+        binding.saveButton.setIcon(ContextCompat.getDrawable(requireContext(),
+                isSaved ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark_border));
+
+        // Show feedback message
+        String message = isSaved ? "Recipe saved" : "Recipe removed from saved";
+        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT).show();
     }
 
     private void observeViewModel() {

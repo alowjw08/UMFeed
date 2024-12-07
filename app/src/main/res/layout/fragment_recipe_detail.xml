@@ -53,7 +53,8 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="12dp"
             android:icon="@drawable/ic_favourite_border"
-            app:backgroundTint="@color/light_grey"
+            app:backgroundTint="@android:color/transparent"
+            app:iconTint="@color/black"
             app:layout_constraintEnd_toStartOf="@id/saveButton"
             app:layout_constraintTop_toBottomOf="@id/recipeCard" />
 
@@ -65,9 +66,20 @@
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
             android:icon="@drawable/ic_bookmark_border"
-            app:backgroundTint="@color/light_grey"
+            app:iconTint="@color/black"
+            android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recipeCard" />
+
+        <ProgressBar
+            android:id="@+id/saveProgressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:visibility="gone"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@id/saveButton"
+            app:layout_constraintTop_toTopOf="@id/saveButton"
+            app:layout_constraintBottom_toBottomOf="@id/saveButton"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/nutritionCard"
@@ -138,6 +150,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="8dp"
             android:textStyle="bold"
+            android:text="Allergens"
             app:layout_constraintTop_toBottomOf="@id/ingredientsList"
             app:layout_constraintStart_toStartOf="parent"/>
 

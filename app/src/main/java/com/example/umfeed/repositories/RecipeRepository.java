@@ -8,6 +8,7 @@ import com.example.umfeed.models.recipe.Range;
 import com.example.umfeed.models.recipe.Recipe;
 import com.example.umfeed.models.user.SavedRecipe;
 import com.example.umfeed.utils.FuzzySearchUtil;
+import com.example.umfeed.viewmodels.recipe.SavedRecipeViewModel;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
@@ -119,6 +120,10 @@ public class RecipeRepository {
     }
 
     public Task<Void> savedRecipe (String recipeId) {
+        if (userId == null) {
+            return Tasks.forException(new IllegalStateException("User not logged in"));
+        }
+
         SavedRecipe savedRecipe = new SavedRecipe();
         savedRecipe.setRecipeId(recipeId);
         savedRecipe.setSavedAt(Timestamp.now());
@@ -126,8 +131,64 @@ public class RecipeRepository {
         return db.collection("users").document(userId).collection("savedRecipes").document(recipeId).set(savedRecipe);
     }
 
+    public Task<Boolean> isRecipeSaved(String recipeId) {
+        if (userId == null) {
+            return Tasks.forException(new IllegalStateException("User not logged in"));
+        }
+
+        return db.collection("users")
+                .document(userId)
+                .collection("savedRecipes")
+                .document(recipeId)
+                .get()
+                .continueWith(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return task.getResult().exists();
+                });
+    }
+
+    public Task<Void> toggleSaveRecipe(String recipeId) {
+        Log.d(TAG, "Toggling save state for recipe: " + recipeId);
+
+        return isRecipeSaved(recipeId).continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                Log.e(TAG, "Error checking saved state", task.getException());
+                throw task.getException();
+            }
+
+            boolean isSaved = task.getResult();
+            Log.d(TAG, "Current save state: " + isSaved);
+
+            if (isSaved) {
+                Log.d(TAG, "Removing recipe from saved");
+                return removeSavedRecipe(recipeId);
+            } else {
+                Log.d(TAG, "Adding recipe to saved");
+                SavedRecipe savedRecipe = new SavedRecipe();
+                savedRecipe.setRecipeId(recipeId);
+                savedRecipe.setSavedAt(Timestamp.now());
+
+                return db.collection("users")
+                        .document(userId)
+                        .collection("savedRecipes")
+                        .document(recipeId)
+                        .set(savedRecipe);
+            }
+        });
+    }
+
     public Task<Void> removeSavedRecipe(String recipeId) {
-        return db.collection("users").document(userId).collection("savedRecipes").document(recipeId).delete();
+        if (userId == null) {
+            return Tasks.forException(new IllegalStateException("User not logged in"));
+        }
+
+        return db.collection("users")
+                .document(userId)
+                .collection("savedRecipes")
+                .document(recipeId)
+                .delete();
     }
 
     public Task<Void> likeRecipe(String recipeId) {
@@ -146,7 +207,6 @@ public class RecipeRepository {
     }
 
     public Task<List<Recipe>> searchRecipes(String query) {
-        // First get all recipes to perform fuzzy search on
         return getAllRecipes()
                 .continueWith(task -> {
                     if (!task.isSuccessful()) {
