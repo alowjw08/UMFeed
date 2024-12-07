@@ -31,7 +31,6 @@
                 android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
 
-
         <TextView
             android:id="@+id/recipeName"
             android:layout_width="0dp"
