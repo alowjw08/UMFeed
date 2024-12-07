@@ -4,45 +4,45 @@ import com.google.firebase.firestore.PropertyName;
 
 public class NutritionFacts {
     @PropertyName("carbohydrates")
-    private double carbohydrates;
+    private float carbohydrates;
 
     @PropertyName("protein")
-    private double protein;
+    private float protein;
 
     @PropertyName("fats")
-    private double fats;
+    private float fats;
 
     // Default constructor required for Firestore
     public NutritionFacts() {}
 
     // Getters and setters with PropertyName annotations
     @PropertyName("carbohydrates")
-    public double getCarbohydrates() {
+    public float getCarbohydrates() {
         return carbohydrates;
     }
 
     @PropertyName("carbohydrates")
-    public void setCarbohydrates(double carbohydrates) {
+    public void setCarbohydrates(float carbohydrates) {
         this.carbohydrates = carbohydrates;
     }
 
     @PropertyName("protein")
-    public double getProtein() {
+    public float getProtein() {
         return protein;
     }
 
     @PropertyName("protein")
-    public void setProtein(double protein) {
+    public void setProtein(float protein) {
         this.protein = protein;
     }
 
     @PropertyName("fats")
-    public double getFats() {
+    public float getFats() {
         return fats;
     }
 
     @PropertyName("fats")
-    public void setFats(double fats) {
+    public void setFats(float fats) {
         this.fats = fats;
     }
 }

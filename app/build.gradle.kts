@@ -40,6 +40,9 @@ android {
 
 dependencies {
 
+    implementation(libs.fuzzywuzzy)
+    implementation(libs.gson)
+    implementation(libs.firebase.storage.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation (libs.activity.v180)

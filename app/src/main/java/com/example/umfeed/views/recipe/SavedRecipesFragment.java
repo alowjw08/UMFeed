@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.umfeed.adapters.RecipeAdapter;
 import com.example.umfeed.databinding.FragmentSavedRecipesBinding;
@@ -50,7 +51,7 @@ public class SavedRecipesFragment extends Fragment {
 
         binding.savedRecipesRecyclerView.setAdapter(adapter);
         binding.savedRecipesRecyclerView.setLayoutManager(
-                new GridLayoutManager(requireContext(), 1)
+                new GridLayoutManager(requireContext(),1, GridLayoutManager.VERTICAL, false)
         );
     }
 

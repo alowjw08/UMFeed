@@ -3,6 +3,7 @@ package com.example.umfeed.views.recipe;
 // views/recipe/RecipeDetailFragment.java
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,12 @@ public class RecipeDetailFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
         savedRecipeViewModel = new ViewModelProvider(this).get(SavedRecipeViewModel.class);
         recipeId = RecipeDetailFragmentArgs.fromBundle(requireArguments()).getRecipeId();
+        if (getArguments() != null) {
+            String recipeId = getArguments().getString("recipeId");
+            Log.d("RecipeDetailFragment", "Received recipe ID: " + recipeId);
+        } else {
+            Log.e("RecipeDetailFragment", "No recipe ID received");
+        }
     }
 
     @Override
@@ -67,27 +74,23 @@ public class RecipeDetailFragment extends Fragment {
     private void updateUI(Recipe recipe) {
         if (recipe == null) return;
 
-        // Basic info
         binding.recipeName.setText(recipe.getName());
 
         binding.recipeDescription.setText(recipe.getDescription());
         binding.caloriesText.setText(getString(R.string.calories_format, recipe.getCalories()));
 
-        // Load image using Glide
         Glide.with(this)
                 .load(recipe.getImageUrl())
                 .placeholder(R.drawable.placeholder_recipe)
                 .error(R.drawable.error_recipe)
                 .into(binding.recipeImage);
 
-        // Ingredients list
         StringBuilder ingredientsText = new StringBuilder();
         for (String ingredient : recipe.getIngredients()) {
             ingredientsText.append("• ").append(ingredient).append("\n");
         }
         binding.ingredientsList.setText(ingredientsText.toString().trim());
 
-        // Cooking steps
         StringBuilder stepsText = new StringBuilder();
         for (int i = 0; i < recipe.getSteps().size(); i++) {
             stepsText.append(i + 1).append(". ")
@@ -96,7 +99,6 @@ public class RecipeDetailFragment extends Fragment {
         }
         binding.stepsList.setText(stepsText.toString().trim());
 
-        // Allergens
         binding.allergensChipGroup.removeAllViews();
         for (String allergen : recipe.getAllergens()) {
             Chip chip = new Chip(requireContext());

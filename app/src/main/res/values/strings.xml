@@ -17,4 +17,5 @@
     <string name="food_donation">Food\nDonation</string>
     <string name="healthy_recipe">Healthy\nRecipe</string>
     <string name="all_menu_rahmah">All Menu Rahmah</string>
+    <string name="no_recipes_found">No recipes found</string>
 </resources>

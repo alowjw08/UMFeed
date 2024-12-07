@@ -20,7 +20,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
     private final OnRecipeClickListener listener;
 
     public interface OnRecipeClickListener {
-        void onRecipeClick(Recipe recipe); // Changed from OnRecipeClick to onRecipeClick
+        void onRecipeClick(Recipe recipe);
     }
 
     public RecipeAdapter(OnRecipeClickListener listener) {
@@ -56,7 +56,10 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = getItem(position);
         Log.d("RecipeAdapter", "Binding recipe: " + recipe.getName());
-        holder.bind(recipe, listener);
+        holder.bind(recipe, clickedRecipe -> {
+            Log.d("RecipeAdapter", "Recipe clicked: " + clickedRecipe.getName());
+            listener.onRecipeClick(clickedRecipe);
+        });
     }
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
@@ -68,35 +71,34 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
         }
 
         public void bind(Recipe recipe, OnRecipeClickListener listener) {
-            if (recipe == null) {
-                Log.w("RecipeAdapter", "Attempted to bind null recipe");
-                return;
-            }
+            if (recipe != null) {
+                binding.recipeName.setText(recipe.getName());
+                binding.caloriesText.setText(
+                        itemView.getContext().getString(R.string.calories_format, recipe.getCalories())
+                );
 
-            binding.recipeName.setText(recipe.getName());
-            binding.caloriesText.setText(
-                    itemView.getContext().getString(R.string.calories_format,
-                            recipe.getCalories())
-            );
+                // Add debug logging
+                Log.d("RecipeAdapter", "Binding recipe: " + recipe.getName() + " with ID: " + recipe.getId());
 
-            // Load image using Glide with null check
-            String imageUrl = recipe.getImageUrl();
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                Glide.with(itemView.getContext())
-                        .load(imageUrl)
-                        .placeholder(R.drawable.placeholder_recipe)
-                        .error(R.drawable.error_recipe)
-                        .into(binding.recipeImage);
-            } else {
-                binding.recipeImage.setImageResource(R.drawable.placeholder_recipe);
-            }
+                // Set click listener on the card itself
+                binding.getRoot().setOnClickListener(v -> {
+                    Log.d("RecipeAdapter", "Card clicked for recipe: " + recipe.getName());
+                    if (recipe.getId() != null && !recipe.getId().isEmpty()) {
+                        listener.onRecipeClick(recipe);
+                    } else {
+                        Log.e("RecipeAdapter", "Recipe ID is null or empty for: " + recipe.getName());
+                    }
+                });
 
-            // Set click listener
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onRecipeClick(recipe);
+                // Load image using Glide
+                if (recipe.getImageUrl() != null) {
+                    Glide.with(itemView.getContext())
+                            .load(recipe.getImageUrl())
+                            .placeholder(R.drawable.placeholder_recipe)
+                            .error(R.drawable.error_recipe)
+                            .into(binding.recipeImage);
                 }
-            });
+            }
         }
     }
 

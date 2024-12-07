@@ -35,14 +35,16 @@
         android:id="@+id/emptyStateView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No recipes found"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"
+        android:text="No recipes match the selected nutrition criteria"
         android:textSize="16sp"
-        android:textColor="@color/grey"
-        app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
+        android:textAlignment="center"
+        android:padding="16dp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -54,6 +56,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/filterFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Filter Chips -->
     <com.google.android.material.chip.ChipGroup

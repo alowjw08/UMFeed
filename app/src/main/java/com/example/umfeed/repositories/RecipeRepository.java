@@ -2,8 +2,12 @@ package com.example.umfeed.repositories;
 
 import android.util.Log;
 
+import com.example.umfeed.models.recipe.NutritionFacts;
+import com.example.umfeed.models.recipe.NutritionFilter;
+import com.example.umfeed.models.recipe.Range;
 import com.example.umfeed.models.recipe.Recipe;
 import com.example.umfeed.models.user.SavedRecipe;
+import com.example.umfeed.utils.FuzzySearchUtil;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
@@ -24,6 +28,7 @@ public class RecipeRepository {
     private final FirebaseFirestore db;
     private final String userId;
     private final CollectionReference recipesRef;
+    private static final String TAG = "RecipeRepository";
 
     public RecipeRepository() {
         db = FirebaseFirestore.getInstance();
@@ -32,24 +37,35 @@ public class RecipeRepository {
     }
 
     public Task<QuerySnapshot> getAllRecipes() {
-        return db.collection("recipes").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Recipe> recipeList = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Recipe recipe = document.toObject(Recipe.class);
-                        // Make sure to set the ID from the document
-                        recipe.setId(document.getId());
-                        recipeList.add(recipe);
-                    }
-                    // Log for debugging
-                    Log.d("RecipeRepository", "Loaded " + recipeList.size() + " recipes");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("RecipeRepository", "Error loading recipes", e);
-                });
+        return db.collection("recipes").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                Recipe recipe = document.toObject(Recipe.class);
+                recipe.setId(document.getId()); // Set ID immediately when converting to object
+                // Update the document in the snapshot
+                document.getReference().set(recipe);
+            }
+        });
     }
     public Task<QuerySnapshot> getRecipesByCategory(String category) {
-        return db.collection("recipes").whereArrayContains("categories", category).get();
+        // Add logging for debugging
+        Log.d("RecipeRepository", "Filtering by category: " + category);
+
+        return db.collection("recipes")
+                .whereArrayContains("categories", category)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Ensure IDs are set
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Recipe recipe = document.toObject(Recipe.class);
+                        recipe.setId(document.getId());
+                        // Update the document with ID
+                        document.getReference().set(recipe);
+                    }
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " recipes for category: " + category);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error filtering by category: " + e.getMessage());
+                });
     }
 
     public Task<List<Recipe>> getSavedRecipes() {
@@ -129,28 +145,99 @@ public class RecipeRepository {
         return db.collection("recipes").document(recipeId).get();
     }
 
-    public Task<QuerySnapshot> searchRecipes(String query) {
-        // Create array of search terms for partial matching
-        String[] searchTerms = query.split("\\s+");
-
-        // Create query to search in name and description fields
-        Query searchQuery = recipesRef;
-
-        // First, search for matches in recipe name
-        searchQuery = searchQuery.orderBy("name")
-                .startAt(query)
-                .endAt(query + '\uf8ff');
-
-        return searchQuery.get()
-                .continueWithTask(task -> {
-                    // If no results in name, search in description
-                    if (task.isSuccessful() && task.getResult().isEmpty()) {
-                        return recipesRef.orderBy("description")
-                                .startAt(query)
-                                .endAt(query + '\uf8ff')
-                                .get();
+    public Task<List<Recipe>> searchRecipes(String query) {
+        // First get all recipes to perform fuzzy search on
+        return getAllRecipes()
+                .continueWith(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
                     }
-                    return task;
+
+                    List<Recipe> allRecipes = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Recipe recipe = document.toObject(Recipe.class);
+                        recipe.setId(document.getId());
+                        allRecipes.add(recipe);
+                    }
+
+                    // Perform fuzzy search on background thread
+                    return FuzzySearchUtil.fuzzySearch(allRecipes, query);
                 });
+    }
+
+    public Task<List<Recipe>> getRecipesByNutrition(NutritionFilter filter) {
+        Log.d(TAG, String.format("Applying nutrition filter with ranges:" +
+                        "\nCarbs: %.1f-%.1f" +
+                        "\nProtein: %.1f-%.1f" +
+                        "\nFats: %.1f-%.1f" +
+                        "\nMatch All: %b",
+                filter.getCarbRange().getMin(), filter.getCarbRange().getMax(),
+                filter.getProteinRange().getMin(), filter.getProteinRange().getMax(),
+                filter.getFatRange().getMin(), filter.getFatRange().getMax(),
+                filter.isMatchAll()
+        ));
+
+        return db.collection("recipes")
+                .get()
+                .continueWith(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.e(TAG, "Failed to fetch recipes", task.getException());
+                        throw task.getException();
+                    }
+
+                    List<Recipe> filteredRecipes = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        Recipe recipe = doc.toObject(Recipe.class);
+                        recipe.setId(doc.getId());
+                        if (recipe.getNutritionFacts() == null) {
+                            Log.w(TAG, "Recipe " + recipe.getId() + " has no nutrition facts");
+                            continue;
+                        }
+                        try {
+                            if (isWithinNutritionRange(recipe, filter)) {
+                                filteredRecipes.add(recipe);
+                                Log.d(TAG, "Recipe " + recipe.getName() + " matches nutrition criteria");
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error processing recipe " + recipe.getId(), e);
+                        }
+                    }
+                    return filteredRecipes;
+                });
+    }
+
+    private boolean isWithinNutritionRange(Recipe recipe, NutritionFilter filter) {
+        NutritionFacts facts = recipe.getNutritionFacts();
+
+        if (facts == null) {
+            Log.w(TAG, "Recipe " + recipe.getName() + " has null nutrition facts");
+            return false;
+        }
+
+        boolean matchesCarbs = facts.getCarbohydrates() >= filter.getCarbRange().getMin() &&
+                facts.getCarbohydrates() <= filter.getCarbRange().getMax();
+
+        boolean matchesProtein = facts.getProtein() >= filter.getProteinRange().getMin() &&
+                facts.getProtein() <= filter.getProteinRange().getMax();
+
+        boolean matchesFats = facts.getFats() >= filter.getFatRange().getMin() &&
+                facts.getFats() <= filter.getFatRange().getMax();
+
+        Log.d(TAG, String.format("Match results for %s - Carbs: %b, Protein: %b, Fats: %b",
+                recipe.getName(), matchesCarbs, matchesProtein, matchesFats));
+
+        boolean matches;
+        if (filter.isMatchAll()) {
+            // AND logic - must match all criteria
+            matches = matchesCarbs && matchesProtein && matchesFats;
+        } else {
+            // OR logic - must match at least one criteria
+            matches = matchesCarbs || matchesProtein || matchesFats;
+        }
+
+        Log.d(TAG, String.format("Final match result for %s: %b (using %s logic)",
+                recipe.getName(), matches, filter.isMatchAll() ? "AND" : "OR"));
+
+        return matches;
     }
 }
