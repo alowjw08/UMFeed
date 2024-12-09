@@ -24,6 +24,7 @@ materialVersion = "1.10.0"
 navigationFragment = "2.7.5"
 navigationFragmentKtx = "2.7.5"
 navigationUi = "2.7.5"
+okhttp = "4.9.3"
 playServicesAuth = "20.7.0"
 
 [libraries]
@@ -56,6 +57,7 @@ navigation-fragment = { module = "androidx.navigation:navigation-fragment", vers
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationUi" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
