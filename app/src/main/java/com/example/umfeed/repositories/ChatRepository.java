@@ -17,7 +17,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatRepository {
     private static final String TAG = "ChatRepository";
@@ -180,14 +182,20 @@ public class ChatRepository {
                 .addOnFailureListener(e -> Log.e(TAG, "Error deleting message", e));
     }
 
-    public void updateMessage(String messageId, String newContent) {
-        if (userId == null) return;
+    public Task<Void> updateMessage(String messageId, String newContent, boolean sending) {
+        if (userId == null) {
+            return Tasks.forException(new IllegalStateException("User not logged in"));
+        }
 
-        db.collection("chatHistory")
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("message", newContent);
+        updates.put("sending", sending);
+
+        return db.collection("chatHistory")
                 .document(userId)
                 .collection("messages")
                 .document(messageId)
-                .update("message", newContent)
+                .update(updates)
                 .addOnFailureListener(e -> Log.e(TAG, "Error updating message", e));
     }
 
@@ -205,5 +213,9 @@ public class ChatRepository {
                     messages.setValue(new ArrayList<>());
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Error clearing chat", e));
+    }
+
+    public void updateMessagesList(List<ChatMessage> updatedMessages) {
+        messages.setValue(updatedMessages);
     }
 }

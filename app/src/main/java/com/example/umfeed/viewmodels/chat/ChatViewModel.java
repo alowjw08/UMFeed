@@ -13,9 +13,8 @@ import com.example.umfeed.models.chat.ChatMessage;
 import com.example.umfeed.repositories.ChatRepository;
 import com.example.umfeed.services.OpenAIService;
 
-import org.json.JSONException;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -89,7 +88,6 @@ public class ChatViewModel extends AndroidViewModel {
         try {
             // Create and save user message
             ChatMessage userMessage = new ChatMessage(messageText.trim(), "user");
-            userMessage.setSending(true);
 
             repository.saveMessage(userMessage)
                     .addOnSuccessListener(aVoid -> {
@@ -97,14 +95,19 @@ public class ChatViewModel extends AndroidViewModel {
                         isLoading.setValue(true);
                         error.setValue(null);
 
+                        List<ChatMessage> currentMessages = repository.getMessages().getValue();
+                        if (currentMessages != null) {
+                            // Create new list to force update
+                            List<ChatMessage> updatedMessages = new ArrayList<>(currentMessages);
+                            repository.updateMessagesList(updatedMessages);
+                        }
+
                         // Process with OpenAI in background
                         executor.execute(() -> {
                             try {
                                 String response = openAIService.sendMessage(messageText);
 
-                                // Update user message status
-                                userMessage.setSending(false);
-                                repository.updateMessage(userMessage.getMessageId(), userMessage.getMessage());
+                                repository.updateMessage(userMessage.getMessageId(), userMessage.getMessage(), false);
 
                                 // Save bot response
                                 ChatMessage botMessage = new ChatMessage(response, "bot");
@@ -117,10 +120,9 @@ public class ChatViewModel extends AndroidViewModel {
                                 isLoading.postValue(false);
                             } catch (Exception e) {
                                 Log.e(TAG, "Error getting response", e);
-                                userMessage.setSending(false);
                                 userMessage.setHasError(true);
                                 userMessage.setErrorMessage("Failed to send message");
-                                repository.updateMessage(userMessage.getMessageId(), userMessage.getMessage());
+                                repository.updateMessage(userMessage.getMessageId(), userMessage.getMessage(), false);
 
                                 error.postValue("Failed to get response: " + e.getMessage());
                                 isLoading.postValue(false);
@@ -144,10 +146,9 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void retryMessage(ChatMessage message) {
-        message.setSending(true);
         message.setHasError(false);
         message.setErrorMessage(null);
-        repository.updateMessage(message.getMessageId(), message.getMessage());
+        repository.updateMessage(message.getMessageId(), message.getMessage(), false);
         sendMessage(message.getMessage());
     }
 

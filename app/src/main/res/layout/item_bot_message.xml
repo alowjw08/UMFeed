@@ -18,7 +18,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_chatbot"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -34,8 +35,15 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
+                android:textIsSelectable="true"
                 android:autoLink="web"
                 android:linksClickable="true"
+                android:lineSpacingMultiplier="1.4"
+                android:breakStrategy="high_quality"
+                android:hyphenationFrequency="full"
+                android:textColorLink="@color/colorPrimary"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
                 tools:text="This is a bot message"/>
 
         </LinearLayout>

@@ -1,20 +1,25 @@
 package com.example.umfeed.adapters;
 
+import android.graphics.Color;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.models.chat.ChatMessage;
+
+import io.noties.markwon.AbstractMarkwonPlugin;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.core.MarkwonTheme;
 
 public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_USER = 1;
@@ -35,7 +40,6 @@ public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.Vi
             @Override
             public boolean areContentsTheSame(@NonNull ChatMessage oldItem, @NonNull ChatMessage newItem) {
                 return oldItem.equals(newItem) &&
-                        oldItem.isSending() == newItem.isSending() &&
                         oldItem.hasError() == newItem.hasError();
             }
         });
@@ -75,7 +79,6 @@ public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.Vi
     class UserMessageViewHolder extends RecyclerView.ViewHolder {
         private final TextView messageText;
         private final TextView timestampText;
-        private final ProgressBar sendingProgress;
         private final ImageButton retryButton;
         private final MessageClickListener listener;
 
@@ -84,7 +87,6 @@ public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.Vi
             this.listener = listener;
             messageText = itemView.findViewById(R.id.messageText);
             timestampText = itemView.findViewById(R.id.timestampText);
-            sendingProgress = itemView.findViewById(R.id.sendingProgress);
             retryButton = itemView.findViewById(R.id.retryButton);
 
             itemView.setOnLongClickListener(v -> {
@@ -98,9 +100,9 @@ public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.Vi
         }
 
         void bind(ChatMessage message) {
+            itemView.setTag(message);
             messageText.setText(message.getMessage());
 
-            sendingProgress.setVisibility(message.isSending() ? View.VISIBLE : View.GONE);
             retryButton.setVisibility(message.hasError() ? View.VISIBLE : View.GONE);
 
             if (message.hasError()) {
@@ -141,11 +143,23 @@ public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.Vi
     class BotMessageViewHolder extends RecyclerView.ViewHolder {
         private final TextView messageText;
         private final TextView timestampText;
+        private final Markwon markwon;
 
         BotMessageViewHolder(@NonNull View itemView, MessageClickListener listener) {
             super(itemView);
             messageText = itemView.findViewById(R.id.messageText);
             timestampText = itemView.findViewById(R.id.timestampText);
+
+            markwon = Markwon.builder(itemView.getContext())
+                    .usePlugin(new AbstractMarkwonPlugin() {
+                        @Override
+                        public void configureTheme(@NonNull MarkwonTheme.Builder builder) {
+                            builder
+                                    .codeTextColor(Color.BLACK)
+                                    .codeBackgroundColor(Color.parseColor("#f5f5f5"));
+                        }
+                    })
+                    .build();
 
             itemView.setOnLongClickListener(v -> {
                 int position = getAdapterPosition();
@@ -158,7 +172,10 @@ public class ChatMessageAdapter extends ListAdapter<ChatMessage, RecyclerView.Vi
         }
 
         void bind(ChatMessage message) {
-            messageText.setText(message.getMessage());
+            String markdown = message.getMessage();
+            markwon.setMarkdown(messageText, markdown);
+
+            messageText.setLinkTextColor(ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary));
 
             if (message.getTimestamp() != null) {
                 long timestamp = message.getTimestamp().getSeconds() * 1000L;

@@ -125,9 +125,12 @@
         android:layout_height="48dp"
         android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_send"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorPrimary" />
 
     <!-- Loading Indicator -->
     <ProgressBar

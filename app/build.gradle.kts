@@ -56,6 +56,7 @@ android {
 
 dependencies {
 
+    implementation (libs.core)
     implementation (libs.okhttp)
     implementation(libs.fuzzywuzzy)
     implementation(libs.gson)

@@ -10,8 +10,6 @@ public class ChatMessage {
     private String message;
     private String type;  // "user" or "bot"
     private Timestamp timestamp;
-
-    private boolean isSending;
     private boolean hasError;
     private String errorMessage;
     public ChatMessage() {}
@@ -20,7 +18,6 @@ public class ChatMessage {
         this.message = message;
         this.type = type;
         this.timestamp = Timestamp.now();
-        this.isSending = false;
         this.hasError = false;
     }
 
@@ -88,14 +85,6 @@ public class ChatMessage {
                 ", type='" + type + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
-    }
-
-    public boolean isSending() {
-        return isSending;
-    }
-
-    public void setSending(boolean sending) {
-        isSending = sending;
     }
 
     public boolean hasError() {

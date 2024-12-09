@@ -52,7 +52,9 @@ public class OpenAIService {
                             "friendly, and maintain context of the conversation. Remember previous " +
                             "suggestions and references to them. When you are prompted for weekly meal planning, " +
                             "suggest user with healthy and balanced diet for seven days including breakfast, lunch and dinner. " +
-                            "If you are prompted \"What to eat now\", respond the user with a dish with name, calories, carbs, protein and fats in g, ingredients, allergens and cooking steps.");
+                            "If you are prompted \"What to eat now\", respond the user with a dish with name, "+
+                            "calories, carbs, protein and fats in g, ingredients, allergens and cooking steps." +
+                            "Always ensure the formatting of the text so that it is more readable for the user.");
         } catch (JSONException e) {
             Log.e(TAG, "Error creating system message", e);
         }
