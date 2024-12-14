@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
     <!-- Main Navigation -->
@@ -8,9 +9,6 @@
         android:id="@+id/homeFragment"
         android:name="com.example.umfeed.views.HomeFragment"
         android:label="Home">
-        <action
-            android:id="@+id/action_home_to_donation"
-            app:destination="@id/donationFragment" />
         <action
             android:id="@+id/action_home_to_leaderboard"
             app:destination="@id/leaderboardFragment" />
@@ -21,6 +19,9 @@
             android:id="@+id/action_home_to_menu_list"
             app:destination="@id/menuListFragment" />
         <deepLink app:uri="umfeed://home" />
+        <action
+            android:id="@+id/action_home_to_donationMain"
+            app:destination="@id/donationMain" />
     </fragment>
 
     <!-- Food Donation Flow -->
@@ -187,5 +188,14 @@
         android:id="@+id/b40StatusDialog"
         android:name="com.example.umfeed.views.profile.B40StatusDialogFragment"
         android:label="B40 Status" />
+    <fragment
+        android:id="@+id/donationMain"
+        android:name="com.example.umfeed.views.donation.DonationMain"
+        android:label="fragment_donation_main"
+        tools:layout="@layout/fragment_donation_main" >
+        <action
+            android:id="@+id/action_donationMain_to_donationFragment"
+            app:destination="@id/donationFragment" />
+    </fragment>
 
 </navigation>
