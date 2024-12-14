@@ -221,8 +221,17 @@
     <!-- Dialog Fragments -->
     <dialog
         android:id="@+id/pinVerificationDialog"
-        android:name="com.example.umfeed.views.foodbank.PinVerificationDialogFragment"
-        android:label="Pin Verification" />
+        android:name="com.example.umfeed.views.pin.PinVerificationDialogFragment"
+        android:label="Pin Verification" >
+        <action
+            android:id="@+id/action_pinVerificationDialog_to_dialogSuccessFragment"
+            app:destination="@id/dialogSuccessFragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/dialogSuccessFragment"
+        android:name="com.example.umfeed.views.pin.DialogSuccessFragment"
+        android:label="Dialog Success" />
 
     <dialog
         android:id="@+id/b40StatusDialog"

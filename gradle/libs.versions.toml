@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.0"
+agp = "8.7.3"
 firebaseBom = "33.6.0"
 glide = "4.15.1"
 junit = "4.13.2"
@@ -10,7 +10,13 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
 firebaseFirestore = "25.1.1"
+materialVersion = "1.9.0"
 navigationFragmentKtx = "2.7.5"
+legacySupportV4 = "1.0.0"
+lifecycleLivedataKtx = "2.8.7"
+lifecycleViewmodelKtx = "2.8.7"
+workRuntime = "2.9.0"
+navigationFragment = "2.8.4"
 
 [libraries]
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
@@ -27,8 +33,14 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -17,4 +17,33 @@
     <string name="food_donation">Food\nDonation</string>
     <string name="healthy_recipe">Healthy\nRecipe</string>
     <string name="all_menu_rahmah">All Menu Rahmah</string>
+    <string-array name="categories">
+        <item>Vegetables</item>
+        <item>Fruits</item>
+        <item>Grains</item>
+        <item>Dairy</item>
+        <item>Meat</item>
+    </string-array>
+    <string-array name="foodBanks">
+        <item>KK1</item>
+        <item>KK2</item>
+        <item>KK3</item>
+        <item>KK4</item>
+        <item>KK5</item>
+        <item>KK6</item>
+        <item>KK7</item>
+        <item>KK8</item>
+        <item>KK9</item>
+        <item>KK10</item>
+        <item>KK11</item>
+        <item>KK12</item>
+        <item>KK13</item>
+        <item>International House</item>
+    </string-array>
+    <string-array name="Boolean">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
