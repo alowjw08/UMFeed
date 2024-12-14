@@ -86,6 +86,15 @@ public class DonationMain extends Fragment {
             }
         };
         BtnFoodBankList.setOnClickListener(OCLFoodBankList);
+
+        Button BtnFoodReserved = view.findViewById(R.id.BtnFoodReserved);
+        View.OnClickListener OCLFoodReserved = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.foodReserved);
+            }
+        };
+        BtnFoodReserved.setOnClickListener(OCLFoodReserved);
     }
 
 }

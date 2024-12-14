@@ -187,6 +187,14 @@
         <action
             android:id="@+id/action_donationMain_to_donationFragment"
             app:destination="@id/donationFragment" />
+        <action
+            android:id="@+id/action_donationMain_to_foodReserved"
+            app:destination="@id/foodReserved" />
     </fragment>
+    <fragment
+        android:id="@+id/foodReserved"
+        android:name="com.example.umfeed.views.donation.FoodReserved"
+        android:label="fragment_food_reserved"
+        tools:layout="@layout/fragment_food_reserved" />
 
 </navigation>
