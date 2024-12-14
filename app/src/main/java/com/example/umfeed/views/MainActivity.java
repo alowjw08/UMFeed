@@ -12,7 +12,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.umfeed.R;
-import com.example.umfeed.utils.RecipeImportUtil;
 import com.example.umfeed.viewmodels.auth.LoginViewModel;
 import com.example.umfeed.views.auth.LoginActivity;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -26,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth auth;
     private LoginViewModel loginViewModel;
-    private RecipeImportUtil recipeImportUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

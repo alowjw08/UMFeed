@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
     private void setupClickListeners(View view) {
         // Action button clicks
         view.findViewById(R.id.donation_card).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_home_to_donation));
+                Navigation.findNavController(v).navigate(R.id.action_home_to_donationMain));
 
         view.findViewById(R.id.leaderboard_card).setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_home_to_leaderboard));

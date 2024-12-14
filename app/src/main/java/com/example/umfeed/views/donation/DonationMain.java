@@ -1,12 +1,17 @@
-package com.example.umfeed;
+package com.example.umfeed.views.donation;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.example.umfeed.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,4 +66,27 @@ public class DonationMain extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_donation_main, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Button BtnDonateFood = view.findViewById(R.id.BtnDonateFood);
+        View.OnClickListener OCLDonateFood = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.donationFragment);
+            }
+        };
+        BtnDonateFood.setOnClickListener(OCLDonateFood);
+
+        Button BtnFoodBankList = view.findViewById(R.id.BtnFoodBanksAvailable);
+        View.OnClickListener OCLFoodBankList = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.foodBankListFragment);
+            }
+        };
+        BtnFoodBankList.setOnClickListener(OCLFoodBankList);
+    }
+
 }
+    
