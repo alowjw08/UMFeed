@@ -2,53 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
-
-    <!-- Authentication Flow -->
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.umfeed.views.auth.LoginActivity"
-        android:label="Login">
-        <action
-            android:id="@+id/action_login_to_register"
-            app:destination="@id/registerFragment" />
-        <action
-            android:id="@+id/action_login_to_forgot_password"
-            app:destination="@id/forgotPasswordFragment" />
-        <action
-            android:id="@+id/action_login_to_home"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
-        <deepLink app:uri="umfeed://login" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.example.umfeed.views.auth.RegisterActivity"
-        android:label="Register">
-        <action
-            android:id="@+id/action_register_to_home"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/forgotPasswordFragment"
-        android:name="com.example.umfeed.views.auth.ForgotPasswordActivity"
-        android:label="Forgot Password">
-        <action
-            android:id="@+id/action_forgot_password_to_login"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/forgotPasswordFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-
+    app:startDestination="@id/homeFragment">
     <!-- Main Navigation -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.umfeed.views.MainActivity"
+        android:name="com.example.umfeed.views.HomeFragment"
         android:label="Home">
         <action
             android:id="@+id/action_home_to_donation"
@@ -203,14 +161,6 @@
         <action
             android:id="@+id/action_profile_to_donated_items"
             app:destination="@id/donatedItemsFragment" />
-        <action
-            android:id="@+id/action_profile_to_forgot_password"
-            app:destination="@id/forgotPasswordFragment" />
-        <action
-            android:id="@+id/action_profile_to_login"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

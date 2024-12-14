@@ -44,6 +44,7 @@
         <item>Yes</item>
         <item>No</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="no_recipes_found">No recipes found</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="openai_api_key">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</string>
 </resources>

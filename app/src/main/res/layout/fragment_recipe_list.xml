@@ -35,14 +35,16 @@
         android:id="@+id/emptyStateView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No recipes found"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"
+        android:text="No recipes match the selected nutrition criteria"
         android:textSize="16sp"
-        android:textColor="@color/grey"
-        app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
+        android:textAlignment="center"
+        android:padding="16dp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -54,6 +56,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/filterFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Filter Chips -->
     <com.google.android.material.chip.ChipGroup
@@ -69,48 +80,40 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/chipHighProtein"
             style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/high_protein"
             android:layout_marginEnd="8dp" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipLowFats"
             style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/low_fats"
             android:layout_marginEnd="8dp" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipLowCalories"
             style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/low_calories" />
     </com.google.android.material.chip.ChipGroup>
 
-
-
     <!-- Recipe Cards RecyclerView -->
-
-    <!-- Bottom Navigation Bar -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_recipe_card" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

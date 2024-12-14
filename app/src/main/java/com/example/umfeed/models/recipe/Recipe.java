@@ -1,9 +1,13 @@
 package com.example.umfeed.models.recipe;
 
+import com.google.firebase.firestore.PropertyName;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Recipe {
+    @PropertyName("id")
     private String id;
     private String name;
     private String imageUrl;
@@ -14,7 +18,17 @@ public class Recipe {
     private List<String> allergens;
     private List<String> steps;
     private List<String> categories;
-    private NutritionFacts nutritionFact;
+    @PropertyName("nutritionFacts") // Add Firestore annotation
+    private NutritionFacts nutritionFacts;
+    private int searchScore;
+
+    public int getSearchScore() {
+        return searchScore;
+    }
+
+    public void setSearchScore(int searchScore) {
+        this.searchScore = searchScore;
+    }
 
     public Recipe() {
     }
@@ -27,10 +41,12 @@ public class Recipe {
         likes--;
     }
 
+    @PropertyName("id")
     public String getId() {
         return id;
     }
 
+    @PropertyName("id")
     public void setId(String id) {
         this.id = id;
     }
@@ -100,19 +116,25 @@ public class Recipe {
     }
 
     public List<String> getCategories() {
-        return categories;
+        return categories != null ? categories : new ArrayList<>();
     }
 
     public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 
-    public NutritionFacts getNutritionFact() {
-        return nutritionFact;
+    public boolean hasCategory(String category) {
+        return categories != null && categories.contains(category);
     }
 
-    public void setNutritionFact(NutritionFacts nutritionFact) {
-        this.nutritionFact = nutritionFact;
+    @PropertyName("nutritionFacts")
+    public NutritionFacts getNutritionFacts() {
+        return nutritionFacts;
+    }
+
+    @PropertyName("nutritionFacts")
+    public void setNutritionFacts(NutritionFacts nutritionFacts) {
+        this.nutritionFacts = nutritionFacts;
     }
 
     @Override

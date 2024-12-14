@@ -50,7 +50,7 @@ public class SavedRecipesFragment extends Fragment {
 
         binding.savedRecipesRecyclerView.setAdapter(adapter);
         binding.savedRecipesRecyclerView.setLayoutManager(
-                new GridLayoutManager(requireContext(), 2)
+                new GridLayoutManager(requireContext(),1, GridLayoutManager.VERTICAL, false)
         );
     }
 

@@ -1,5 +1,6 @@
 //package com.example.umfeed.views;
 //
+//import android.content.Intent;
 //import android.os.Bundle;
 //import android.view.LayoutInflater;
 //import android.view.View;
@@ -14,8 +15,13 @@
 //
 //import com.example.umfeed.R;
 //import com.example.umfeed.adapters.FeaturedMenuAdapter;
+//import com.example.umfeed.repositories.MenuRepository;
+//import com.example.umfeed.repositories.UserRepository;
 //import com.example.umfeed.viewmodels.MainViewModel;
 //import com.example.umfeed.utils.TimeUtils;
+//import com.example.umfeed.viewmodels.MainViewModelFactory;
+//import com.example.umfeed.views.auth.LoginActivity;
+//import com.google.firebase.auth.FirebaseAuth;
 //
 //public class HomeFragment extends Fragment {
 //    private MainViewModel viewModel;
@@ -25,10 +31,20 @@
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
-//        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+//
+//        // Create repositories
+//        UserRepository userRepository = new UserRepository();
+//        MenuRepository menuRepository = new MenuRepository();
+//
+//        // Create factory
+//        MainViewModelFactory factory = new MainViewModelFactory(userRepository, menuRepository);
+//
+//        // Get ViewModel using factory
+//        viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+//
 //        featuredMenuAdapter = new FeaturedMenuAdapter(menuId ->
 //                Navigation.findNavController(requireView())
-//                        .navigate(MainActivityDirections.actionHomeToMenuList())
+//                        .navigate(HomeFragmentDirections.actionHomeToMenuList())
 //        );
 //    }
 //
@@ -39,6 +55,12 @@
 //        initializeViews(view);
 //        setupClickListeners(view);
 //        observeViewModel();
+//
+//        view.findViewById(R.id.temp_sign_out_button).setOnClickListener(v -> {
+//            FirebaseAuth.getInstance().signOut();
+//            startActivity(new Intent(requireActivity(), LoginActivity.class));
+//            requireActivity().finish();
+//        });
 //
 //        return view;
 //    }
@@ -85,8 +107,6 @@
 //            }
 //        });
 //
-//        viewModel.getFeaturedMenus().observe(getViewLifecycleOwner(), menus -> {
-//            featuredMenuAdapter.submitList(menus);
-//        });
+//        viewModel.getFeaturedMenus().observe(getViewLifecycleOwner(), menus -> featuredMenuAdapter.submitList(menus));
 //    }
 //}
