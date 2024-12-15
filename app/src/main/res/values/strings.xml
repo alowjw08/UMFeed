@@ -18,11 +18,13 @@
     <string name="healthy_recipe">Healthy\nRecipe</string>
     <string name="all_menu_rahmah">All Menu Rahmah</string>
     <string-array name="categories">
-        <item>Vegetables</item>
-        <item>Fruits</item>
+        <item>Canned Goods</item>
         <item>Grains</item>
-        <item>Dairy</item>
-        <item>Meat</item>
+        <item>Sauce</item>
+        <item>Rice</item>
+        <item>Pasta and Noodles</item>
+        <item>Legumes and Beans</item>
+        <item>Dehydrated Foods</item>
     </string-array>
     <string-array name="foodBanks">
         <item>KK1</item>

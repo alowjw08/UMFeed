@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.umfeed.models.foodbank.DailyPinWorkManager;
 import com.example.umfeed.views.donation.DonationFragment;
+import com.example.umfeed.views.donation.DonationListFragment;
+import com.example.umfeed.views.foodbank.FoodbankListFragment;
 
 public class TestFragment extends AppCompatActivity {
     @Override
@@ -14,14 +16,7 @@ public class TestFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
 
-        // Load the fragment you want to test
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragment_container, new PinVerificationDialogFragment())
-//                    .commit();
-//        }
-
-//        triggerWorkerManually();
+        triggerWorkerManually();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new DonationFragment())

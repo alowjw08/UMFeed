@@ -30,6 +30,9 @@ public class PinVerificationViewModel extends ViewModel {
             pinText.setValue(pinText.getValue() + digit);
         }
     }
+    public void clearPin() {
+        pinText.setValue(""); // Clear the PIN text
+    }
 
     public boolean isPinValid() {
         return pinText.getValue() != null && pinText.getValue().length() == PIN_LENGTH;

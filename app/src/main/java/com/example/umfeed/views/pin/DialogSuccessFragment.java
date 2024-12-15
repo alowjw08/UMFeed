@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class DialogSuccessFragment extends DialogFragment {
     private TextView mainTextView;
     private TextView helperTextView;
     private ImageView imageView;
+    private ImageButton buttonCancel;
 
     public String getMainTextView() {
         return mainTextView.getText().toString();
@@ -86,6 +88,9 @@ public class DialogSuccessFragment extends DialogFragment {
 //        viewModel = new ViewModelProvider(this).get(DialogSuccessViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(DialogSuccessViewModel.class);
 
+        buttonCancel = view.findViewById(R.id.cancelButton);
+        buttonCancel.setOnClickListener(v -> dismiss());
+
         // Observe changes to the mainText, helperText, and imageResource
         viewModel.getMainText().observe(getViewLifecycleOwner(), mainText -> {
             if (mainTextView != null) {
@@ -104,26 +109,49 @@ public class DialogSuccessFragment extends DialogFragment {
         });
     }
 
-//    @NonNull
-//    @Override
-//    public Dialog onCreateDialog(Bundle savedInstanceState) {
-////        View customView = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_success, null);
-////
-////        // Create the dialog with no message or button
-////        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-////        builder.setView(customView);  // Set your custom layout as the content of the dialog
-////
-////        // Return the dialog
-////        return builder.create();
-//        return super.onCreateDialog(savedInstanceState);
-//    }
+//@Override
+//public Dialog onCreateDialog(Bundle savedInstanceState) {
+//    return new AlertDialog.Builder(getActivity())
+//            .setView(R.layout.fragment_dialog_success)
+//            .create();
+//}
 
 @Override
 public Dialog onCreateDialog(Bundle savedInstanceState) {
-    return new AlertDialog.Builder(getActivity())
-            .setView(R.layout.fragment_dialog_success)
-            .create();
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+            .setView(R.layout.fragment_dialog_success);
+
+    // Create the dialog
+    AlertDialog dialog = builder.create();
+
+    // Use onPrepareDialog() to update the message before the dialog is displayed
+    dialog.setOnShowListener(d -> {
+        onPrepareDialog(dialog);
+    });
+
+    return dialog;
 }
+    public void onPrepareDialog(Dialog dialog) {
+        TextView mainTextView = dialog.findViewById(R.id.mainText);
+        TextView helperTextView = dialog.findViewById(R.id.helperText);
+        ImageView imageView = dialog.findViewById(R.id.statusDisplay);
+
+        viewModel.getMainText().observe(getViewLifecycleOwner(), mainText -> {
+            if (mainTextView != null) {
+                mainTextView.setText(mainText);
+            }
+        });
+        viewModel.getHelperText().observe(getViewLifecycleOwner(), helperText -> {
+            if (helperTextView != null) {
+                helperTextView.setText(helperText);
+            }
+        });
+        viewModel.getImageResource().observe(getViewLifecycleOwner(), imageRes -> {
+            if (imageView != null) {
+                imageView.setImageResource(imageRes);
+            }
+        });
+    }
 
     // TODO: create logic for this (if donate, onDonate. if reserve, onReserve) (put at donate&reserve button onClickListeners)
     public void onDonate() {
@@ -137,5 +165,11 @@ public Dialog onCreateDialog(Bundle savedInstanceState) {
     }
     public void onReservationError() {
         viewModel.setReservationErrorMessage();
+    }
+    public void onCollect() {
+        viewModel.setCollectionMessage();
+    }
+    public void onCollectionError() {
+        viewModel.setCollectionErrorMessage();
     }
 }

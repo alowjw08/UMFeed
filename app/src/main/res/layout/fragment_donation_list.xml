@@ -5,7 +5,7 @@
     android:id="@+id/foodBankListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.foodbank.FoodbankListFragment" >
+    tools:context=".views.donation.DonationListFragment" >
 
     <androidx.cardview.widget.CardView
         android:id="@+id/topCard"
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Food Banks Available"
+                android:text="Food Donation"
                 android:textColor="#FFFFFF"
                 android:textSize="34sp"
                 android:textStyle="bold"
@@ -38,7 +38,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Click to view the food bank's details"
+                android:text="Choose a food bank to donate to"
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/textView"
