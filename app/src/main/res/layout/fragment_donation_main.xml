@@ -22,7 +22,7 @@
         android:id="@+id/TVDonationTitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="28dp"
         android:text="Donate now and help others!"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
