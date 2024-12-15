@@ -1,5 +1,7 @@
 package com.example.umfeed.adapters;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,7 +25,8 @@ public class DonationAdapter {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(adapter);
+        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
+        categorySpinner.setAdapter(nothingSelectedAdapter);
     }
 
     public void setupVegetarianSpinner() {
@@ -32,7 +35,8 @@ public class DonationAdapter {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, vegetarian);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        vegetarianSpinner.setAdapter(adapter);
+        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
+        vegetarianSpinner.setAdapter(nothingSelectedAdapter);
     }
 
     public void setupLocationSpinner() {
@@ -41,6 +45,7 @@ public class DonationAdapter {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, location);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        locationSpinner.setAdapter(adapter);
+        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
+        locationSpinner.setAdapter(nothingSelectedAdapter);
     }
 }

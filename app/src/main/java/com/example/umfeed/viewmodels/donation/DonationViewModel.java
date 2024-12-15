@@ -33,17 +33,17 @@ public class DonationViewModel extends ViewModel {
         donationData.put("quantity", quantity);
         donationData.put("expiryDate", expiryDate);
         donationData.put("location", location);
-        donationData.put("timestamp", FieldValue.serverTimestamp());
+        donationData.put("donationDate", FieldValue.serverTimestamp());
 
         // Submit data to Firestore
-//        donationsRef.add(donationData)
-//                .addOnSuccessListener(documentReference -> {
-//                    // Update LiveData to indicate success
-//                    donationSubmissionStatus.setValue(true);
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Update LiveData to indicate failure
-//                    donationSubmissionStatus.setValue(false);
-//                });
+        donationsRef.add(donationData)
+                .addOnSuccessListener(documentReference -> {
+                    // Update LiveData to indicate success
+                    donationSubmissionStatus.setValue(true);
+                })
+                .addOnFailureListener(e -> {
+                    // Update LiveData to indicate failure
+                    donationSubmissionStatus.setValue(false);
+                });
     }
 }

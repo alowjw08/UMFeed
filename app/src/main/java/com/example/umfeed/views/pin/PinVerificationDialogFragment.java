@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +22,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.umfeed.R;
-import com.example.umfeed.viewmodels.pin.DialogSuccessViewModel;
 import com.example.umfeed.viewmodels.pin.PinVerificationViewModel;
 
 public class PinVerificationDialogFragment extends DialogFragment {
@@ -28,6 +29,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
     private PinVerificationViewModel viewModel;
     private TextView numText;
     private ConstraintLayout cardView;
+    private Button buttonClear;
 
     public static PinVerificationDialogFragment newInstance() {
         return new PinVerificationDialogFragment();
@@ -66,7 +68,8 @@ public class PinVerificationDialogFragment extends DialogFragment {
         Button button3 = view.findViewById(R.id.button3);
         Button button4 = view.findViewById(R.id.button4);
         Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
-        Button buttonCancel = view.findViewById(R.id.buttonCancel);
+        Button buttonClear = view.findViewById(R.id.buttonClear);
+        ImageButton buttonCancel = view.findViewById(R.id.buttonCancel);
 
         // Set up button listeners for number input
         View.OnClickListener numberClickListener = v -> {
@@ -82,40 +85,6 @@ public class PinVerificationDialogFragment extends DialogFragment {
         viewModel.getPinText().observe(getViewLifecycleOwner(), numText::setText);
 
         // TODO: set up nav logic (no need else)
-        // Confirm button listener
-//        buttonConfirm.setOnClickListener(v -> {
-//            if (viewModel.isPinValid()) {
-//                String enteredPin = viewModel.getPinText().getValue();
-//                if (enteredPin != null) {
-//                    // Verify the pin with Firebase
-//                    viewModel.verifyPin(Integer.parseInt(enteredPin));
-//
-//                    viewModel.getPinValid().observe(getViewLifecycleOwner(), isValid -> {
-//                        if (isValid) {
-//                            // Navigate to success screen
-////                            NavController navController = Navigation.findNavController(view);
-//                            dismiss();
-////                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-////                            navController.navigate(R.id.action_pinVerificationDialog_to_dialogSuccessFragment);
-////                            Navigation.findNavController(view).navigate(R.id.action_pinVerificationDialog_to_dialogSuccessFragment);
-//                            DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
-//                            new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
-//                            dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
-//                        } else {
-//                            // Show invalid PIN message
-//                            numText.setText("Invalid PIN");
-//                            dismiss();
-//                            DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
-//                            new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
-//                            dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
-//                        }
-//                    });
-//                }
-//            } else {
-////                numText.setText("Invalid PIN");
-//            }
-//        });
-
         buttonConfirm.setOnClickListener(v -> {
             if (viewModel.isPinValid()) {
                 String enteredPin = viewModel.getPinText().getValue();
@@ -127,6 +96,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
                         dismiss();
                         Log.d("Set On Donation: ", "Showing donation success");
                         DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
+//                        dialogSuccessFragment.onDonate();
                         new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
                         dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                     } else {
@@ -135,6 +105,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
                         Log.d("Set On Donation Error: ", "Showing donation error");
                         dismiss();
                         DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
+//                        dialogSuccessFragment.onDonationError();
                         new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
                         dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                     }
@@ -144,7 +115,16 @@ public class PinVerificationDialogFragment extends DialogFragment {
             }
         });
 
-        // Cancel button listener
-        buttonCancel.setOnClickListener(v -> cardView.setVisibility(View.GONE));
+        // Clear button listener
+        buttonClear.setOnClickListener(v -> {
+            viewModel.clearPin();
+        });
+        buttonCancel.setOnClickListener(v -> dismiss());
+//        buttonCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dismiss();
+//            }
+//        });
     }
 }

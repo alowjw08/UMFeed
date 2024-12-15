@@ -10,28 +10,41 @@
     <androidx.cardview.widget.CardView
         android:layout_width="393dp"
         android:layout_height="292dp"
-        app:cardElevation="8dp"
         app:cardCornerRadius="50dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="393:292"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintDimensionRatio="393:292">
+        app:layout_constraintVertical_bias="0.5">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
+            <ImageButton
                 android:id="@+id/buttonCancel"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#00FFFFFF"
+                android:contentDescription="cancel_button"
+                android:src="@drawable/close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/mainText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonClear"
                 android:layout_width="118dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="48dp"
                 android:layout_marginBottom="16dp"
                 android:backgroundTint="#D5D5D5"
-                android:text="Cancel"
+                android:text="Clear"
                 android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/buttonConfirm"
@@ -65,7 +78,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.113" />
+                app:layout_constraintVertical_bias="0.139" />
 
             <Button
                 android:id="@+id/button1"
@@ -138,7 +151,7 @@
                 android:id="@+id/numText"
                 android:layout_width="78dp"
                 android:layout_height="37dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="76dp"
                 android:gravity="center"
                 android:text=""
                 android:textSize="34sp"
@@ -149,4 +162,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

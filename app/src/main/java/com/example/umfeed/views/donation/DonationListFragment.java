@@ -1,4 +1,4 @@
-package com.example.umfeed.views.foodbank;
+package com.example.umfeed.views.donation;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,25 +16,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.umfeed.R;
 import com.example.umfeed.adapters.FoodBankAdapter;
+import com.example.umfeed.R;
 import com.example.umfeed.viewmodels.foodbank.FoodbankListViewModel;
 
-public class FoodbankListFragment extends Fragment {
+public class DonationListFragment extends Fragment {
 
     private FoodbankListViewModel viewModel;
     private RecyclerView recyclerView;
     private FoodBankAdapter foodBankAdapter;
 
-    public static FoodbankListFragment newInstance() {
-        return new FoodbankListFragment();
+    public static DonationListFragment newInstance() {
+        return new DonationListFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for the fragment
-        View rootView = inflater.inflate(R.layout.fragment_foodbank_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_donation_list, container, false);
 
         // Initialize RecyclerView
         recyclerView = rootView.findViewById(R.id.foodBankRecyclerView);
@@ -60,5 +62,15 @@ public class FoodbankListFragment extends Fragment {
                 }
             }
         });
+
+        NavController navController = NavHostFragment.findNavController(this);
+
+        // Set up the adapter with Donation navigation logic
+//        foodBankAdapter = new FoodBankAdapter(foodBankList, requireContext(), foodBank -> {
+//            // Navigate to the DonationFragment
+//            Bundle bundle = new Bundle();
+//            bundle.putString("foodBankId", foodBank.getId());
+//            navController.navigate(R.id.action_donation_list_to_donation_fragment, bundle);
+//        });
     }
 }

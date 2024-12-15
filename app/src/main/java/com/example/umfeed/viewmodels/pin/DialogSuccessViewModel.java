@@ -34,9 +34,15 @@ public class DialogSuccessViewModel extends ViewModel {
     }
 
     public void setReservationMessage() {
-//        mainText.setValue("Congratulations!");
-//        helperText.setValue("You have successfully reserved the food!");
-//        imageResource.setValue(R.drawable.success_tick);
+        mainText.setValue("Congratulations!");
+        helperText.setValue("You have successfully reserved the food!");
+        imageResource.setValue(R.drawable.success_tick);
+    }
+
+    public void setCollectionMessage() {
+        mainText.setValue("Congratulations!");
+        helperText.setValue("You have successfully collected the food!");
+        imageResource.setValue(R.drawable.success_tick);
     }
 
     public void setDonationErrorMessage() {
@@ -47,8 +53,14 @@ public class DialogSuccessViewModel extends ViewModel {
     }
 
     public void setReservationErrorMessage() {
-//        mainText.setValue("Sorry!");
-//        helperText.setValue("You have reserved 3 units of food today.");
-//        imageResource.setValue(R.drawable.error_cross);
+        mainText.setValue("Sorry!");
+        helperText.setValue("You have reserved 3 units of food today.");
+        imageResource.setValue(R.drawable.error_cross);
+    }
+
+    public void setCollectionErrorMessage() {
+        mainText.setValue("Wrong pin!");
+        helperText.setValue("Please enter the pin displayed at the food bank.");
+        imageResource.setValue(R.drawable.error_cross);
     }
 }
