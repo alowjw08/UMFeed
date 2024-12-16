@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.umfeed.R;
+import com.example.umfeed.utils.B40ValidationUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +20,7 @@ import com.example.umfeed.R;
  * create an instance of this fragment.
  */
 public class DonationMain extends Fragment {
+    private B40ValidationUtil b40ValidationUtil;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,6 +71,10 @@ public class DonationMain extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+        // Initialize B40ValidationUtil
+        b40ValidationUtil = new B40ValidationUtil();
+
         Button BtnDonateFood = view.findViewById(R.id.BtnDonateFood);
         View.OnClickListener OCLDonateFood = new View.OnClickListener() {
             @Override
@@ -88,6 +94,7 @@ public class DonationMain extends Fragment {
         BtnFoodBankList.setOnClickListener(OCLFoodBankList);
 
         Button BtnFoodReserved = view.findViewById(R.id.BtnFoodReserved);
+        BtnFoodReserved.setVisibility(View.GONE); // Default visibility is gone
         View.OnClickListener OCLFoodReserved = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +102,24 @@ public class DonationMain extends Fragment {
             }
         };
         BtnFoodReserved.setOnClickListener(OCLFoodReserved);
+
+        // Check if the user is B40 and show the reserve food button
+        b40ValidationUtil.checkB40Status(new B40ValidationUtil.B40StatusCallback() {
+            @Override
+            public void onResult(boolean isB40) {
+                if (isB40) {
+                    BtnFoodReserved.setVisibility(View.VISIBLE); // Show button for B40 users
+                } else {
+                    BtnFoodReserved.setVisibility(View.GONE); // Hide button otherwise
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+                BtnFoodReserved.setVisibility(View.GONE); // Default to hidden on error
+            }
+        });
     }
 
 }
