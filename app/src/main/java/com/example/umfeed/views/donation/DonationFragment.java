@@ -113,9 +113,7 @@ public class DonationFragment extends Fragment {
 
         if (foodBankName != null && locationSpinner != null) {
             ArrayAdapter<String> adapter = (ArrayAdapter<String>) locationSpinner.getAdapter();
-            Log.d("locationSpinner", "setAdapter");
             if (adapter != null) {
-                Log.d("locationSpinner", "setFixed");
                 int position = adapter.getPosition(foodBankName); // Find the position of foodBankId in the spinner's data
                 if (position >= 0) {
                     locationSpinner.setSelection(position); // Set the selected item
