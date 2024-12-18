@@ -48,11 +48,11 @@
 
     <fragment
         android:id="@+id/foodBankListFragment"
-        android:name="com.example.umfeed.views.foodbank.FoodBankFragment"
+        android:name="com.example.umfeed.views.foodbank.FoodbankListFragment"
         android:label="Food Banks">
         <action
-            android:id="@+id/action_foodbank_list_to_detail"
-            app:destination="@id/foodBankDetailFragment" />
+            android:id="@+id/action_foodbank_list_to_reservation"
+            app:destination="@id/reservationFragment" />
     </fragment>
 
     <fragment
@@ -205,6 +205,9 @@
         <action
             android:id="@+id/action_donationMain_to_donationFragment"
             app:destination="@id/donationFragment" />
+        <action
+            android:id="@+id/action_donationMain_to_foodBankListFragment"
+            app:destination="@id/foodBankListFragment" />
         <action
             android:id="@+id/action_donationMain_to_foodReserved"
             app:destination="@id/foodReserved" />
