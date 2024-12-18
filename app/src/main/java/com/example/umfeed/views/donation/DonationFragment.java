@@ -180,6 +180,7 @@ public class DonationFragment extends Fragment {
             PinVerificationDialogFragment pinVerificationDialog = PinVerificationDialogFragment.newInstance();
             // Create a Bundle and add the foodBankId
             Bundle args = new Bundle();
+            args.putString("source", "donation");
             args.putString("foodBankId", foodBankId); // Pass the foodBankId
 //            args.putString("foodName", foodName);
             args.putString("category", category);
