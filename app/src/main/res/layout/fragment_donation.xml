@@ -66,44 +66,16 @@
         app:layout_constraintTop_toBottomOf="@+id/topCard" />
 
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:autoSizeTextType="uniform"
-        android:text="Vegetarian"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textView7"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="108dp"
         android:autoSizeTextType="uniform"
         android:text="Location"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="96dp"
-        android:text="Quantity"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <!--    <Spinner-->
     <!--        android:id="@+id/expirySpinner"-->
@@ -112,6 +84,18 @@
     <!--        android:layout_marginTop="12dp"-->
     <!--        app:layout_constraintStart_toStartOf="@+id/textView8"-->
     <!--        app:layout_constraintTop_toBottomOf="@+id/textView8" />-->
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:autoSizeTextType="uniform"
+        android:text="Quantity"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/submitButton"
@@ -127,17 +111,9 @@
         app:layout_constraintTop_toBottomOf="@+id/locationSpinner"
         app:layout_constraintVertical_bias="0.787" />
 
-    <Spinner
-        android:id="@+id/vegetarianSpinner"
-        android:layout_width="150dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
     <android.widget.NumberPicker
         android:id="@+id/quantityPicker"
-        android:layout_width="150dp"
+        android:layout_width="75dp"
         android:layout_height="52dp"
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="@+id/textView7"

@@ -29,15 +29,15 @@ public class DonationAdapter {
         categorySpinner.setAdapter(nothingSelectedAdapter);
     }
 
-    public void setupVegetarianSpinner() {
-        Spinner vegetarianSpinner = view.findViewById(R.id.vegetarianSpinner);
-        String[] vegetarian = context.getResources().getStringArray(R.array.Boolean);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, vegetarian);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
-        vegetarianSpinner.setAdapter(nothingSelectedAdapter);
-    }
+//    public void setupVegetarianSpinner() {
+//        Spinner vegetarianSpinner = view.findViewById(R.id.vegetarianSpinner);
+//        String[] vegetarian = context.getResources().getStringArray(R.array.Boolean);
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, vegetarian);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
+//        vegetarianSpinner.setAdapter(nothingSelectedAdapter);
+//    }
 
     public void setupLocationSpinner() {
         Spinner locationSpinner = view.findViewById(R.id.locationSpinner);

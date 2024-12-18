@@ -61,7 +61,7 @@ public class DonationFragment extends Fragment {
         // Bind views
 //        foodNameEditText = root.findViewById(R.id.foodNameEditText);
         categorySpinner = root.findViewById(R.id.categorySpinner);
-        vegetarianSpinner = root.findViewById(R.id.vegetarianSpinner);
+//        vegetarianSpinner = root.findViewById(R.id.vegetarianSpinner);
 //        dateTextView = root.findViewById(R.id.dateTextView);
         locationSpinner = root.findViewById(R.id.locationSpinner);
         quantityPicker = root.findViewById(R.id.quantityPicker);
@@ -70,7 +70,7 @@ public class DonationFragment extends Fragment {
         // Setting up adapter for spinner
         DonationAdapter donationAdapter = new DonationAdapter(requireContext(), root);
         donationAdapter.setupCategorySpinner();
-        donationAdapter.setupVegetarianSpinner();
+//        donationAdapter.setupVegetarianSpinner();
         donationAdapter.setupLocationSpinner();
 
         quantityPicker.setMinValue(1);
@@ -163,11 +163,11 @@ public class DonationFragment extends Fragment {
         String category = categorySpinner.getSelectedItem() != null ? categorySpinner.getSelectedItem().toString() : null;
         String location = locationSpinner.getSelectedItem() != null ? locationSpinner.getSelectedItem().toString() : null;
 
-        Boolean vegetarian = null;
-        if (vegetarianSpinner.getSelectedItem() != null) {
-            String vegetarianString = vegetarianSpinner.getSelectedItem().toString();
-            vegetarian = "Yes".equalsIgnoreCase(vegetarianString);
-        }
+//        Boolean vegetarian = null;
+//        if (vegetarianSpinner.getSelectedItem() != null) {
+//            String vegetarianString = vegetarianSpinner.getSelectedItem().toString();
+//            vegetarian = "Yes".equalsIgnoreCase(vegetarianString);
+//        }
 
         Date date = null;
         Timestamp expiryDate = null;
@@ -178,7 +178,7 @@ public class DonationFragment extends Fragment {
         int quantity = quantityPicker.getValue();
 
         // Call the ViewModel to handle the data
-        if (validateInput(category, vegetarian, quantity, location)) {
+        if (validateInput(category, quantity, location)) {
             PinVerificationDialogFragment pinVerificationDialog = PinVerificationDialogFragment.newInstance();
             // Create a Bundle and add the foodBankId
             Bundle args = new Bundle();
@@ -186,7 +186,7 @@ public class DonationFragment extends Fragment {
 //            args.putString("foodName", foodName);
             args.putString("category", category);
             args.putString("location", location);
-            args.putBoolean("vegetarian", vegetarian);
+//            args.putBoolean("vegetarian", vegetarian);
             args.putInt("quantity", quantity);
 
             pinVerificationDialog.setArguments(args);
@@ -200,8 +200,8 @@ public class DonationFragment extends Fragment {
     }
 
     // Input validation
-    private boolean validateInput(String category, Boolean vegetarian, int quantity, String location) {
-        return !(category == null || vegetarian == null ||
+    private boolean validateInput(String category, int quantity, String location) {
+        return !(category == null ||
                 location == null || quantity <= 0);
 
     }
@@ -216,11 +216,13 @@ public class DonationFragment extends Fragment {
                 if (spinnerId == R.id.categorySpinner) {
                     // Handle category selection
                     Toast.makeText(requireContext(), "Category selected: " + selectedItem, Toast.LENGTH_SHORT).show();
-                } else if (spinnerId == R.id.vegetarianSpinner) {
-                    // Handle vegetarian selection
-                    boolean isVegetarian = selectedItem.equals("Yes");
-                    Toast.makeText(requireContext(), "Vegetarian: " + (isVegetarian ? "Yes" : "No"), Toast.LENGTH_SHORT).show();
-                } else if (spinnerId == R.id.locationSpinner) {
+                }
+//                else if (spinnerId == R.id.vegetarianSpinner) {
+//                    // Handle vegetarian selection
+//                    boolean isVegetarian = selectedItem.equals("Yes");
+//                    Toast.makeText(requireContext(), "Vegetarian: " + (isVegetarian ? "Yes" : "No"), Toast.LENGTH_SHORT).show();
+//                }
+                else if (spinnerId == R.id.locationSpinner) {
                     // Handle location selection
                     Toast.makeText(requireContext(), "Location selected: " + selectedItem, Toast.LENGTH_SHORT).show();
                 }

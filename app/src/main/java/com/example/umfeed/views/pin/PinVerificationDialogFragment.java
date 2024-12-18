@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.umfeed.R;
@@ -95,38 +96,76 @@ public class PinVerificationDialogFragment extends DialogFragment {
         viewModel.setFoodBankId(foodBankId);
 
         // TODO: set up nav logic (no need else)
+//        buttonConfirm.setOnClickListener(v -> {
+//            if (viewModel.isPinValid()) {
+//                String enteredPin = viewModel.getPinText().getValue();
+//                viewModel.verifyPin(Integer.parseInt(enteredPin));
+//
+//                viewModel.getPinCorrect().observe(this, isPinCorrect -> {
+////                    if (isDialogShown) return;
+//
+//                    DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
+//                    Log.d("FinalPinVerification", String.valueOf(isPinCorrect));
+//                    if (isPinCorrect) {
+//                        dismiss();
+//                        new ViewModelProvider(requireActivity())
+//                                .get(DonationViewModel.class)
+//                                .submitDonation(category, vegetarian, quantity, location);
+//
+//                        Log.d("Set On Donation: ", "Showing donation success");
+////                        dialogSuccessFragment.onDonate();
+//                        new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
+//                        dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
+//                        isDialogShown = true;
+//                    } else {
+//                        numText.setText("Incorrect PIN");
+//                        Log.d("Set On Donation Error: ", "Showing donation error");
+//                        dismiss();
+////                        dialogSuccessFragment.onDonationError();
+//                        new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
+//                        dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
+//                    }
+//                });
+//            } else {
+//                // Handle invalid PIN format case (if needed)
+//                numText.setText("Invalid PIN");
+//            }
+//        });
+
         buttonConfirm.setOnClickListener(v -> {
             if (viewModel.isPinValid()) {
                 String enteredPin = viewModel.getPinText().getValue();
                 viewModel.verifyPin(Integer.parseInt(enteredPin));
 
-                viewModel.getPinCorrect().observe(getViewLifecycleOwner(), isPinCorrect -> {
-                    if (isDialogShown) return;
+                // Add a one-time observer for isPinCorrect
+                viewModel.getPinCorrect().observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean isPinCorrect) {
+                        if (isPinCorrect == null) return; // Skip null (Firebase call still in progress)
 
-                    DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
-                    Log.d("FinalPinVerification", String.valueOf(isPinCorrect));
-                    if (isPinCorrect) {
-                        dismiss();
-                        new ViewModelProvider(requireActivity())
-                                .get(DonationViewModel.class)
-                                .submitDonation(category, vegetarian, quantity, location);
+                        DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
+                        Log.d("FinalPinVerification", "Pin Correct: " + isPinCorrect);
 
-                        Log.d("Set On Donation: ", "Showing donation success");
-//                        dialogSuccessFragment.onDonate();
-                        new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
-                        dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
-                        isDialogShown = true;
-                    } else {
-                        numText.setText("Incorrect PIN");
-                        Log.d("Set On Donation Error: ", "Showing donation error");
-                        dismiss();
-//                        dialogSuccessFragment.onDonationError();
-                        new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
-                        dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
+                        if (isPinCorrect) {
+                            dismiss();
+                            new ViewModelProvider(requireActivity())
+                                    .get(DonationViewModel.class)
+                                    .submitDonation(category, vegetarian, quantity, location);
+
+                            new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
+                            dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
+                        } else {
+                            numText.setText("Incorrect PIN");
+                            dismiss();
+                            new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
+                            dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
+                        }
+
+                        // Remove this observer after the first trigger
+                        viewModel.getPinCorrect().removeObserver(this);
                     }
                 });
             } else {
-                // Handle invalid PIN format case (if needed)
                 numText.setText("Invalid PIN");
             }
         });

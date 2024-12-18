@@ -18,19 +18,15 @@ import java.util.Map;
 
 public class DonationViewModel extends ViewModel {
 
-    // LiveData to hold the submission status or response
+    // Assuming donationSubmissionStatus is defined elsewhere in your code, such as MutableLiveData<Boolean>
     private MutableLiveData<Boolean> donationSubmissionStatus = new MutableLiveData<>();
 
-    public LiveData<Boolean> getDonationSubmissionStatus() {
-        return donationSubmissionStatus;
-    }
+    // Reference to Firestore database
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
 
-    // Method to handle donation submission
     public void submitDonation(String category, Boolean vegetarian, int quantity, String foodBankName) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
-
         if (userId == null) {
             // Handle error: user is not logged in
             donationSubmissionStatus.setValue(false);
@@ -39,62 +35,113 @@ public class DonationViewModel extends ViewModel {
 
         CollectionReference donationsRef = db.collection("users").document(userId).collection("donations");
         CollectionReference foodBanksRef = db.collection("foodBanks");
-        Query foodBankQuery = foodBanksRef.whereEqualTo("name", foodBankName);
 
+        // Find the food bank by name
+        Query foodBankQuery = foodBanksRef.whereEqualTo("name", foodBankName);
         foodBankQuery.get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
-                        // Get the first matching food bank (or handle if there are multiple results)
                         DocumentSnapshot foodBankDoc = querySnapshot.getDocuments().get(0);
-                        String foodBankId = foodBankDoc.getId(); // This is the foodBankId
+                        String foodBankId = foodBankDoc.getId();
 
-                        // Create a map of donation data
+                        // Prepare donation data
                         Map<String, Object> donationData = new HashMap<>();
                         donationData.put("category", category);
-                        donationData.put("vegetarian", vegetarian);
+//                        donationData.put("vegetarian", vegetarian);
                         donationData.put("quantity", quantity);
-//                        donationData.put("expiryDate", expiryDate);
                         donationData.put("foodBankId", foodBankId);
                         donationData.put("donationDate", FieldValue.serverTimestamp());
-                        donationData.put("isReserved", false);
-                        donationData.put("isCollected", false);
 
-                        // Submit the donation to the user's donations collection
-                        donationsRef.add(donationData)
-                                .addOnSuccessListener(documentReference -> {
-                                    String donationId = documentReference.getId();
+                        // Handle donationsRef
+                        donationsRef.whereEqualTo("category", category).get()
+                                .addOnSuccessListener(donationsSnapshot -> {
+                                    if (!donationsSnapshot.isEmpty()) {
+                                        // Category exists in donationsRef, increment the quantity
+                                        DocumentSnapshot donationDoc = donationsSnapshot.getDocuments().get(0);
+                                        String donationDocId = donationDoc.getId();
 
-                                    // Reference to the food bank's inventory
-                                    CollectionReference inventoryRef = db.collection("foodBanks").document(foodBankId).collection("inventory");
-
-                                    // Submit the same donation data to the food bank's inventory with the same donationId
-                                    inventoryRef.document(donationId).set(donationData)
-                                            .addOnSuccessListener(aVoid -> {
-                                                // Update LiveData to indicate success
-                                                donationSubmissionStatus.setValue(true);
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                // Handle failure in adding to inventory
-                                                donationSubmissionStatus.setValue(false);
-                                            });
-
-                                    // Update LiveData to indicate success
-                                    donationSubmissionStatus.setValue(true);
+                                        // Increment quantity in donationsRef
+                                        donationsRef.document(donationDocId).update("quantity", FieldValue.increment(quantity), "donationDate", FieldValue.serverTimestamp())
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // After updating donation, handle the inventoryRef
+                                                    updateInventoryRef(donationData);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // Handle failure in updating donation
+                                                    donationSubmissionStatus.setValue(false);
+                                                });
+                                    } else {
+                                        // Category does not exist, add a new donation
+                                        donationsRef.add(donationData)
+                                                .addOnSuccessListener(documentReference -> {
+                                                    // After adding donation, handle the inventoryRef
+                                                    updateInventoryRef(donationData);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // Handle failure in adding donation
+                                                    donationSubmissionStatus.setValue(false);
+                                                });
+                                    }
                                 })
                                 .addOnFailureListener(e -> {
-                                    // Update LiveData to indicate failure
+                                    // Handle failure in checking existing donations
                                     donationSubmissionStatus.setValue(false);
                                 });
                     } else {
-                        // Handle case where no food bank is found for the given location
+                        // Handle case where no food bank is found
                         donationSubmissionStatus.setValue(false);
                     }
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure in fetching food bank
                     donationSubmissionStatus.setValue(false);
-                    Log.d("donationSubmissionStatus", "false");
                 });
-        Log.d("donationSubmissionStatus", String.valueOf(donationSubmissionStatus.getValue()));
+    }
+
+    private void updateInventoryRef(Map<String, Object> donationData) {
+        // Reference to the food bank's inventory
+        String foodBankId = (String) donationData.get("foodBankId");
+        String category = (String) donationData.get("category");
+        int quantity = (int) donationData.get("quantity");
+        CollectionReference inventoryRef = db.collection("foodBanks").document(foodBankId).collection("inventory");
+
+        // Check if the category already exists in the inventory
+        inventoryRef.whereEqualTo("category", category).get()
+                .addOnSuccessListener(inventorySnapshot -> {
+                    if (!inventorySnapshot.isEmpty()) {
+                        // Category exists, increment the quantity in inventory
+                        DocumentSnapshot inventoryDoc = inventorySnapshot.getDocuments().get(0);
+                        String inventoryDocId = inventoryDoc.getId();
+
+                        Map<String, Object> updateData = new HashMap<>();
+                        updateData.put("quantity", FieldValue.increment(quantity));  // Increment the quantity
+                        updateData.put("donationDate", FieldValue.serverTimestamp());
+                        inventoryRef.document(inventoryDocId).update(updateData)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Update LiveData to indicate success
+                                    donationSubmissionStatus.setValue(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle failure in updating inventory
+                                    donationSubmissionStatus.setValue(false);
+                                });
+                    } else {
+                        // Category does not exist in inventory, create a new document
+                        donationData.remove("foodBankId");
+                        inventoryRef.add(donationData)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Update LiveData to indicate success
+                                    donationSubmissionStatus.setValue(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle failure in adding to inventory
+                                    donationSubmissionStatus.setValue(false);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure in checking inventory
+                    donationSubmissionStatus.setValue(false);
+                });
     }
 }

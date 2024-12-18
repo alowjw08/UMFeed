@@ -49,30 +49,24 @@ public class PinVerificationViewModel extends ViewModel {
 
     public void verifyPin(int enteredPin) {
         String foodBankId = String.valueOf(this.foodBankId.getValue());
+        isPinCorrect.setValue(null);
         firestore.collection("foodBanks")
                 .document(foodBankId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        // Fetch 'pin' as a number and 'date' as a timestamp
-//                            Integer pinNumber = document.getLong("pin").intValue(); // Assuming 'pin' is stored as a number
-//                            Date timestamp = document.getDate("date"); // Assuming 'date' is stored as a timestamp
                         Long pinNumber = document.getLong("dailyPin");
-                        Log.d("pinBumer", String.valueOf(pinNumber));
                         if (pinNumber != null) {
                             Log.d("PinVerification", "EnteredPin: " + enteredPin);
                             Log.d("PinVerification", "PinNum: " + pinNumber);
                             // Check if the date matches and the PIN matches
                             if (enteredPin == pinNumber.intValue()) {
-                                isPinCorrect.setValue(true);
                                 isPinCorrect.postValue(true);
                             } else {
-                                isPinCorrect.setValue(false);
                                 isPinCorrect.postValue(false);
                             }
                         }
-                        Log.d("PinVerification", "False or True: " + isPinCorrect.getValue());
                     } else {
                         Log.e("PinVerification", "Firebase call failed", task.getException());
                     }
