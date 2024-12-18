@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import com.example.umfeed.R;
 import com.example.umfeed.adapters.FoodBankAdapter;
 import com.example.umfeed.viewmodels.foodbank.FoodbankListViewModel;
+import com.example.umfeed.views.donation.DonationListFragment;
 
 public class FoodbankListFragment extends Fragment {
 
@@ -53,7 +56,11 @@ public class FoodbankListFragment extends Fragment {
             if (foodBanks != null) {
                 // Initialize or update the adapter with the new data
                 if (foodBankAdapter == null) {
-                    foodBankAdapter = new FoodBankAdapter(foodBanks, getContext());
+                    // Pass the clickListener here
+                    foodBankAdapter = new FoodBankAdapter(foodBanks, getContext(), foodBank -> {
+//                        TODO: set up navigation to reserve food fragment
+//                        navController.navigate(R.id.action_donation_list_to_donation_fragment, bundle);
+                    });
                     recyclerView.setAdapter(foodBankAdapter);
                 } else {
                     foodBankAdapter.notifyDataSetChanged();

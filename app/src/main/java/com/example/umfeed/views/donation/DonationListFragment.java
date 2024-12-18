@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,27 +51,24 @@ public class DonationListFragment extends Fragment {
         // Initialize the ViewModel
         viewModel = new ViewModelProvider(this).get(FoodbankListViewModel.class);
 
-        // Observe the food bank list and update the adapter
-        viewModel.getFoodBankList().observe(getViewLifecycleOwner(), foodBanks -> {
-            if (foodBanks != null) {
-                // Initialize or update the adapter with the new data
-                if (foodBankAdapter == null) {
-                    foodBankAdapter = new FoodBankAdapter(foodBanks, getContext());
-                    recyclerView.setAdapter(foodBankAdapter);
-                } else {
-                    foodBankAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
         NavController navController = NavHostFragment.findNavController(this);
 
-        // Set up the adapter with Donation navigation logic
-//        foodBankAdapter = new FoodBankAdapter(foodBankList, requireContext(), foodBank -> {
-//            // Navigate to the DonationFragment
-//            Bundle bundle = new Bundle();
-//            bundle.putString("foodBankId", foodBank.getId());
-//            navController.navigate(R.id.action_donation_list_to_donation_fragment, bundle);
-//        });
+        // Initialize Adapter
+        foodBankAdapter = new FoodBankAdapter(null, requireContext(), foodBank -> {
+            // Navigate to the DonationFragment
+            Bundle bundle = new Bundle();
+            bundle.putString("foodBankName", foodBank.getName());
+//            Navigation.findNavController(requireView()).navigate(R.id.action_donation_list_to_donation_fragment);
+            navController.navigate(R.id.action_donation_list_to_donation_fragment, bundle);
+        });
+        recyclerView.setAdapter(foodBankAdapter);
+
+        // Observe LiveData
+        viewModel.getFoodBankList().observe(getViewLifecycleOwner(), foodBanks -> {
+            if (foodBanks != null) {
+                foodBankAdapter.setFoodBankList(foodBanks);
+                foodBankAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

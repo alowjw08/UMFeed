@@ -39,8 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearance="@style/RoundedImageStyle"
-            app:srcCompat="@drawable/kk_international_house" />
+            app:shapeAppearance="@style/RoundedImageStyle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

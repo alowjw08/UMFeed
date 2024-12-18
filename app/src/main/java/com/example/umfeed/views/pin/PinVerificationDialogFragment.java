@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -22,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.umfeed.R;
+import com.example.umfeed.viewmodels.donation.DonationViewModel;
 import com.example.umfeed.viewmodels.pin.PinVerificationViewModel;
 
 public class PinVerificationDialogFragment extends DialogFragment {
@@ -30,6 +30,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
     private TextView numText;
     private ConstraintLayout cardView;
     private Button buttonClear;
+    private boolean isDialogShown = false;
 
     public static PinVerificationDialogFragment newInstance() {
         return new PinVerificationDialogFragment();
@@ -56,7 +57,9 @@ public class PinVerificationDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize ViewModel
-        viewModel = new ViewModelProvider(this).get(PinVerificationViewModel.class);
+//        viewModel = new ViewModelProvider(this).get(PinVerificationViewModel.class);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(PinVerificationViewModel.class);
 
         // Get UI elements
         numText = view.findViewById(R.id.numText);
@@ -69,7 +72,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
         Button button4 = view.findViewById(R.id.button4);
         Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
         Button buttonClear = view.findViewById(R.id.buttonClear);
-        ImageButton buttonCancel = view.findViewById(R.id.buttonCancel);
+//        ImageButton buttonCancel = view.findViewById(R.id.buttonCancel);
 
         // Set up button listeners for number input
         View.OnClickListener numberClickListener = v -> {
@@ -83,6 +86,13 @@ public class PinVerificationDialogFragment extends DialogFragment {
 
         // Observe PIN text changes
         viewModel.getPinText().observe(getViewLifecycleOwner(), numText::setText);
+        String foodBankId = getArguments() != null ? getArguments().getString("foodBankId") : null;
+        String foodName = getArguments() != null ? getArguments().getString("foodName") : null;
+        String category = getArguments() != null ? getArguments().getString("category") : null;
+        String location = getArguments() != null ? getArguments().getString("location") : null;
+        Boolean vegetarian = getArguments() != null ? getArguments().getBoolean("vegetarian") : null;
+        int quantity = getArguments() != null ? getArguments().getInt("quantity") : 0;
+        viewModel.setFoodBankId(foodBankId);
 
         // TODO: set up nav logic (no need else)
         buttonConfirm.setOnClickListener(v -> {
@@ -90,41 +100,43 @@ public class PinVerificationDialogFragment extends DialogFragment {
                 String enteredPin = viewModel.getPinText().getValue();
                 viewModel.verifyPin(Integer.parseInt(enteredPin));
 
-                // verifyPin() is an asynchronous operation, so we need to handle it accordingly
-                    if (viewModel.getPinCorrect()) {
-                        // PIN is correct, proceed to success screen
+                viewModel.getPinCorrect().observe(getViewLifecycleOwner(), isPinCorrect -> {
+                    if (isDialogShown) return;
+
+                    DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
+                    Log.d("FinalPinVerification", String.valueOf(isPinCorrect));
+                    if (isPinCorrect) {
                         dismiss();
+                        new ViewModelProvider(requireActivity())
+                                .get(DonationViewModel.class)
+                                .submitDonation(category, vegetarian, quantity, location);
+
                         Log.d("Set On Donation: ", "Showing donation success");
-                        DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
 //                        dialogSuccessFragment.onDonate();
                         new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
                         dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
+                        isDialogShown = true;
                     } else {
-                        // Show invalid PIN message
                         numText.setText("Incorrect PIN");
                         Log.d("Set On Donation Error: ", "Showing donation error");
                         dismiss();
-                        DialogSuccessFragment dialogSuccessFragment = DialogSuccessFragment.newInstance();
 //                        dialogSuccessFragment.onDonationError();
                         new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
                         dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                     }
+                });
             } else {
                 // Handle invalid PIN format case (if needed)
                 numText.setText("Invalid PIN");
             }
         });
 
+        viewModel.clearPin();
         // Clear button listener
         buttonClear.setOnClickListener(v -> {
             viewModel.clearPin();
         });
-        buttonCancel.setOnClickListener(v -> dismiss());
-//        buttonCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dismiss();
-//            }
-//        });
+//        buttonCancel.setOnClickListener(v -> dismiss());
     }
 }
+

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.adapters.FeaturedMenuAdapter;
+import com.example.umfeed.models.foodbank.DailyPin;
+import com.example.umfeed.models.foodbank.DailyPinWorkManager;
 import com.example.umfeed.repositories.MenuRepository;
 import com.example.umfeed.repositories.UserRepository;
 import com.example.umfeed.viewmodels.MainViewModel;
@@ -31,6 +33,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        DailyPinWorkManager.triggerWorkerManually(getContext());
 
         // Create repositories
         UserRepository userRepository = new UserRepository();

@@ -51,6 +51,7 @@ public class DialogSuccessFragment extends DialogFragment {
         mainTextView = rootView.findViewById(R.id.mainText);
         helperTextView = rootView.findViewById(R.id.helperText);
         imageView = rootView.findViewById(R.id.statusDisplay);
+//        buttonCancel = rootView.findViewById(R.id.cancelButton);
 
         // Add touch listener to detect taps outside the CardView
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -88,8 +89,8 @@ public class DialogSuccessFragment extends DialogFragment {
 //        viewModel = new ViewModelProvider(this).get(DialogSuccessViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(DialogSuccessViewModel.class);
 
-        buttonCancel = view.findViewById(R.id.cancelButton);
-        buttonCancel.setOnClickListener(v -> dismiss());
+//        buttonCancel = view.findViewById(R.id.cancelButton);
+//        buttonCancel.setOnClickListener(v -> dismissAllowingStateLoss());
 
         // Observe changes to the mainText, helperText, and imageResource
         viewModel.getMainText().observe(getViewLifecycleOwner(), mainText -> {
@@ -139,11 +140,13 @@ public Dialog onCreateDialog(Bundle savedInstanceState) {
         viewModel.getMainText().observe(getViewLifecycleOwner(), mainText -> {
             if (mainTextView != null) {
                 mainTextView.setText(mainText);
+                Log.d("Main Text:", mainText);
             }
         });
         viewModel.getHelperText().observe(getViewLifecycleOwner(), helperText -> {
             if (helperTextView != null) {
                 helperTextView.setText(helperText);
+                Log.d("Helper Text:", helperText);
             }
         });
         viewModel.getImageResource().observe(getViewLifecycleOwner(), imageRes -> {

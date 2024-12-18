@@ -73,7 +73,7 @@ public class DonationMain extends Fragment {
         View.OnClickListener OCLDonateFood = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.donationFragment);
+                Navigation.findNavController(view).navigate(R.id.donationListFragment);
             }
         };
         BtnDonateFood.setOnClickListener(OCLDonateFood);

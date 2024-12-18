@@ -45,7 +45,7 @@ public class DonationAdapter {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, location);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
-        locationSpinner.setAdapter(nothingSelectedAdapter);
+//        NothingSelectedSpinnerAdapter nothingSelectedAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_nothing_selected, context);
+        locationSpinner.setAdapter(adapter);
     }
 }

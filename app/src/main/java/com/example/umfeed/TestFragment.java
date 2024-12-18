@@ -16,10 +16,10 @@ public class TestFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
 
-        triggerWorkerManually();
+//        triggerWorkerManually();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new DonationFragment())
+                    .replace(R.id.fragment_container, new DonationListFragment())
                     .commit();
         }
     }
