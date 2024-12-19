@@ -1,7 +1,11 @@
 package com.example.umfeed.repositories;
 
 import androidx.annotation.NonNull;
+
+import com.example.umfeed.models.foodbank.FoodBank;
 import com.example.umfeed.models.foodbank.FoodBankInventoryItem;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,5 +40,24 @@ public class FoodBankRepository {
                     onSuccess.accept(inventoryList);
                 })
                 .addOnFailureListener(onFailure::accept);
+    }
+
+    public void getFoodBankById(String foodBankId, OnSuccessListener<FoodBank> onSuccess,
+                                OnFailureListener onFailure) {
+        db.collection("foodBanks")
+                .document(foodBankId)
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        FoodBank foodBank = document.toObject(FoodBank.class);
+                        if (foodBank != null) {
+                            foodBank.setId(document.getId());
+                            onSuccess.onSuccess(foodBank);
+                        }
+                    } else {
+                        onFailure.onFailure(new Exception("Food bank not found"));
+                    }
+                })
+                .addOnFailureListener(onFailure);
     }
 }

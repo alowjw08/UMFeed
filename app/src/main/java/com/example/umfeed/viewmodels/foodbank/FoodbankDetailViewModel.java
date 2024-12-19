@@ -63,4 +63,19 @@ public class FoodbankDetailViewModel extends ViewModel {
                 }
         );
     }
+
+    public void loadFoodBankDetails(String foodBankId) {
+        isLoading.setValue(true);
+
+        repository.getFoodBankById(foodBankId,
+                foodBank -> {
+                    isLoading.setValue(false);
+                    selectedFoodBank.setValue(foodBank);
+                },
+                error -> {
+                    isLoading.setValue(false);
+                    errorMessage.setValue("Failed to load food bank details: " + error.getMessage());
+                }
+        );
+    }
 }

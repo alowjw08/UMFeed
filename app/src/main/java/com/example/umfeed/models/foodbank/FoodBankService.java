@@ -36,16 +36,7 @@ public class FoodBankService {
                                 String name = document.getString("name");
                                 String imageUrl = document.getString("imageUrl");
 
-                                // Handle numeric dailyPin
-                                String dailyPin;
-                                Object pinObj = document.get("dailyPin");
-                                if (pinObj instanceof Long) {
-                                    dailyPin = String.format("%04d", (Long) pinObj); // Format with leading zeros
-                                } else if (pinObj instanceof Number) {
-                                    dailyPin = String.valueOf(pinObj);
-                                } else {
-                                    dailyPin = document.getString("dailyPin");
-                                }
+                                Long dailyPin = (Long) document.get("dailyPin");
 
                                 FoodBank foodBank = new FoodBank(
                                         id,
