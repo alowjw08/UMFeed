@@ -32,11 +32,28 @@ public class FoodBankService {
                         List<FoodBank> foodBanks = new ArrayList<>();
                         if (querySnapshot != null) {
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                String id = document.getId();
                                 String name = document.getString("name");
                                 String imageUrl = document.getString("imageUrl");
 
-                                // Create a FoodBank object
-                                FoodBank foodBank = new FoodBank(name, imageUrl);
+                                // Handle numeric dailyPin
+                                String dailyPin;
+                                Object pinObj = document.get("dailyPin");
+                                if (pinObj instanceof Long) {
+                                    dailyPin = String.format("%04d", (Long) pinObj); // Format with leading zeros
+                                } else if (pinObj instanceof Number) {
+                                    dailyPin = String.valueOf(pinObj);
+                                } else {
+                                    dailyPin = document.getString("dailyPin");
+                                }
+
+                                FoodBank foodBank = new FoodBank(
+                                        id,
+                                        name,
+                                        imageUrl,
+                                        dailyPin,
+                                        document.getTimestamp("pinTimestamp")
+                                );
                                 foodBanks.add(foodBank);
                             }
                         }

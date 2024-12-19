@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,12 +55,22 @@ public class FoodbankListFragment extends Fragment {
         // Observe the food bank list and update the adapter
         viewModel.getFoodBankList().observe(getViewLifecycleOwner(), foodBanks -> {
             if (foodBanks != null) {
-                // Initialize or update the adapter with the new data
                 if (foodBankAdapter == null) {
-                    // Pass the clickListener here
                     foodBankAdapter = new FoodBankAdapter(foodBanks, getContext(), foodBank -> {
-//                        TODO: set up navigation to reserve food fragment
-//                        navController.navigate(R.id.action_donation_list_to_donation_fragment, bundle);
+                        String foodBankId = foodBank.getId();
+                        if (foodBankId != null) {
+                            try {
+                                FoodbankListFragmentDirections.ActionFoodBankListFragmentToFoodBankDetailFragment action =
+                                        FoodbankListFragmentDirections.actionFoodBankListFragmentToFoodBankDetailFragment(foodBankId);
+                                NavHostFragment.findNavController(this).navigate(action);
+                            } catch (Exception e) {
+                                Log.e("FoodbankListFragment", "Navigation failed", e);
+                                // Optionally show error to user
+                            }
+                        } else {
+                            Log.e("FoodbankListFragment", "FoodBank ID is null");
+                            // Optionally show error to user
+                        }
                     });
                     recyclerView.setAdapter(foodBankAdapter);
                 } else {
