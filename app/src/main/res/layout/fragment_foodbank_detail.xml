@@ -40,14 +40,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/food_image"
+            android:id="@+id/foodbankDetailsImage"
             android:layout_width="263dp"
             android:layout_height="150dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/TVFoodBankName"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@drawable/error_recipe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -105,6 +105,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- TextView to show when no inventory is available -->
+    <TextView
+        android:id="@+id/no_inventory_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No inventory available."
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        android:layout_gravity="center" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

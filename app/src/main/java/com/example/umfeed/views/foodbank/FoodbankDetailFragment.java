@@ -1,66 +1,94 @@
 package com.example.umfeed.views.foodbank;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.umfeed.R;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FoodbankDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.umfeed.adapters.FoodBankInventoryAdapter;
+import com.example.umfeed.models.foodbank.FoodBank;
+import com.example.umfeed.viewmodels.foodbank.FoodbankDetailViewModel;
+
 public class FoodbankDetailFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FoodbankDetailViewModel viewModel;
+    private RecyclerView recyclerView;
+    private FoodBankInventoryAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView noInventoryMessage;
 
     public FoodbankDetailFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FoodbankDetail.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FoodbankDetailFragment newInstance(String param1, String param2) {
-        FoodbankDetailFragment fragment = new FoodbankDetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_foodbank_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_foodbank_detail, container, false);
+
+        // Initialize views
+        recyclerView = view.findViewById(R.id.inventoryRecyclerView);
+        progressBar = view.findViewById(R.id.progressBar);
+        noInventoryMessage = view.findViewById(R.id.no_inventory_message);
+
+        // Initialize ViewModel
+        viewModel = new ViewModelProvider(this).get(FoodbankDetailViewModel.class);
+
+        // Setup RecyclerView and Adapter
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new FoodBankInventoryAdapter(null, getContext());
+        recyclerView.setAdapter(adapter);
+
+        // Get selected foodbank from arguments (or wherever you store the selected foodbank)
+        FoodBank selectedFoodBank = getArguments().getParcelable("selectedFoodBank");
+        if (selectedFoodBank != null) {
+            viewModel.setSelectedFoodBank(selectedFoodBank);
+            viewModel.loadFoodBankInventory(selectedFoodBank.getId());
+        }
+
+        // Observe data from ViewModel
+        viewModel.getFoodBankInventory().observe(getViewLifecycleOwner(), inventoryItems -> {
+            if (inventoryItems != null && !inventoryItems.isEmpty()) {
+                adapter.setInventoryList(inventoryItems);
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                noInventoryMessage.setVisibility(View.GONE);
+            } else {
+                // Show the "No inventory" message when no data is available
+                recyclerView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                noInventoryMessage.setVisibility(View.VISIBLE);
+            }
+        });
+
+        // Observe loading state
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null) {
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        // Observe error messages
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null) {
+                showError(errorMessage);
+            }
+        });
+
+        return view;
+    }
+
+    private void showError(String errorMessage) {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
     }
 }
