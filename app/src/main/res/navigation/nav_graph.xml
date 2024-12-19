@@ -40,47 +40,35 @@
     <fragment
         android:id="@+id/donationFragment"
         android:name="com.example.umfeed.views.donation.DonationFragment"
-        android:label="Donate Food">
-        <action
-            android:id="@+id/action_donation_to_reservations"
-            app:destination="@id/reservationListFragment" />
-    </fragment>
+        android:label="Donate Food"/>
 
     <fragment
         android:id="@+id/foodBankListFragment"
         android:name="com.example.umfeed.views.foodbank.FoodbankListFragment"
         android:label="Food Banks">
         <action
-            android:id="@+id/action_foodbank_list_to_reservation"
-            app:destination="@id/reservationFragment" />
+            android:id="@+id/action_foodBankListFragment_to_foodBankDetailFragment"
+            app:destination="@id/foodBankDetailFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/foodBankDetailFragment"
-        android:name="com.example.umfeed.views.foodbank.FoodBankDetailFragment"
+        android:name="com.example.umfeed.views.foodbank.FoodbankDetailFragment"
         android:label="Food Bank Detail">
         <argument
             android:name="foodBankId"
             app:argType="string" />
-        <action
-            android:id="@+id/action_foodbank_detail_to_reservation"
-            app:destination="@id/reservationFragment" />
         <deepLink app:uri="umfeed://foodbank/{foodBankId}" />
     </fragment>
 
     <fragment
         android:id="@+id/reservationFragment"
-        android:name="com.example.umfeed.views.donation.ReservationFragment"
+        android:name="com.example.umfeed.views.donation.ReservationListFragment"
         android:label="Reserve Food">
         <argument
             android:name="foodBankId"
             app:argType="string" />
     </fragment>
-
-    <fragment
-        android:id="@+id/reservationListFragment"
-        android:name="com.example.umfeed.views.donation.ReservationListFragment"
-        android:label="My Reservations" />
 
     <!-- Recipe Flow -->
     <fragment
@@ -209,13 +197,13 @@
             android:id="@+id/action_donationMain_to_foodBankListFragment"
             app:destination="@id/foodBankListFragment" />
         <action
-            android:id="@+id/action_donationMain_to_foodReserved"
-            app:destination="@id/foodReserved" />
+            android:id="@+id/action_donationMain_to_reservationListFragment"
+            app:destination="@id/reservationListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/foodReserved"
-        android:name="com.example.umfeed.views.donation.FoodReserved"
+        android:id="@+id/reservationListFragment"
+        android:name="com.example.umfeed.views.donation.ReservationListFragment"
         android:label="fragment_food_reserved"
-        tools:layout="@layout/fragment_food_reserved" />
+        tools:layout="@layout/fragment_reservation_list" />
 
 </navigation>

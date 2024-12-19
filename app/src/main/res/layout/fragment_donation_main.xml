@@ -6,45 +6,66 @@
     android:layout_height="match_parent"
     tools:context=".views.donation.DonationMain">
 
-    <TextView
-        android:id="@+id/TVDonationTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Food Donation"
-        android:textSize="40sp"
-        android:textStyle="bold"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/topCard"
+        android:layout_width="0dp"
+        android:layout_height="152dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/TVDonationTitle2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Donate now and help others!"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TVDonationTitle" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_bottom_corners">
+
+            <TextView
+                android:id="@+id/TVDonationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Food Donation"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/TVDonationTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Donate now and help others!"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TVDonationTitle" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/BtnDonateFood"
         android:layout_width="261dp"
         android:layout_height="84dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="92dp"
+        android:backgroundTint="#A7BEEF"
         android:text="Donate Food"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TVDonationTitle2" />
+        app:layout_constraintTop_toBottomOf="@+id/topCard" />
 
     <Button
         android:id="@+id/BtnFoodBanksAvailable"
         android:layout_width="261dp"
         android:layout_height="84dp"
         android:layout_marginTop="48dp"
+        android:backgroundTint="#A7BEEF"
         android:text="Food Banks Available"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,6 +77,7 @@
         android:layout_width="261dp"
         android:layout_height="84dp"
         android:layout_marginTop="48dp"
+        android:backgroundTint="#A7BEEF"
         android:text="Food Reserved"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -100,7 +100,7 @@ public class DonationMain extends Fragment {
         View.OnClickListener OCLFoodReserved = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.foodReserved);
+                Navigation.findNavController(view).navigate(R.id.reservationListFragment);
             }
         };
         BtnFoodReserved.setOnClickListener(OCLFoodReserved);

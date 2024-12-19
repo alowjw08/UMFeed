@@ -51,4 +51,27 @@
     <string name="no_recipes_found">No recipes found</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="openai_api_key">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</string>
+
+    <string name="confirm_reservation">Confirm Reservation</string>
+    <string name="reservation_confirmation">Are you sure you want to reserve %1$s?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="daily_reservation_limit_reached">You have reached your daily reservation limit</string>
+    <string name="no_items_available">No items available</string>
+    <string name="reservations_remaining">Reservations remaining today: %d</string>
+    <string name="reserve">Reserve</string>
+    <string name="reservation_limit_reached">You have reached your daily reservation limit</string>
+    <string name="quantity_format">Quantity: %d</string>
+    <string name="my_reservations">My Reservations</string>
+    <string name="no_reservations">No reservations found</string>
+    <string name="update_status">Update Status</string>
+    <string name="reservation_status_updated">Reservation status updated</string>
+    <string name="error_updating_status">Error updating status</string>
+    <string name="collected">Collected</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="pending">Pending</string>
+    <string name="view_details">View Details</string>
+    <string name="reservation_details">Reservation Details</string>
+    <string name="reserved_date_format">Reserved: %s</string>
+
 </resources>
