@@ -16,12 +16,16 @@
             android:id="@+id/action_home_to_recipes"
             app:destination="@id/recipeListFragment" />
         <action
-            android:id="@+id/action_home_to_menu_list"
-            app:destination="@id/menuListFragment" />
-        <deepLink app:uri="umfeed://home" />
-        <action
             android:id="@+id/action_home_to_donationMain"
             app:destination="@id/donationMain" />
+        <action
+            android:id="@+id/action_home_to_menuRahmahList"
+            app:destination="@id/menuRahmahListFragment" />
+        <deepLink app:uri="umfeed://home" />
+        <action
+            android:id="@+id/action_homeFragment_to_menuRahmahDetailFragment"
+            app:destination="@id/menuRahmahDetailFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim" />
     </fragment>
 
     <!-- Food Donation Flow -->
@@ -103,24 +107,19 @@
 
 
     <!-- Menu Rahmah Flow -->
-    <fragment
-        android:id="@+id/menuListFragment"
-        android:name="com.example.umfeed.views.menu.MenuRahmahFragment"
-        android:label="Menu Rahmah">
-        <action
-            android:id="@+id/action_menu_list_to_detail"
-            app:destination="@id/menuDetailFragment" />
-    </fragment>
 
     <fragment
-        android:id="@+id/menuDetailFragment"
-        android:name="com.example.umfeed.views.menu.MenuDetailFragment"
-        android:label="Menu Detail">
-        <argument
-            android:name="menuId"
-            app:argType="string" />
-        <deepLink app:uri="umfeed://menu/{menuId}" />
+        android:id="@+id/menuRahmahListFragment"
+        android:name="com.example.umfeed.views.menu_rahmah.MenuRahmahListFragment"
+        android:label="MenuRahmahListFragment" >
+        <action
+            android:id="@+id/action_menuRahmahListFragment_to_menuRahmahDetailFragment"
+            app:destination="@id/menuRahmahDetailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/menuRahmahDetailFragment"
+        android:name="com.example.umfeed.views.menu_rahmah.MenuRahmahDetailFragment"
+        android:label="MenuRahmahDetailFragment" />
 
     <!-- Leaderboard Flow -->
     <fragment

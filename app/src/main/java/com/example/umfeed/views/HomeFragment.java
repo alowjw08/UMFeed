@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
-import com.example.umfeed.adapters.FeaturedMenuAdapter;
-import com.example.umfeed.models.foodbank.DailyPin;
-import com.example.umfeed.models.foodbank.DailyPinWorkManager;
-import com.example.umfeed.repositories.MenuRepository;
+import com.example.umfeed.adapters.MenuRahmahAdapter;
+
+import com.example.umfeed.repositories.MenuRahmahRepository;
 import com.example.umfeed.repositories.UserRepository;
 import com.example.umfeed.viewmodels.MainViewModel;
 import com.example.umfeed.utils.TimeUtils;
@@ -28,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HomeFragment extends Fragment {
     private MainViewModel viewModel;
     private TextView greetingText;
-    private FeaturedMenuAdapter featuredMenuAdapter;
+    private MenuRahmahAdapter menuRahmahAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class HomeFragment extends Fragment {
 
         // Create repositories
         UserRepository userRepository = new UserRepository();
-        MenuRepository menuRepository = new MenuRepository();
+        MenuRahmahRepository menuRepository = new MenuRahmahRepository();
 
         // Create factory
         MainViewModelFactory factory = new MainViewModelFactory(userRepository, menuRepository);
@@ -46,10 +45,6 @@ public class HomeFragment extends Fragment {
         // Get ViewModel using factory
         viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
 
-        featuredMenuAdapter = new FeaturedMenuAdapter(menuId ->
-                Navigation.findNavController(requireView())
-                        .navigate(HomeFragmentDirections.actionHomeToMenuList())
-        );
     }
 
     @Override
@@ -72,12 +67,15 @@ public class HomeFragment extends Fragment {
     private void initializeViews(View view) {
         greetingText = view.findViewById(R.id.greeting_text);
 
+        // Initialize adapter with empty list
+        menuRahmahAdapter = new MenuRahmahAdapter(getContext());
+
         // Setup featured menus RecyclerView
         RecyclerView featuredMenusRecyclerView = view.findViewById(R.id.featured_menus_recycler_view);
         featuredMenusRecyclerView.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-        featuredMenusRecyclerView.setAdapter(featuredMenuAdapter);
+        featuredMenusRecyclerView.setAdapter(menuRahmahAdapter);
     }
 
     private void setupClickListeners(View view) {
@@ -93,7 +91,7 @@ public class HomeFragment extends Fragment {
 
         // All menu button click
         view.findViewById(R.id.all_menu_button).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_home_to_menu_list));
+                Navigation.findNavController(v).navigate(R.id.action_home_to_menuRahmahList));
     }
 
     private void observeViewModel() {
@@ -111,6 +109,21 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        viewModel.getFeaturedMenus().observe(getViewLifecycleOwner(), menus -> featuredMenuAdapter.submitList(menus));
+        // Observe the menu list and update the adapter's data
+        viewModel.getMenuList().observe(getViewLifecycleOwner(), menus -> {
+            if (menus != null) {
+                menuRahmahAdapter.updateMenuList(menus);  // Use custom method to update the list
+            }
+        });
+
+        // Set the item click listener for menu items
+        menuRahmahAdapter.setOnItemClickListener(menuId -> {
+            // Create a Bundle to pass the menuId to the next fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("menu_id", menuId);
+
+            // Navigate to the MenuRahmahDetailFragment with the menuId
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_menuRahmahDetailFragment, bundle);
+        });
     }
 }

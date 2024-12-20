@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/TVMenuName"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDE7E7"
+    android:backgroundTint="@color/light_grey"
+    tools:context=".views.MenuRahmahDetail">
+
+    <!-- Background -->
+
+    <View
+        android:id="@+id/backgroundView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E8F0FE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/DIVMenu"
+        android:layout_width="426dp"
+        android:layout_height="213dp"
+        android:scaleType="centerCrop"
+        app:circularflow_defaultRadius="8dp"
+        app:circularflow_radiusInDP="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/DTVMenuName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:textColor="@color/main_theme_blue"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/DIVMenu"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="@+id/DIVMenu"
+        app:layout_constraintTop_toBottomOf="@+id/DIVMenu"
+        app:layout_constraintVertical_bias="0.019" />
+
+    <TextView
+        android:id="@+id/DTVRestaurantName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:textAlignment="center"
+        android:textColor="@color/message_blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/DIVMenu"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/DIVMenu"
+        app:layout_constraintTop_toBottomOf="@+id/DTVMenuName"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/DTVVegetarianStatus"
+        android:layout_width="258dp"
+        android:layout_height="31dp"
+        android:fontFamily="sans-serif-medium"
+        android:textAlignment="viewStart"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DTVRestaurantName"
+        app:layout_constraintVertical_bias="0.02" />
+
+    <TextView
+        android:id="@+id/DTVHalalStatus"
+        android:layout_width="226dp"
+        android:layout_height="28dp"
+        android:fontFamily="sans-serif-medium"
+        android:textAlignment="viewStart"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DTVVegetarianStatus"
+        app:layout_constraintTop_toBottomOf="@+id/DTVVegetarianStatus"
+        app:layout_constraintVertical_bias="0.024" />
+
+    <TextView
+        android:id="@+id/DTVAllergensStatement"
+        android:layout_width="368dp"
+        android:layout_height="55dp"
+        android:fontFamily="sans-serif-medium"
+        android:textAlignment="viewStart"
+        android:textColor="#673AB7"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DTVHalalStatus"
+        app:layout_constraintTop_toBottomOf="@id/DTVHalalStatus"
+        app:layout_constraintVertical_bias="0.03" />
+
+    <TextView
+        android:id="@+id/TVMoreInformation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="More Information"
+        android:textColor="@color/main_theme_blue"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DTVAllergensStatement"
+        app:layout_constraintTop_toBottomOf="@id/DTVAllergensStatement"
+        app:layout_constraintVertical_bias="0.101" />
+
+    <Button
+        android:id="@+id/BtnSocialMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/light_grey"
+        android:text="Social Media"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/backgroundView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/TVAddress"
+        app:layout_constraintTop_toBottomOf="@+id/TVAddress"
+        app:layout_constraintVertical_bias="0.307" />
+
+    <Button
+        android:id="@+id/BtnWebsite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/light_grey"
+        android:text="Website"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/backgroundView"
+        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintStart_toEndOf="@+id/BtnSocialMedia"
+        app:layout_constraintTop_toBottomOf="@+id/TVAddress"
+        app:layout_constraintVertical_bias="0.307" />
+
+    <TextView
+        android:id="@+id/TVPhoneNumber"
+        android:layout_width="281dp"
+        android:layout_height="44dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/gray_600"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.007"
+        app:layout_constraintStart_toStartOf="@+id/TVMoreInformation"
+        app:layout_constraintTop_toBottomOf="@+id/TVMoreInformation"
+        app:layout_constraintVertical_bias="0.046" />
+
+    <TextView
+        android:id="@+id/TVAddress"
+        android:layout_width="364dp"
+        android:layout_height="96dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/gray_600"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/TVPhoneNumber"
+        app:layout_constraintTop_toBottomOf="@+id/TVPhoneNumber"
+        app:layout_constraintVertical_bias="0.079" />
+
+    <TextView
+        android:id="@+id/TVTermsAndConditions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/menu_rahmah_tnc"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.301"
+        app:layout_constraintStart_toEndOf="@+id/BtnWebsite"
+        app:layout_constraintTop_toBottomOf="@+id/TVAddress"
+        app:layout_constraintVertical_bias="0.169" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,23 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.umfeed.repositories.MenuRepository;
+import com.example.umfeed.repositories.MenuRahmahRepository;
 import com.example.umfeed.repositories.UserRepository;
 
 public class MainViewModelFactory implements ViewModelProvider.Factory {
     private final UserRepository userRepository;
-    private final MenuRepository menuRepository;
+    private final MenuRahmahRepository menuRahmahRepository;
 
-    public MainViewModelFactory(UserRepository userRepository, MenuRepository menuRepository) {
+    public MainViewModelFactory(UserRepository userRepository, MenuRahmahRepository menuRahmahRepository) {
         this.userRepository = userRepository;
-        this.menuRepository = menuRepository;
+        this.menuRahmahRepository = menuRahmahRepository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainViewModel.class)) {
-            return (T) new MainViewModel(userRepository, menuRepository);
+            return (T) new MainViewModel(userRepository, menuRahmahRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

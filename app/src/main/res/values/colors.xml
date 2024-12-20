@@ -11,4 +11,7 @@
     <color name="message_gray">#F5F5F5</color>
     <color name="light_blue">#aeb8ff</color>
     <color name="light_yellow">#FAD07D</color>
+    <color name="main_theme_blue">#384B72</color>
+    <color name="semi_transparent_white">#88FFFFFF</color>
+    <color name="fully_transparent">#00000000</color>
 </resources>

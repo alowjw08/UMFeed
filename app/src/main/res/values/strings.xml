@@ -17,6 +17,7 @@
     <string name="food_donation">Food\nDonation</string>
     <string name="healthy_recipe">Healthy\nRecipe</string>
     <string name="all_menu_rahmah">All Menu Rahmah</string>
+    <string name="menu_rahmah_tnc">T&amp;Cs apply.</string>
     <string-array name="categories">
         <item>Rice and Grains</item>
         <item>Canned and Preserved Foods</item>
