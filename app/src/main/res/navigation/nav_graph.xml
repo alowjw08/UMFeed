@@ -26,6 +26,9 @@
             android:id="@+id/action_homeFragment_to_menuRahmahDetailFragment"
             app:destination="@id/menuRahmahDetailFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <!-- Food Donation Flow -->
@@ -153,11 +156,11 @@
         android:name="com.example.umfeed.views.profile.ProfileFragment"
         android:label="Profile">
         <action
-            android:id="@+id/action_profile_to_saved_recipes"
-            app:destination="@id/savedRecipesFragment" />
-        <action
-            android:id="@+id/action_profile_to_donated_items"
+            android:id="@+id/action_profileFragment_to_donatedItemsFragment"
             app:destination="@id/donatedItemsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_savedRecipesFragment"
+            app:destination="@id/savedRecipesFragment" />
     </fragment>
 
     <fragment
