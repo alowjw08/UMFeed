@@ -20,7 +20,12 @@
         android:layout_height="wrap_content"
         android:valueFrom="0"
         android:valueTo="200"
-        app:labelBehavior="floating"
+        app:thumbColor="@color/sliderThumbColor"
+        app:trackColorInactive="@color/sliderTrackInactiveColor"
+        app:trackColorActive="@color/sliderTrackActiveColor"
+        app:haloColor="@color/sliderHaloColor"
+        app:tickColorInactive="@color/sliderTickInactiveColor"
+        app:tickColorActive="@color/sliderTickActiveColor"
         android:stepSize="5"
         android:layout_marginBottom="24dp"/>
 
@@ -46,6 +51,12 @@
         android:valueFrom="0"
         android:valueTo="50"
         app:labelBehavior="floating"
+        app:thumbColor="@color/sliderThumbColor"
+        app:trackColorInactive="@color/sliderTrackInactiveColor"
+        app:trackColorActive="@color/sliderTrackActiveColor"
+        app:haloColor="@color/sliderHaloColor"
+        app:tickColorInactive="@color/sliderTickInactiveColor"
+        app:tickColorActive="@color/sliderTickActiveColor"
         android:stepSize="5"
         android:layout_marginBottom="24dp"/>
 
@@ -71,6 +82,12 @@
         android:valueFrom="0"
         android:valueTo="50"
         app:labelBehavior="floating"
+        app:thumbColor="@color/sliderThumbColor"
+        app:trackColorInactive="@color/sliderTrackInactiveColor"
+        app:trackColorActive="@color/sliderTrackActiveColor"
+        app:haloColor="@color/sliderHaloColor"
+        app:tickColorInactive="@color/sliderTickInactiveColor"
+        app:tickColorActive="@color/sliderTickActiveColor"
         android:stepSize="1"
         android:layout_marginBottom="24dp"/>
 
@@ -102,6 +119,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/applyButton"
+        app:backgroundTint="#6A83C3"
+        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Apply"/>

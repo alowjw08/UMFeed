@@ -14,4 +14,15 @@
     <color name="main_theme_blue">#384B72</color>
     <color name="semi_transparent_white">#88FFFFFF</color>
     <color name="fully_transparent">#00000000</color>
+    <color name="brand_blue">#6B89C6</color>
+    <color name="brand_mint">#E8F5E9</color>
+    <color name="text_primary">#1A1A1A</color>
+    <color name="gray">#858585</color>
+    <color name="sliderThumbColor">#58A1E0</color>
+    <color name="sliderTrackInactiveColor">#C6D8FF</color>
+    <color name="sliderTrackActiveColor">#384B72</color>
+    <color name="sliderHaloColor">#A7BEEF</color>
+    <color name="sliderTickInactiveColor">#4066C8</color>
+    <color name="sliderTickActiveColor">#4BA0FA</color>
+
 </resources>

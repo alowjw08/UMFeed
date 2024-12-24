@@ -13,7 +13,6 @@ public class Recipe {
     private String imageUrl;
     private String description;
     private int calories;
-    private int likes;
     private List<String> ingredients;
     private List<String> allergens;
     private List<String> steps;
@@ -31,14 +30,6 @@ public class Recipe {
     }
 
     public Recipe() {
-    }
-
-    public void incrementLikes(){
-        likes++;
-    }
-
-    public void decrementLikes(){
-        likes--;
     }
 
     @PropertyName("id")
@@ -81,14 +72,6 @@ public class Recipe {
 
     public void setCalories(int calories) {
         this.calories = calories;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
     }
 
     public List<String> getIngredients() {
