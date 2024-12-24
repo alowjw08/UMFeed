@@ -88,8 +88,10 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.material.v190)
     implementation(libs.work.runtime)
+    implementation(libs.firebase.database)
     annotationProcessor(libs.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }

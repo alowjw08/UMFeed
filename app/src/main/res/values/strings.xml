@@ -74,5 +74,14 @@
     <string name="view_details">View Details</string>
     <string name="reservation_details">Reservation Details</string>
     <string name="reserved_date_format">Reserved: %s</string>
+    <string name="textviews">Your Textviews Label</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="functionality">Functionality</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="saved_recipe">Saved Recipe</string>
+    <string name="b40_status">B40 Status</string>
+    <string name="donated_items">Donated Items</string>
+    <string name="log_out">Log Out</string>
+    <string name="textview">Your Textview Label</string>
 
 </resources>
