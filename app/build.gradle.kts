@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.material.v190)
     implementation(libs.work.runtime)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.database)
     annotationProcessor(libs.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

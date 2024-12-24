@@ -32,6 +32,7 @@ navigationUi = "2.7.5"
 okhttp = "4.9.3"
 playServicesAuth = "20.7.0"
 firebaseMessaging = "24.1.0"
+firebaseDatabase = "21.0.0"
 
 [libraries]
 activity-v180 = { module = "androidx.activity:activity", version.ref = "activityVersion" }
@@ -78,6 +79,7 @@ syntax-highlight = { module = "io.noties.markwon:syntax-highlight", version.ref 
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
