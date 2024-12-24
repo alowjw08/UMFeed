@@ -45,7 +45,7 @@ android {
 
     buildFeatures{
         viewBinding = true
-        buildConfig = true;
+        buildConfig = true
     }
 
     compileOptions {
@@ -81,7 +81,6 @@ dependencies {
     implementation(libs.google.firebase.firestore)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
-    implementation(platform(libs.firebase.bom))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

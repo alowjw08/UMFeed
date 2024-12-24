@@ -1,11 +1,21 @@
 package com.example.umfeed.views;
 
+import static android.content.ContentValues.TAG;
+
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.customview.widget.Openable;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -15,16 +25,18 @@ import com.example.umfeed.R;
 import com.example.umfeed.viewmodels.auth.LoginViewModel;
 import com.example.umfeed.views.auth.LoginActivity;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth auth;
-    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +59,28 @@ public class MainActivity extends AppCompatActivity {
             FirebaseApp.initializeApp(this);
         }
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        String msg = "FCM Token: " + token;
+                        Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, "Notifications enabled for this app", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         setupNavigation();
         observeAuthState();
+        askNotificationPermission();
     }
 
     private void observeAuthState() {
@@ -92,4 +124,48 @@ public class MainActivity extends AppCompatActivity {
                     .handleDeepLink(intent);
         }
     }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                    Log.d("Permission", "Notification permission granted.");
+                } else {
+                    Log.d("Permission", "Notification permission denied.");
+                    // Show a message or UI to explain why notifications are necessary
+                    Toast.makeText(this, "Notifications will be disabled.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+    private void askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (and UMFeed) can post notifications.
+                Log.d("Permission", "Permission already granted.");
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                // Show an educational UI explaining the need for notification permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("Notification Permission Required")
+                        .setMessage("We need your permission to send you important updates about new menus and other features. Notifications will help you stay informed.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            // If the user agrees, request the permission.
+                            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                        })
+                        .setNegativeButton("No thanks", (dialog, which) -> {
+                            // Allow the user to continue without notifications.
+                            Log.d("Permission", "User declined notifications.");
+                            Toast.makeText(this, "Notifications are disabled.", Toast.LENGTH_SHORT).show();
+                        })
+                        .create()
+                        .show();
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
+
+
 }

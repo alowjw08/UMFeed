@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -66,7 +67,7 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".java.MyFirebaseMessagingService"
+            android:name=".MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -75,7 +76,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/baseline_food_bank_24" />
+            android:resource="@drawable/ic_logo" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
