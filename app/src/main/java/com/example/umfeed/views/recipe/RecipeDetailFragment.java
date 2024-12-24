@@ -79,9 +79,6 @@ public class RecipeDetailFragment extends Fragment {
             Log.d(TAG, "Save button clicked for recipe: " + recipeId);
             savedRecipeViewModel.toggleSaveRecipe(recipeId);
         });
-        binding.likeButton.setOnClickListener(v -> {
-            viewModel.likeRecipe(recipeId);
-        });
     }
 
     private void setupObservers() {

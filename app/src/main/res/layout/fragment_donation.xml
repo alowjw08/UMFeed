@@ -5,7 +5,8 @@
     android:id="@+id/donationFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.foodbank.FoodbankListFragment" >
+    tools:context=".views.foodbank.FoodbankListFragment"
+    android:background="@drawable/home_rounded_bottom">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/topCard"

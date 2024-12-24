@@ -18,11 +18,6 @@ import com.example.umfeed.views.auth.ForgotPasswordActivity;
 import com.example.umfeed.views.auth.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,7 +27,6 @@ public class ProfileFragment extends Fragment {
     private Button buttonForgotPassword, buttonLogOut, buttonSavedRecipes, buttonDonatedItems;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
-    private DatabaseReference userRef;
 
     public ProfileFragment() {
         // Required empty public constructor

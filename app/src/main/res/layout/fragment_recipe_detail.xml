@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -39,22 +40,8 @@
             android:layout_marginTop="32dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/likeButton"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recipeCard" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/likeButton"
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="12dp"
-            android:icon="@drawable/ic_favourite_border"
-            app:backgroundTint="@android:color/transparent"
-            app:iconTint="@color/black"
-            app:layout_constraintEnd_toStartOf="@id/saveButton"
             app:layout_constraintTop_toBottomOf="@id/recipeCard" />
 
         <!-- Nutrition Facts Section -->
@@ -96,7 +83,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="#C8D5E5">
 
                 <TextView
                     android:id="@+id/caloriesText"
@@ -137,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/ingredientsTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -162,10 +151,12 @@
             app:layout_constraintTop_toBottomOf="@id/allergensTitle">
 
             <com.google.android.material.chip.Chip
+                app:chipBackgroundColor="#C8D5E5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.chip.Chip
+                app:chipBackgroundColor="#C8D5E5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -190,6 +181,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="8dp"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/stepsTitle"
             android:lineSpacingExtra="4dp"/>
 
