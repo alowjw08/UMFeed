@@ -30,6 +30,8 @@ public class DialogSuccessFragment extends DialogFragment {
     private static final String ACTION_RESERVE_ERROR = "RESERVE_ERROR";
     private static final String ACTION_DONATE = "DONATE";
     private static final String ACTION_DONATE_ERROR = "DONATE_ERROR";
+    private static final String ACTION_COLLECT = "COLLECT";
+    private static final String ACTION_COLLECT_ERROR = "COLLECT_ERROR";
 
     private DialogSuccessViewModel viewModel;
     private FragmentDialogSuccessBinding binding;
@@ -59,6 +61,10 @@ public class DialogSuccessFragment extends DialogFragment {
                 case ACTION_DONATE_ERROR:
                     viewModel.setDonationErrorMessage();
                     break;
+                case ACTION_COLLECT:
+                    viewModel.setCollectionMessage();
+                case ACTION_COLLECT_ERROR:
+                    viewModel.setCollectionErrorMessage();
                 default:
                     Log.e(TAG, "Unknown action: " + action);
             }
@@ -83,6 +89,14 @@ public class DialogSuccessFragment extends DialogFragment {
 
     public void onDonationError() {
         executeAction(ACTION_DONATE_ERROR);
+    }
+
+    public void onCollect() {
+        executeAction(ACTION_COLLECT);
+    }
+
+    public void onCollectError() {
+        executeAction(ACTION_COLLECT_ERROR);
     }
 
     @Override

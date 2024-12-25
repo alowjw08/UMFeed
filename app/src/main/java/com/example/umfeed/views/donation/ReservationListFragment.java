@@ -125,25 +125,23 @@ public class ReservationListFragment extends Fragment {
 
             pinVerificationDialog.setArguments(args);
 
+            // Handle the result when the dialog is dismissed
+            pinVerificationDialog.setOnDismissListener(() -> {
+                // Reload reservations or remove the collected reservation
+                adapter.removeReservation(reservation);
+                if (adapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            });
+
+            //2nd option to reload all reservations if removing the specific item manually doesn't work
+//            pinVerificationDialog.setOnDismissListener(() -> {
+//                fetchReservations();
+//            });
+
             // Show the dialog
             pinVerificationDialog.show(getChildFragmentManager(), "PinVerificationDialogFragment");
-
-
-//            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//
-//            db.collection("users")
-//                    .document(userId)
-//                    .collection("reservations")
-//                    .document(reservation.getReservationId())
-//                    .update("status", "collected")
-//                    .addOnSuccessListener(aVoid -> {
-//                        Toast.makeText(getContext(), "Food collected successfully!", Toast.LENGTH_SHORT).show();
-//                        viewModel.loadUserReservations(); // Refresh the list
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        Toast.makeText(getContext(), "Failed to update status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    });
         });
     }
 }

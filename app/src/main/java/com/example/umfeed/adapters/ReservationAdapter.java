@@ -57,6 +57,15 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         });
     }
 
+    //remove item if successfully collected
+    public void removeReservation(Reservation reservation) {
+        int position = reservations.indexOf(reservation);
+        if (position != -1) {
+            reservations.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return reservations.size();

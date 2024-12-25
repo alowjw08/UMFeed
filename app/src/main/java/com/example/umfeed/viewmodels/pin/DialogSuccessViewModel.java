@@ -48,6 +48,14 @@ public class DialogSuccessViewModel extends ViewModel {
         imageResource.postValue(R.drawable.success_tick);
     }
 
+    public void setCollectionMessage(){
+        Log.d("Dialog Success View Model", "Setting collection success message");
+        // Use postValue to ensure thread safety
+        mainText.postValue("Congratulations!");
+        helperText.postValue("You have successfully collected the food!");
+        imageResource.postValue(R.drawable.success_tick);
+    }
+
     public void setDonationErrorMessage() {
         clearState();
         mainText.setValue("Wrong pin!");
@@ -59,6 +67,13 @@ public class DialogSuccessViewModel extends ViewModel {
         clearState();
         mainText.setValue("Sorry!");
         helperText.setValue("You have reached your daily reservation limit.");
+        imageResource.setValue(R.drawable.error_cross);
+    }
+
+    public void setCollectionErrorMessage(){
+        clearState();
+        mainText.setValue("Wrong pin!");
+        helperText.setValue("Please enter the pin displayed at the food bank.");
         imageResource.setValue(R.drawable.error_cross);
     }
 }

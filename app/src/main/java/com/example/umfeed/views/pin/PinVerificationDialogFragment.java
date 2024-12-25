@@ -1,6 +1,7 @@
 package com.example.umfeed.views.pin;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -34,9 +35,26 @@ public class PinVerificationDialogFragment extends DialogFragment {
     private ConstraintLayout cardView;
     private Button buttonClear;
     private boolean isDialogShown = false;
+    private OnDismissListener onDismissListener;
 
     public static PinVerificationDialogFragment newInstance() {
         return new PinVerificationDialogFragment();
+    }
+
+    public void setOnDismissListener(OnDismissListener listener) {
+        this.onDismissListener = listener;
+    }
+
+    public interface OnDismissListener {
+        void onDismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss();
+        }
     }
 
     @Override
@@ -134,7 +152,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
                                         .addOnSuccessListener(aVoid -> Log.d("PinVerification", "Reservation collected"))
                                         .addOnFailureListener(e -> Log.e("PinVerification", "Error updating reservation", e));
 
-                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onReserve, 50);
+                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onCollect, 50);
                             }
                             dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                         } else {
@@ -143,7 +161,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
                             if ("donation".equals(source)) {
                                 new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
                             } else if ("reservation".equals(source)) {
-                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onReservationError, 50);
+                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onCollectError, 50);
                             }
                             dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                         }
