@@ -14,6 +14,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.umfeed.models.user.User;
 
@@ -89,7 +90,7 @@ public class UserRepository {
                         newUser.setTotalDonations(0);
                         verifyB40Status(firebaseUser.getEmail(), newUser::setB40Status);
 
-                        User.UserBadges badges = new User.UserBadges(false, false, false);
+                        User.UserBadges badges = new User.UserBadges(false, false, false, false);
                         newUser.setCurrentBadges(badges);
 
                         db.collection("users").document(firebaseUser.getUid())
@@ -167,7 +168,7 @@ public class UserRepository {
         newUser.setTotalDonations(0);
         verifyB40Status(firebaseUser.getEmail(), newUser::setB40Status);
 
-        User.UserBadges badges = new User.UserBadges(false, false, false);
+        User.UserBadges badges = new User.UserBadges(false, false, false, false);
         newUser.setCurrentBadges(badges);
 
         db.collection("users").document(firebaseUser.getUid())
@@ -264,4 +265,36 @@ public class UserRepository {
 
         return userLiveData;
     }
+
+    public void updateTotalDonationsForUsers() {
+        // Get all users from the 'users' collection
+        db.collection("users").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null) {
+                        // Iterate through each user document
+                        for (DocumentSnapshot userSnapshot : queryDocumentSnapshots) {
+                            String userId = userSnapshot.getId();
+
+                            // Get the donations collection for this user
+                            db.collection("users")
+                                    .document(userId)
+                                    .collection("donations")
+                                    .get()
+                                    .addOnSuccessListener(donationsSnapshot -> {
+                                        // Count the number of donations for the user
+                                        int totalDonations = donationsSnapshot.size();
+
+                                        // Update the totalDonations field in the user's document
+                                        db.collection("users")
+                                                .document(userId)
+                                                .update("totalDonations", totalDonations)
+                                                .addOnFailureListener(e -> Log.e("UserRepository", "Error updating total donations", e));
+                                    })
+                                    .addOnFailureListener(e -> Log.e("UserRepository", "Error getting donations", e));
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("UserRepository", "Error getting users", e));
+    }
+
 }

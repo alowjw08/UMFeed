@@ -11,7 +11,7 @@
         android:label="Home">
         <action
             android:id="@+id/action_home_to_leaderboard"
-            app:destination="@id/leaderboardFragment" />
+            app:destination="@id/leaderboardListFragment" />
         <action
             android:id="@+id/action_home_to_recipes"
             app:destination="@id/recipeListFragment" />
@@ -126,22 +126,18 @@
 
     <!-- Leaderboard Flow -->
     <fragment
-        android:id="@+id/leaderboardFragment"
-        android:name="com.example.umfeed.views.leaderboard.LeaderboardFragment"
+        android:id="@+id/leaderboardListFragment"
+        android:name="com.example.umfeed.views.leaderboard.LeaderboardListFragment"
         android:label="Leaderboard">
         <action
-            android:id="@+id/action_leaderboard_to_profile"
-            app:destination="@id/userProfileFragment" />
+            android:id="@+id/action_leaderboard_to_leaderboard_profile"
+            app:destination="@id/leaderboardProfileFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/userProfileFragment"
-        android:name="com.example.umfeed.views.UserProfileFragment"
-        android:label="User Profile">
-        <argument
-            android:name="userId"
-            app:argType="string" />
-        <deepLink app:uri="umfeed://user/{userId}" />
+        android:id="@+id/leaderboardProfileFragment"
+        android:name="com.example.umfeed.views.leaderboard.LeaderboardProfileFragment"
+        android:label="Leaderboard Profile">
     </fragment>
 
     <!-- Chat -->

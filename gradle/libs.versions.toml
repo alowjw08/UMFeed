@@ -33,6 +33,9 @@ okhttp = "4.9.3"
 playServicesAuth = "20.7.0"
 firebaseMessaging = "24.1.0"
 firebaseDatabase = "21.0.0"
+cardviewV7 = "28.0.0"
+foundationAndroid = "1.7.6"
+recyclerview = "1.1.0"
 
 [libraries]
 activity-v180 = { module = "androidx.activity:activity", version.ref = "activityVersion" }
@@ -80,6 +83,9 @@ legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", ver
 work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+cardview-v7 = { group = "com.android.support", name = "cardview-v7", version.ref = "cardviewV7" }
+foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

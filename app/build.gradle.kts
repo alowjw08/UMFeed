@@ -52,6 +52,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    packagingOptions {
+        exclude("META-INF/androidx.cardview_cardview.version")
+    }
 }
 
 dependencies {
@@ -90,6 +94,9 @@ dependencies {
     implementation(libs.work.runtime)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.database)
+    implementation(libs.cardview.v7)
+    implementation(libs.foundation.android)
+    implementation(libs.recyclerview)
     annotationProcessor(libs.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
