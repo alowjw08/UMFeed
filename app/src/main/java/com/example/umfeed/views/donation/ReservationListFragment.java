@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,9 @@ import com.example.umfeed.models.reservation.Reservation;
 import com.example.umfeed.viewmodels.reservation.ReservationViewModel;
 
 import com.example.umfeed.R;
+import com.example.umfeed.views.pin.PinVerificationDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -57,6 +61,8 @@ public class ReservationListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ReservationAdapter();
         recyclerView.setAdapter(adapter);
+
+        setupCollectButton(); // Set up collect button listener
 
         setupObservers();
         fetchReservations();
@@ -98,5 +104,43 @@ public class ReservationListFragment extends Fragment {
             emptyView.setVisibility(View.VISIBLE);
         }
         progressBar.setVisibility(View.GONE);
+    }
+
+    private void setupCollectButton() {
+        adapter.setOnCollectClickListener(reservation -> {
+            // Create an instance of PinVerificationDialogFragment
+            PinVerificationDialogFragment pinVerificationDialog = PinVerificationDialogFragment.newInstance();
+
+            // Create a Bundle and add the reservation details
+            Bundle args = new Bundle();
+            args.putString("source", "reservation");
+            args.putString("foodBankId", reservation.getFoodBankId());
+            args.putString("foodName", reservation.getCategory());
+            args.putString("category", reservation.getCategory());
+            args.putInt("quantity", reservation.getQuantity());
+            args.putString("reservationId", reservation.getReservationId());
+
+            pinVerificationDialog.setArguments(args);
+
+            // Show the dialog
+            pinVerificationDialog.show(getChildFragmentManager(), "PinVerificationDialogFragment");
+
+
+//            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//            db.collection("users")
+//                    .document(userId)
+//                    .collection("reservations")
+//                    .document(reservation.getReservationId())
+//                    .update("status", "collected")
+//                    .addOnSuccessListener(aVoid -> {
+//                        Toast.makeText(getContext(), "Food collected successfully!", Toast.LENGTH_SHORT).show();
+//                        viewModel.loadUserReservations(); // Refresh the list
+//                    })
+//                    .addOnFailureListener(e -> {
+//                        Toast.makeText(getContext(), "Failed to update status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    });
+        });
     }
 }
