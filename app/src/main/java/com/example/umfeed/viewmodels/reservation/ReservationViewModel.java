@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.umfeed.models.reservation.Reservation;
 import com.example.umfeed.repositories.ReservationRepository;
+
+import java.util.List;
 
 public class ReservationViewModel extends ViewModel {
     private final ReservationRepository repository;
@@ -12,6 +15,8 @@ public class ReservationViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<Boolean> showSuccessDialog = new MutableLiveData<>();
     private final MutableLiveData<Boolean> showErrorDialog = new MutableLiveData<>();
+    private final MutableLiveData<List<Reservation>> reservations = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
     public ReservationViewModel() {
         repository = new ReservationRepository();
@@ -31,6 +36,32 @@ public class ReservationViewModel extends ViewModel {
 
     public LiveData<Boolean> getShowErrorDialog() {
         return showErrorDialog;
+    }
+
+    public LiveData<List<Reservation>> getReservations() {
+        return reservations;
+    }
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public void loadUserReservations() {
+        isLoading.setValue(true);
+
+        repository.getUserReservations(new ReservationRepository.ReservationListCallback() {
+            @Override
+            public void onSuccess(List<Reservation> reservationList) {
+                isLoading.setValue(false);
+                reservations.setValue(reservationList);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                isLoading.setValue(false);
+                errorMessage.setValue(error);
+            }
+        });
     }
 
     public void reserveFood(String foodBankId, String categoryId, String category, int quantity) {

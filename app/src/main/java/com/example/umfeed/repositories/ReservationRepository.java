@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 public class ReservationRepository {
     private final FirebaseFirestore db;
@@ -81,6 +82,20 @@ public class ReservationRepository {
                             .addOnFailureListener(e -> callback.onFailure("Failed to check daily reservations."));
                 }
 
+    public void getUserReservations(ReservationListCallback callback) {
+        db.collection("users").document(userId).collection("reservations")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Reservation> reservations = querySnapshot.toObjects(Reservation.class);
+                    callback.onSuccess(reservations);
+                })
+                .addOnFailureListener(e -> callback.onFailure("Failed to load reservations: " + e.getMessage()));
+    }
+
+    public interface ReservationListCallback {
+        void onSuccess(List<Reservation> reservations);
+        void onFailure(String error);
+    }
 
     public interface ReservationCallback {
         void onSuccess(); // Called when the reservation is successful
