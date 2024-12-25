@@ -3,6 +3,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,15 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
 
     private List<FoodBankInventoryItem> inventoryList;
     private Context context;
+    private OnReserveClickListener listener;
+
+    public interface OnReserveClickListener {
+        void onReserveClick(FoodBankInventoryItem item);
+    }
+
+    public void setOnReserveClickListener(OnReserveClickListener listener) {
+        this.listener = listener;
+    }
 
     public FoodBankInventoryAdapter(List<FoodBankInventoryItem> inventoryList, Context context) {
         this.inventoryList = inventoryList;
@@ -42,6 +52,12 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
         // Assuming you have mapped drawable resources to specific categories
         int imageResId = getImageResourceByCategory(inventoryItem.getCategory());
         holder.foodImage.setImageResource(imageResId);
+
+        holder.reserveButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onReserveClick(inventoryItem);
+            }
+        });
     }
 
     @Override
@@ -88,12 +104,14 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
         public TextView foodCategory;
         public TextView foodQuantity;
         public ImageView foodImage;
+        Button reserveButton;
 
         public InventoryViewHolder(@NonNull View itemView) {
             super(itemView);
             foodCategory = itemView.findViewById(R.id.category_text);
             foodQuantity = itemView.findViewById(R.id.quantity_text);
             foodImage = itemView.findViewById(R.id.foodbankDetailsImage);
+            reserveButton = itemView.findViewById(R.id.reserve_button);
         }
     }
 }

@@ -7,25 +7,18 @@ public class FoodBankInventoryItem {
     private String category; // e.g., "Biscuits and Snacks"
     private Timestamp donationDate; // Date and time of donation
     private String foodBankId; // ID of the associated foodbank
-    private boolean isCollected; // Status of whether the item is collected
-    private boolean isReserved; // Status of whether the item is reserved
     private int quantity; // Quantity of the item
-    private boolean vegetarian; // Whether the item is vegetarian
 
     // Empty constructor required for Firebase
     public FoodBankInventoryItem() {}
 
     // Full constructor
-    public FoodBankInventoryItem(String id, String category, Timestamp donationDate, String foodBankId,
-                                 boolean isCollected, boolean isReserved, int quantity, boolean vegetarian) {
+    public FoodBankInventoryItem(String id, String category, Timestamp donationDate, String foodBankId, int quantity) {
         this.id = id;
         this.category = category;
         this.donationDate = donationDate;
         this.foodBankId = foodBankId;
-        this.isCollected = isCollected;
-        this.isReserved = isReserved;
         this.quantity = quantity;
-        this.vegetarian = vegetarian;
     }
 
     // Getters
@@ -45,20 +38,8 @@ public class FoodBankInventoryItem {
         return foodBankId;
     }
 
-    public boolean isCollected() {
-        return isCollected;
-    }
-
-    public boolean isReserved() {
-        return isReserved;
-    }
-
     public int getQuantity() {
         return quantity;
-    }
-
-    public boolean isVegetarian() {
-        return vegetarian;
     }
 
     // Setters
@@ -78,20 +59,5 @@ public class FoodBankInventoryItem {
         this.foodBankId = foodBankId;
     }
 
-    public void setCollected(boolean collected) {
-        isCollected = collected;
-    }
-
-    public void setReserved(boolean reserved) {
-        isReserved = reserved;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setVegetarian(boolean vegetarian) {
-        this.vegetarian = vegetarian;
-    }
 }
 
