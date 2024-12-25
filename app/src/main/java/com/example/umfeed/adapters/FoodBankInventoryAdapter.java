@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.models.foodbank.FoodBankInventoryItem;
+import com.example.umfeed.utils.CategoryImageUtil;
 
 import java.util.List;
 
@@ -65,8 +66,7 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
         holder.foodCategory.setText(inventoryItem.getCategory());
         holder.foodQuantity.setText(String.valueOf(inventoryItem.getQuantity()));
 
-        // Assuming you have mapped drawable resources to specific categories
-        int imageResId = getImageResourceByCategory(inventoryItem.getCategory());
+        int imageResId = CategoryImageUtil.getImageResourceByCategory(inventoryItem.getCategory());
         holder.foodImage.setImageResource(imageResId);
 
         holder.reserveButton.setOnClickListener(v -> {

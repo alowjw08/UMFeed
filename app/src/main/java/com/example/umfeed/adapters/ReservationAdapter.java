@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.models.reservation.Reservation;
+import com.example.umfeed.utils.CategoryImageUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +46,10 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         Reservation reservation = reservations.get(position);
         holder.bind(reservation);
 
+        // Use CategoryImageUtil for the image
+        int imageResId = CategoryImageUtil.getImageResourceByCategory(reservation.getCategory());
+        holder.foodImage.setImageResource(imageResId);
+
         holder.collectButton.setOnClickListener(v -> {
             if (onCollectClickListener != null) {
                 onCollectClickListener.onCollectClick(reservation);
@@ -63,6 +69,8 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView categoryText, quantityText, foodBankText, reservationDateText;
+        private final ImageView foodImage;
+
         private final Button collectButton;
 
         public ReservationViewHolder(@NonNull View itemView) {
@@ -71,6 +79,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
             quantityText = itemView.findViewById(R.id.foodQuantity);
             foodBankText = itemView.findViewById(R.id.foodBank);
             reservationDateText = itemView.findViewById(R.id.reservationDateText);
+            foodImage = itemView.findViewById(R.id.foodImage);
             collectButton = itemView.findViewById(R.id.btnCollect);
         }
 
