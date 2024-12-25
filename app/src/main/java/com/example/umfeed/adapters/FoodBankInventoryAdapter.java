@@ -3,6 +3,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.models.foodbank.FoodBankInventoryItem;
+import com.example.umfeed.utils.CategoryImageUtil;
 
 import java.util.List;
 
@@ -18,6 +20,22 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
 
     private List<FoodBankInventoryItem> inventoryList;
     private Context context;
+    private OnReserveClickListener onReserveClickListener;
+    private boolean isB40;
+
+
+    public interface OnReserveClickListener {
+        void onReserveClick(FoodBankInventoryItem item);
+    }
+
+    public void setB40Status(boolean isB40) {
+        this.isB40 = isB40;
+        notifyDataSetChanged(); // Refresh the list
+    }
+
+    public void setOnReserveClickListener(OnReserveClickListener listener) {
+        this.onReserveClickListener = listener;
+    }
 
     public FoodBankInventoryAdapter(List<FoodBankInventoryItem> inventoryList, Context context) {
         this.inventoryList = inventoryList;
@@ -36,12 +54,26 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
     public void onBindViewHolder(@NonNull InventoryViewHolder holder, int position) {
         FoodBankInventoryItem inventoryItem = inventoryList.get(position);
 
+        // Show or hide the "Reserve" button based on B40 status
+        holder.reserveButton.setVisibility(isB40 ? View.VISIBLE : View.GONE);
+
+        holder.reserveButton.setOnClickListener(v -> {
+            if (onReserveClickListener != null) {
+                onReserveClickListener.onReserveClick(inventoryItem);
+            }
+        });
+
         holder.foodCategory.setText(inventoryItem.getCategory());
         holder.foodQuantity.setText(String.valueOf(inventoryItem.getQuantity()));
 
-        // Assuming you have mapped drawable resources to specific categories
-        int imageResId = getImageResourceByCategory(inventoryItem.getCategory());
+        int imageResId = CategoryImageUtil.getImageResourceByCategory(inventoryItem.getCategory());
         holder.foodImage.setImageResource(imageResId);
+
+        holder.reserveButton.setOnClickListener(v -> {
+            if (onReserveClickListener != null) {
+                onReserveClickListener.onReserveClick(inventoryItem);
+            }
+        });
     }
 
     @Override
@@ -88,12 +120,14 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
         public TextView foodCategory;
         public TextView foodQuantity;
         public ImageView foodImage;
+        Button reserveButton;
 
         public InventoryViewHolder(@NonNull View itemView) {
             super(itemView);
             foodCategory = itemView.findViewById(R.id.category_text);
             foodQuantity = itemView.findViewById(R.id.quantity_text);
             foodImage = itemView.findViewById(R.id.foodbankDetailsImage);
+            reserveButton = itemView.findViewById(R.id.reserve_button);
         }
     }
 }

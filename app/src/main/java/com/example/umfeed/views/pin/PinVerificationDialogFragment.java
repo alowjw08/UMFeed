@@ -1,6 +1,7 @@
 package com.example.umfeed.views.pin;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.umfeed.R;
 import com.example.umfeed.viewmodels.donation.DonationViewModel;
 import com.example.umfeed.viewmodels.pin.PinVerificationViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class PinVerificationDialogFragment extends DialogFragment {
 
@@ -32,9 +35,26 @@ public class PinVerificationDialogFragment extends DialogFragment {
     private ConstraintLayout cardView;
     private Button buttonClear;
     private boolean isDialogShown = false;
+    private OnDismissListener onDismissListener;
 
     public static PinVerificationDialogFragment newInstance() {
         return new PinVerificationDialogFragment();
+    }
+
+    public void setOnDismissListener(OnDismissListener listener) {
+        this.onDismissListener = listener;
+    }
+
+    public interface OnDismissListener {
+        void onDismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss();
+        }
     }
 
     @Override
@@ -94,6 +114,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
         String location = getArguments() != null ? getArguments().getString("location") : null;
         Boolean vegetarian = getArguments() != null ? getArguments().getBoolean("vegetarian") : null;
         int quantity = getArguments() != null ? getArguments().getInt("quantity") : 0;
+        String reservationId = getArguments() != null ? getArguments().getString("reservationId") : null;
         viewModel.setFoodBankId(foodBankId);
 
         buttonConfirm.setOnClickListener(v -> {
@@ -119,12 +140,19 @@ public class PinVerificationDialogFragment extends DialogFragment {
 
                                 new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonate, 50);
                             } else if ("reservation".equals(source)) {
-                                // Reservation scenario
-//                                new ViewModelProvider(requireActivity())
-//                                        .get(ReservationViewModel.class)  // Update to correct ViewModel if needed
-//                                        .submitReservation(category, vegetarian, quantity, location);
-//
-//                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onReserve, 50);
+                                // Update the reservation as "collected"
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                assert reservationId != null;
+                                db.collection("users")
+                                        .document(userId)
+                                        .collection("reservations")
+                                        .document(reservationId)
+                                        .update("status", "collected")
+                                        .addOnSuccessListener(aVoid -> Log.d("PinVerification", "Reservation collected"))
+                                        .addOnFailureListener(e -> Log.e("PinVerification", "Error updating reservation", e));
+
+                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onCollect, 50);
                             }
                             dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                         } else {
@@ -133,7 +161,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
                             if ("donation".equals(source)) {
                                 new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onDonationError, 50);
                             } else if ("reservation".equals(source)) {
-//                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onReervationError, 50);
+                                new Handler(Looper.getMainLooper()).postDelayed(dialogSuccessFragment::onCollectError, 50);
                             }
                             dialogSuccessFragment.show(getParentFragmentManager(), "DialogSuccessFragment");
                         }
