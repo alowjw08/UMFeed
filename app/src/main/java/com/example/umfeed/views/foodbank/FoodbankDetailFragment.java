@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.umfeed.adapters.FoodBankInventoryAdapter;
 import com.example.umfeed.models.foodbank.FoodBank;
+import com.example.umfeed.utils.B40ValidationUtil;
 import com.example.umfeed.viewmodels.foodbank.FoodbankDetailViewModel;
 import com.example.umfeed.viewmodels.reservation.ReservationViewModel;
 import com.example.umfeed.views.pin.DialogSuccessFragment;
@@ -87,6 +88,21 @@ public class FoodbankDetailFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new FoodBankInventoryAdapter(null, requireContext());
         recyclerView.setAdapter(adapter);
+
+        // Check B40 status
+        B40ValidationUtil b40ValidationUtil = new B40ValidationUtil();
+        b40ValidationUtil.checkB40Status(new B40ValidationUtil.B40StatusCallback() {
+            @Override
+            public void onResult(boolean isB40) {
+                adapter.setB40Status(isB40); // Update adapter with B40 status
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("FoodbankDetailFragment", "Error checking B40 status", e);
+                adapter.setB40Status(false); // Default to non-B40
+            }
+        });
 
         // Set the reserve button listener
         adapter.setOnReserveClickListener(item -> {

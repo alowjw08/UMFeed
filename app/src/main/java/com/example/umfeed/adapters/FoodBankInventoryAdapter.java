@@ -19,14 +19,21 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
 
     private List<FoodBankInventoryItem> inventoryList;
     private Context context;
-    private OnReserveClickListener listener;
+    private OnReserveClickListener onReserveClickListener;
+    private boolean isB40;
+
 
     public interface OnReserveClickListener {
         void onReserveClick(FoodBankInventoryItem item);
     }
 
+    public void setB40Status(boolean isB40) {
+        this.isB40 = isB40;
+        notifyDataSetChanged(); // Refresh the list
+    }
+
     public void setOnReserveClickListener(OnReserveClickListener listener) {
-        this.listener = listener;
+        this.onReserveClickListener = listener;
     }
 
     public FoodBankInventoryAdapter(List<FoodBankInventoryItem> inventoryList, Context context) {
@@ -46,6 +53,15 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
     public void onBindViewHolder(@NonNull InventoryViewHolder holder, int position) {
         FoodBankInventoryItem inventoryItem = inventoryList.get(position);
 
+        // Show or hide the "Reserve" button based on B40 status
+        holder.reserveButton.setVisibility(isB40 ? View.VISIBLE : View.GONE);
+
+        holder.reserveButton.setOnClickListener(v -> {
+            if (onReserveClickListener != null) {
+                onReserveClickListener.onReserveClick(inventoryItem);
+            }
+        });
+
         holder.foodCategory.setText(inventoryItem.getCategory());
         holder.foodQuantity.setText(String.valueOf(inventoryItem.getQuantity()));
 
@@ -54,8 +70,8 @@ public class FoodBankInventoryAdapter extends RecyclerView.Adapter<FoodBankInven
         holder.foodImage.setImageResource(imageResId);
 
         holder.reserveButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onReserveClick(inventoryItem);
+            if (onReserveClickListener != null) {
+                onReserveClickListener.onReserveClick(inventoryItem);
             }
         });
     }
