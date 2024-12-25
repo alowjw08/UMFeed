@@ -249,6 +249,7 @@ public class FoodbankDetailFragment extends Fragment {
             dialog.dismiss();
         });
 
+        // Create and show dialog
         dialog.show();
     }
 }

@@ -11,168 +11,190 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.umfeed.R;
+import com.example.umfeed.databinding.FragmentDialogSuccessBinding;
 import com.example.umfeed.viewmodels.pin.DialogSuccessViewModel;
 
 public class DialogSuccessFragment extends DialogFragment {
 
     public static final String TAG = "DialogSuccessFragment";
-    private DialogSuccessViewModel viewModel;
-    private TextView mainTextView;
-    private TextView helperTextView;
-    private ImageView imageView;
-    private ImageButton buttonCancel;
 
-    public String getMainTextView() {
-        return mainTextView.getText().toString();
+    // Define action constants
+    private static final String ACTION_RESERVE = "RESERVE";
+    private static final String ACTION_RESERVE_ERROR = "RESERVE_ERROR";
+    private static final String ACTION_DONATE = "DONATE";
+    private static final String ACTION_DONATE_ERROR = "DONATE_ERROR";
+
+    private DialogSuccessViewModel viewModel;
+    private FragmentDialogSuccessBinding binding;
+    private String pendingAction = null;
+
+    // Single method to handle all actions
+    private synchronized void executeAction(String action) {
+        Log.d(TAG, "Executing action: " + action);
+
+        if (viewModel == null) {
+            Log.d(TAG, "ViewModel not ready, queueing action: " + action);
+            pendingAction = action;
+            return;
+        }
+
+        try {
+            switch (action) {
+                case ACTION_RESERVE:
+                    viewModel.setReservationMessage();
+                    break;
+                case ACTION_RESERVE_ERROR:
+                    viewModel.setReservationErrorMessage();
+                    break;
+                case ACTION_DONATE:
+                    viewModel.setDonationMessage();
+                    break;
+                case ACTION_DONATE_ERROR:
+                    viewModel.setDonationErrorMessage();
+                    break;
+                default:
+                    Log.e(TAG, "Unknown action: " + action);
+            }
+            Log.d(TAG, "Action executed successfully: " + action);
+        } catch (Exception e) {
+            Log.e(TAG, "Error executing action: " + action, e);
+        }
+    }
+
+    // Public methods all follow same pattern
+    public void onReserve() {
+        executeAction(ACTION_RESERVE);
+    }
+
+    public void onReservationError() {
+        executeAction(ACTION_RESERVE_ERROR);
+    }
+
+    public void onDonate() {
+        executeAction(ACTION_DONATE);
+    }
+
+    public void onDonationError() {
+        executeAction(ACTION_DONATE_ERROR);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(DialogSuccessViewModel.class);
+
+        // Execute any pending action
+        if (pendingAction != null) {
+            String action = pendingAction;
+            pendingAction = null; // Clear before executing to avoid loops
+            executeAction(action);
+        }
     }
 
     public static DialogSuccessFragment newInstance() {
         return new DialogSuccessFragment();
     }
 
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dialog_success, container, false);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity(), R.style.TransparentDialog);
+        binding = FragmentDialogSuccessBinding.inflate(getLayoutInflater());
+        builder.setView(binding.getRoot());
 
-        // Initialize the views
-        mainTextView = rootView.findViewById(R.id.mainText);
-        helperTextView = rootView.findViewById(R.id.helperText);
-        imageView = rootView.findViewById(R.id.statusDisplay);
-//        buttonCancel = rootView.findViewById(R.id.cancelButton);
+        // Set up observers first
+        setupObservers();
 
-        // Add touch listener to detect taps outside the CardView
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // If the touch is outside the CardView, dismiss the dialog
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    // Check if the touch is outside the CardView
-                    int[] location = new int[2];
-                    View cardView = rootView.findViewById(R.id.dialogSuccessCard); // The ID of your CardView
-                    cardView.getLocationOnScreen(location);
-                    int cardViewX = location[0];
-                    int cardViewY = location[1];
-                    int cardViewWidth = cardView.getWidth();
-                    int cardViewHeight = cardView.getHeight();
+        Dialog dialog = builder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+        }
 
-                    if (event.getRawX() < cardViewX || event.getRawX() > cardViewX + cardViewWidth ||
-                            event.getRawY() < cardViewY || event.getRawY() > cardViewY + cardViewHeight) {
-                        dismiss(); // Dismiss the dialog
-                    }
-                }
-                return true;  // Consume the touch event
-            }
-        });
-//        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0x00ffffff));
-        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        return rootView;
+        return dialog;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        viewModel = new ViewModelProvider(this).get(DialogSuccessViewModel.class);
-        viewModel = new ViewModelProvider(requireActivity()).get(DialogSuccessViewModel.class);
 
-//        buttonCancel = view.findViewById(R.id.cancelButton);
-//        buttonCancel.setOnClickListener(v -> dismissAllowingStateLoss());
+        // Setup touch listener for dismissing on outside tap
+        view.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                View cardView = binding.dialogSuccessCard;
+                int[] location = new int[2];
+                cardView.getLocationOnScreen(location);
+                float x = event.getRawX();
+                float y = event.getRawY();
 
-        // Observe changes to the mainText, helperText, and imageResource
-        viewModel.getMainText().observe(getViewLifecycleOwner(), mainText -> {
-            if (mainTextView != null) {
-                mainTextView.setText(mainText);
+                if (x < location[0] || x > location[0] + cardView.getWidth() ||
+                        y < location[1] || y > location[1] + cardView.getHeight()) {
+                    dismiss();
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        // Observe ViewModel states
+        viewModel.getMainText().observe(getViewLifecycleOwner(), text -> {
+            if (binding.mainText != null && text != null) {
+                binding.mainText.setText(text);
             }
         });
-        viewModel.getHelperText().observe(getViewLifecycleOwner(), helperText -> {
-            if (helperTextView != null) {
-                helperTextView.setText(helperText);
+
+        viewModel.getHelperText().observe(getViewLifecycleOwner(), text -> {
+            if (binding.helperText != null && text != null) {
+                binding.helperText.setText(text);
             }
         });
-        viewModel.getImageResource().observe(getViewLifecycleOwner(), imageRes -> {
-            if (imageView != null) {
-                imageView.setImageResource(imageRes);
-            }
-        });
-    }
 
-//@Override
-//public Dialog onCreateDialog(Bundle savedInstanceState) {
-//    return new AlertDialog.Builder(getActivity())
-//            .setView(R.layout.fragment_dialog_success)
-//            .create();
-//}
-
-@Override
-public Dialog onCreateDialog(Bundle savedInstanceState) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-            .setView(R.layout.fragment_dialog_success);
-
-    // Create the dialog
-    AlertDialog dialog = builder.create();
-
-    // Use onPrepareDialog() to update the message before the dialog is displayed
-    dialog.setOnShowListener(d -> {
-        onPrepareDialog(dialog);
-    });
-
-    return dialog;
-}
-    public void onPrepareDialog(Dialog dialog) {
-        TextView mainTextView = dialog.findViewById(R.id.mainText);
-        TextView helperTextView = dialog.findViewById(R.id.helperText);
-        ImageView imageView = dialog.findViewById(R.id.statusDisplay);
-
-        viewModel.getMainText().observe(getViewLifecycleOwner(), mainText -> {
-            if (mainTextView != null) {
-                mainTextView.setText(mainText);
-                Log.d("Main Text:", mainText);
-            }
-        });
-        viewModel.getHelperText().observe(getViewLifecycleOwner(), helperText -> {
-            if (helperTextView != null) {
-                helperTextView.setText(helperText);
-                Log.d("Helper Text:", helperText);
-            }
-        });
-        viewModel.getImageResource().observe(getViewLifecycleOwner(), imageRes -> {
-            if (imageView != null) {
-                imageView.setImageResource(imageRes);
+        viewModel.getImageResource().observe(getViewLifecycleOwner(), resId -> {
+            if (binding.statusDisplay != null && resId != null) {
+                binding.statusDisplay.setImageResource(resId);
             }
         });
     }
 
-    // TODO: create logic for this (if donate, onDonate. if reserve, onReserve) (put at donate&reserve button onClickListeners)
-    public void onDonate() {
-        viewModel.setDonationMessage();
+    private void setupObservers() {
+        Log.d(TAG, "Setting up observers");
+        viewModel.getMainText().observe(this, text -> {
+            Log.d(TAG, "Received main text update: " + text);
+            if (binding != null && binding.mainText != null && text != null) {
+                binding.mainText.setText(text);
+                binding.mainText.setVisibility(View.VISIBLE);
+            }
+        });
+
+        viewModel.getHelperText().observe(this, text -> {
+            Log.d(TAG, "Received helper text update: " + text);
+            if (binding != null && binding.helperText != null && text != null) {
+                binding.helperText.setText(text);
+                binding.helperText.setVisibility(View.VISIBLE);
+            }
+        });
+
+        viewModel.getImageResource().observe(this, resId -> {
+            Log.d(TAG, "Received image update");
+            if (binding != null && binding.statusDisplay != null && resId != null) {
+                binding.statusDisplay.setImageResource(resId);
+                binding.statusDisplay.setVisibility(View.VISIBLE);
+            }
+        });
     }
-    public void onReserve() {
-        viewModel.setReservationMessage();
-    }
-    public void onDonationError() {
-        viewModel.setDonationErrorMessage();
-    }
-    public void onReservationError() {
-        viewModel.setReservationErrorMessage();
-    }
-    public void onCollect() {
-        viewModel.setCollectionMessage();
-    }
-    public void onCollectionError() {
-        viewModel.setCollectionErrorMessage();
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
