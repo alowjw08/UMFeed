@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,8 @@ public class ReservationListFragment extends Fragment {
             args.putString("category", reservation.getCategory());
             args.putInt("quantity", reservation.getQuantity());
             args.putString("reservationId", reservation.getReservationId());
+
+            if (reservation.getReservationId() == null) Log.d("ReservationListFragment", "Reservation ID is null");
 
             pinVerificationDialog.setArguments(args);
 

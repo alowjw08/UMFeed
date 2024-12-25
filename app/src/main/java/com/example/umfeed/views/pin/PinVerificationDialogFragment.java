@@ -125,6 +125,7 @@ public class PinVerificationDialogFragment extends DialogFragment {
                                 // Update the reservation as "collected"
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                assert reservationId != null;
                                 db.collection("users")
                                         .document(userId)
                                         .collection("reservations")

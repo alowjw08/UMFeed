@@ -8,8 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.umfeed.models.reservation.Reservation;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,11 +88,19 @@ public class ReservationRepository {
         db.collection("users").document(userId).collection("reservations")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    List<Reservation> reservations = querySnapshot.toObjects(Reservation.class);
+                    List<Reservation> reservations = new ArrayList<>();
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        Reservation reservation = document.toObject(Reservation.class);
+                        if (reservation != null) {
+                            reservation.setReservationId(document.getId()); // Set the document ID
+                            reservations.add(reservation);
+                        }
+                    }
                     callback.onSuccess(reservations);
                 })
                 .addOnFailureListener(e -> callback.onFailure("Failed to load reservations: " + e.getMessage()));
     }
+
 
     public interface ReservationListCallback {
         void onSuccess(List<Reservation> reservations);
