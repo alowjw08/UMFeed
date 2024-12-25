@@ -5,8 +5,7 @@
     android:id="@+id/donationFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.foodbank.FoodbankListFragment"
-    android:background="@drawable/home_rounded_bottom">
+    tools:context=".views.foodbank.FoodbankListFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/topCard"
@@ -27,11 +26,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:autoSizeTextType="uniform"
                 android:text="Food Donation"
                 android:textColor="#FFFFFF"
                 android:textSize="34sp"
                 android:textStyle="bold"
-                android:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,9 +39,9 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autoSizeTextType="uniform"
                 android:text="Fill in food details"
                 android:textColor="#FFFFFF"
-                android:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/textView"
                 app:layout_constraintHorizontal_bias="0.495"
