@@ -1,16 +1,21 @@
 package com.example.umfeed.repositories;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.umfeed.R;
 import com.example.umfeed.models.reservation.Reservation;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -86,13 +91,25 @@ public class ReservationRepository {
 
     public void getUserReservations(ReservationListCallback callback) {
         db.collection("users").document(userId).collection("reservations")
+                .orderBy("expiryDate", Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     List<Reservation> reservations = new ArrayList<>();
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                         Reservation reservation = document.toObject(Reservation.class);
-                        if (reservation != null) {
-                            reservation.setReservationId(document.getId()); // Set the document ID
+                        if (reservation != null && reservation.getStatus().equals("pending")) {
+                            reservation.setReservationId(document.getId());
+
+                            Timestamp expiryTimestamp = reservation.getExpiryDate();
+                            if (expiryTimestamp != null) {
+                                long daysUntilExpiry = (expiryTimestamp.getSeconds() * 1000L - System.currentTimeMillis()) / (24 * 60 * 60 * 1000);
+
+                                if (daysUntilExpiry < 0) {
+                                    updateReservationStatus(reservation.getReservationId(), "expired");
+                                    reservation.setStatus("expired");
+                                }
+                            }
+
                             reservations.add(reservation);
                         }
                     }
@@ -100,7 +117,14 @@ public class ReservationRepository {
                 })
                 .addOnFailureListener(e -> callback.onFailure("Failed to load reservations: " + e.getMessage()));
     }
-
+    public void updateReservationStatus(String reservationId, String newStatus) {
+        db.collection("users")
+                .document(userId)
+                .collection("reservations")
+                .document(reservationId)
+                .update("status", newStatus)
+                .addOnFailureListener(e -> Log.e("ReservationRepo", "Error updating status", e));
+    }
 
     public interface ReservationListCallback {
         void onSuccess(List<Reservation> reservations);

@@ -77,7 +77,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView categoryText, quantityText, foodBankText, reservationDateText;
+        private final TextView categoryText, quantityText, foodBankText, reservationDateText, tvExpiringSoon;
         private final ImageView foodImage;
 
         private final Button collectButton;
@@ -90,12 +90,25 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
             reservationDateText = itemView.findViewById(R.id.reservationDateText);
             foodImage = itemView.findViewById(R.id.foodImage);
             collectButton = itemView.findViewById(R.id.btnCollect);
+            tvExpiringSoon = itemView.findViewById(R.id.TVExpiringSoon);
         }
 
         public void bind(Reservation reservation) {
             categoryText.setText(reservation.getCategory());
             quantityText.setText(String.format(Locale.getDefault(), "%d pack(s)", reservation.getQuantity()));
             foodBankText.setText(String.format("Food Bank: %s", reservation.getFoodBankId()));
+
+            if (reservation.getExpiryDate() != null) {
+                long daysUntilExpiry = (reservation.getExpiryDate().getSeconds() * 1000L
+                        - System.currentTimeMillis()) / (24 * 60 * 60 * 1000);
+
+                if (daysUntilExpiry <= 3 && daysUntilExpiry >= 0) {
+                    tvExpiringSoon.setVisibility(View.VISIBLE);
+                    tvExpiringSoon.setText(daysUntilExpiry + " days remaining");
+                } else {
+                    tvExpiringSoon.setVisibility(View.GONE);
+                }
+            }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
             reservationDateText.setText(String.format("Reserved: %s",

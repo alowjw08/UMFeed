@@ -126,19 +126,17 @@ public class ReservationListFragment extends Fragment {
             pinVerificationDialog.setArguments(args);
 
             // Handle the result when the dialog is dismissed
-            pinVerificationDialog.setOnDismissListener(() -> {
-                // Reload reservations or remove the collected reservation
-                adapter.removeReservation(reservation);
-                if (adapter.getItemCount() == 0) {
-                    recyclerView.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
-                }
-            });
-
-            //2nd option to reload all reservations if removing the specific item manually doesn't work
 //            pinVerificationDialog.setOnDismissListener(() -> {
-//                fetchReservations();
+//                // Reload reservations or remove the collected reservation
+//                adapter.removeReservation(reservation);
+//                if (adapter.getItemCount() == 0) {
+//                    recyclerView.setVisibility(View.GONE);
+//                    emptyView.setVisibility(View.VISIBLE);
+//                }
 //            });
+
+//            2nd option to reload all reservations if removing the specific item manually doesn't work
+            pinVerificationDialog.setOnDismissListener(this::fetchReservations);
 
             // Show the dialog
             pinVerificationDialog.show(getChildFragmentManager(), "PinVerificationDialogFragment");
