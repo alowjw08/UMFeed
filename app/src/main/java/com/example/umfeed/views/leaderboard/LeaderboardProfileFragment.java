@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.umfeed.R;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.umfeed.models.user.User;
@@ -77,8 +78,12 @@ public class LeaderboardProfileFragment extends Fragment {
                 }
             }
 
+            // If the user is found in the leaderboard, use that data
             if (currentUser != null) {
                 updateUI(currentUser);
+            } else {
+                // Fetch the user's profile from another data source (non-donors data)
+                fetchNonDonorProfile(email);
             }
 
             // Hide the loading screen
@@ -90,12 +95,33 @@ public class LeaderboardProfileFragment extends Fragment {
         });
     }
 
+    private void fetchNonDonorProfile(String email) {
+        // Simulate fetching a non-donor user profile (for example, from Firebase or local storage)
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users") // Assuming non-donors are in the 'users' collection
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                        User nonDonor = document.toObject(User.class);
+                        if (nonDonor != null) {
+                            updateUI(nonDonor);  // Update the UI with non-donor data
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("LeaderboardProfile", "Error loading non-donor profile", e);
+                });
+    }
+
+
     private void updateUI(User user) {
         tvUserName.setText(String.format("%s %s",
                 user.getFirstName() != null ? user.getFirstName() : "",
                 user.getLastName() != null ? user.getLastName() : ""));
         // Unranked leaderboard profile shown if unranked user views their own profile from profile page shortcut
-        tvCurrentRank.setText(user.getRank() != -1 ? "#" + user.getRank() : "Unranked");
+        tvCurrentRank.setText(user.getRank() != 0 ? "#" + user.getRank() : "Unranked");
         tvSumItemsDonated.setText(String.valueOf(user.getTotalDonations()));
 
         // Format and set the date
