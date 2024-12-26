@@ -20,7 +20,7 @@ public class FoodbankListViewModel extends ViewModel {
         loadFoodBanks();
     }
 
-    public LiveData<List<FoodBank>> getFoodBankList() {
+    public MutableLiveData<List<FoodBank>> getFoodBankList() {
         return foodBankList;
     }
 
@@ -32,5 +32,9 @@ public class FoodbankListViewModel extends ViewModel {
                 foodBankList.setValue(foodBanks);
             }
         });
+    }
+
+    public void initializeFoodBankList() {
+        loadFoodBanks();
     }
 }

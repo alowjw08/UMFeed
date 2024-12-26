@@ -20,6 +20,8 @@ import com.example.umfeed.R;
 import com.example.umfeed.adapters.FoodBankAdapter;
 import com.example.umfeed.viewmodels.foodbank.FoodbankListViewModel;
 
+import java.util.ArrayList;
+
 public class FoodbankListFragment extends Fragment {
 
     private FoodbankListViewModel viewModel;
@@ -49,7 +51,7 @@ public class FoodbankListFragment extends Fragment {
 
         // Initialize the ViewModel
         viewModel = new ViewModelProvider(this).get(FoodbankListViewModel.class);
-
+        recyclerView.setAdapter(foodBankAdapter);
         // Observe the food bank list and update the adapter
         viewModel.getFoodBankList().observe(getViewLifecycleOwner(), foodBanks -> {
             if (foodBanks != null) {
@@ -75,6 +77,8 @@ public class FoodbankListFragment extends Fragment {
                 } else {
                     foodBankAdapter.notifyDataSetChanged();
                 }
+            } else {
+                Log.d("FoodBankListGragmnet", "foodbank list is null");
             }
         });
     }
