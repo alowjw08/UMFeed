@@ -37,13 +37,27 @@ public class LeaderboardRepository {
         db.collection("users")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Parse only donors for the leaderboard
                     List<User> users = parseDonors(queryDocumentSnapshots);
                     int totalDonations = users.stream().mapToInt(User::getTotalDonations).sum();
+
+                    // Sort users by total donations in descending order
                     users.sort(Comparator.comparingInt(User::getTotalDonations).reversed());
 
-                    // Set ranks locally without updating Firestore
+                    // Set ranks with equal ranks for users with the same total donations
+                    int currentRank = 1;
                     for (int i = 0; i < users.size(); i++) {
-                        users.get(i).setRank(i + 1); // Local rank calculation
+                        // If this user has the same donation total as the previous user, they get the same rank
+                        if (i > 0 && users.get(i).getTotalDonations() == users.get(i - 1).getTotalDonations()) {
+                            users.get(i).setRank(users.get(i - 1).getRank());
+                        } else {
+                            users.get(i).setRank(currentRank);
+                        }
+
+                        // Only increment the rank if the current user's donation total is different from the previous user
+                        if (i == users.size() - 1 || users.get(i).getTotalDonations() != users.get(i + 1).getTotalDonations()) {
+                            currentRank = users.get(i).getRank() + 1;  // Set the rank for the next distinct total donations
+                        }
                     }
 
                     // Calculate recipient count (Check reservations for all users, including non-donors)
@@ -130,8 +144,7 @@ public class LeaderboardRepository {
                         users.get(i).setRank(i + 1); // Local rank calculation
                     }
 
-                    // You can optionally update Firestore with other fields (like totalDonations), but not rank
-                    updateTotalDonationsForAllUsers(); // Optional if you still want to update donations
+                    updateTotalDonationsForAllUsers();
 
                 })
                 .addOnFailureListener(e -> {

@@ -17,6 +17,10 @@ import com.example.umfeed.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.umfeed.models.user.User;
+import com.example.umfeed.repositories.LeaderboardRepository;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class LeaderboardProfileFragment extends Fragment {
 
@@ -61,25 +65,30 @@ public class LeaderboardProfileFragment extends Fragment {
         // Show the loading screen
         progressBar.setVisibility(View.VISIBLE);
 
-                        // Now fetch the current user's profile
-                        db.collection("users")
-                                .whereEqualTo("email", email)
-                                .get()
-                                .addOnSuccessListener(userQuery -> {
-                                    if (!userQuery.isEmpty()) {
-                                        User user = userQuery.getDocuments().get(0).toObject(User.class);
-                                        if (user != null) {
-                                            updateUI(user);
-                                        }
-                                    } else {
-                                        Log.d("LeaderboardProfile", "No user found with email: " + email);
-                                    }
+        LeaderboardRepository leaderboardRepository = new LeaderboardRepository();
+        // Fetch all leaderboard users
+        leaderboardRepository.fetchLeaderboardData(leaderboardData -> {
+            // Find the current user from the leaderboard data
+            User currentUser = null;
+            for (User user : leaderboardData.getUsers()) {
+                if (user.getEmail().equals(email)) {
+                    currentUser = user;
+                    break;
+                }
+            }
 
-                                    // Hide the loading screen
-                                    progressBar.setVisibility(View.GONE);
-                                });
-   }
+            if (currentUser != null) {
+                updateUI(currentUser);
+            }
 
+            // Hide the loading screen
+            progressBar.setVisibility(View.GONE);
+
+        }, error -> {
+            Log.e("LeaderboardProfile", "Error loading leaderboard data", error);
+            progressBar.setVisibility(View.GONE);
+        });
+    }
 
     private void updateUI(User user) {
         tvUserName.setText(String.format("%s %s",
@@ -90,7 +99,8 @@ public class LeaderboardProfileFragment extends Fragment {
         tvSumItemsDonated.setText(String.valueOf(user.getTotalDonations()));
 
         // Format and set the date
-        String formattedDate = user.getCreatedAt().toDate().toString(); // Replace with appropriate formatting
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        String formattedDate = dateFormat.format(user.getCreatedAt().toDate());
         tvDateJoined.setText(formattedDate);
 
         // Set badges visibility

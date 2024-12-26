@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ProfileFragment extends Fragment {
 
     private TextView tvUserName, tvEmailProfile;
-    private Button buttonForgotPassword, buttonLogOut, buttonSavedRecipes, buttonDonatedItems;
+    private Button buttonForgotPassword, buttonLogOut, buttonSavedRecipes, buttonLeaderboardProfile, buttonDonatedItems;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
 
@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
         buttonForgotPassword = view.findViewById(R.id.buttonForgotPassword);
         buttonLogOut = view.findViewById(R.id.buttonLogOut);
         buttonSavedRecipes = view.findViewById(R.id.buttonSavedRecipes);
+        buttonLeaderboardProfile = view.findViewById(R.id.buttonLeaderboardProfile);
         buttonDonatedItems = view.findViewById(R.id.buttonDonatedItems);
 
         // Initialize Firebase
@@ -128,6 +129,12 @@ public class ProfileFragment extends Fragment {
         buttonDonatedItems.setOnClickListener(v ->
                 Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_donatedItemsFragment)
         );
+
+        buttonLeaderboardProfile.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("email", currentUser.getEmail()); // Pass the user's email
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_leaderboardProfileFragment, bundle);
+        });
 
         return view;
     }

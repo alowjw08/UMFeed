@@ -149,7 +149,7 @@
         app:layout_constraintTop_toBottomOf="@+id/functionality" />
 
     <Button
-        android:id="@+id/b40Status"
+        android:id="@+id/buttonLeaderboardProfile"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -172,7 +172,7 @@
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/b40Status" />
+        app:layout_constraintTop_toTopOf="@+id/buttonLeaderboardProfile" />
 
     <Button
         android:id="@+id/buttonLogOut"
