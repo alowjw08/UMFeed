@@ -32,8 +32,8 @@ public class FoodBankRepository {
                     List<FoodBankInventoryItem> inventoryList = new ArrayList<>();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         FoodBankInventoryItem item = doc.toObject(FoodBankInventoryItem.class);
-                        if (item != null) {
-                            item.setId(doc.getId()); // Set the document ID
+                        if (item != null && item.getQuantity() > 0) {
+                            item.setId(doc.getId());
                             inventoryList.add(item);
                         }
                     }

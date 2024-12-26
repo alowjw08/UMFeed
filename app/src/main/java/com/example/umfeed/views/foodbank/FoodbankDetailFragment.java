@@ -187,6 +187,8 @@ public class FoodbankDetailFragment extends Fragment {
                 dialogFragment.onReserve();
                 dialogFragment.show(getChildFragmentManager(), DialogSuccessFragment.TAG);
                 reservationViewModel.clearDialogFlags(); // Reset dialog flag
+
+                viewModel.loadFoodBankInventory(foodBankId);
             }
         });
 
@@ -197,6 +199,8 @@ public class FoodbankDetailFragment extends Fragment {
                 dialogFragment.onReservationError();
                 dialogFragment.show(getChildFragmentManager(), DialogSuccessFragment.TAG);
                 reservationViewModel.clearDialogFlags(); // Reset dialog flag
+
+                viewModel.loadFoodBankInventory(foodBankId);
             }
         });
 
