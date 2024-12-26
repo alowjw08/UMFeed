@@ -168,6 +168,7 @@
         android:layout_width="86dp"
         android:layout_height="83dp"
         android:src="@drawable/badge1"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/TVBadges"
         app:layout_constraintHorizontal_bias="0.0"
@@ -177,51 +178,52 @@
 
     <ImageView
         android:id="@+id/IVsilverBadge"
-        android:layout_width="94dp"
-        android:layout_height="88dp"
+        android:layout_width="86dp"
+        android:layout_height="83dp"
         android:src="@drawable/badge2"
-        app:layout_constraintBottom_toBottomOf="@+id/IVbronzeBadge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/IVbronzeBadge"
+        app:layout_constraintHorizontal_bias="0.278"
+        app:layout_constraintStart_toStartOf="@+id/TVBadges"
         app:layout_constraintTop_toTopOf="@+id/IVbronzeBadge"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/IVgoldBadge"
-        android:layout_width="100dp"
-        android:layout_height="94dp"
+        android:layout_width="86dp"
+        android:layout_height="83dp"
         android:src="@drawable/badge3"
-        app:layout_constraintBottom_toBottomOf="@+id/IVsilverBadge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/IVsilverBadge"
-        app:layout_constraintTop_toTopOf="@+id/IVsilverBadge"
+        app:layout_constraintHorizontal_bias="0.311"
+        app:layout_constraintStart_toEndOf="@+id/TVBadges"
+        app:layout_constraintTop_toTopOf="@+id/IVbronzeBadge"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/IVplatBadge"
-        android:layout_width="106dp"
-        android:layout_height="104dp"
+        android:layout_width="86dp"
+        android:layout_height="83dp"
         android:src="@drawable/badge4"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/IVgoldBadge"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/IVgoldBadge"
-        app:layout_constraintTop_toTopOf="@+id/IVgoldBadge"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="0.743"
+        app:layout_constraintStart_toEndOf="@+id/TVBadges"
+        app:layout_constraintTop_toTopOf="@+id/IVbronzeBadge"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="216dp"
-        android:indeterminate="true"
-        android:visibility="gone"
+        android:layout_gravity="center"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

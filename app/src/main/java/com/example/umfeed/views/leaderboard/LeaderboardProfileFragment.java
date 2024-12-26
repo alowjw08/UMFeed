@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,6 @@ public class LeaderboardProfileFragment extends Fragment {
     private TextView tvUserName, tvCurrentRank, tvSumItemsDonated, tvDateJoined;
     private ImageView ivBronzeBadge, ivSilverBadge, ivGoldBadge, ivPlatBadge;
     private ProgressBar progressBar;
-
     private String email;
 
     private FirebaseFirestore db;
@@ -33,7 +31,6 @@ public class LeaderboardProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_leaderboard_profile, container, false);
-
 
         tvUserName = view.findViewById(R.id.TVUserName);
         tvCurrentRank = view.findViewById(R.id.CurrentRank);
@@ -64,29 +61,25 @@ public class LeaderboardProfileFragment extends Fragment {
         // Show the loading screen
         progressBar.setVisibility(View.VISIBLE);
 
-        db.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        // Get the first document from the result
-                        User user = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class);
-                        if (user != null) {
-                            updateUI(user);
-                        }
-                    } else {
-                        Log.d("LeaderboardProfile", "No user found with email: " + email);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Hide the loading screen
-                    progressBar.setVisibility(View.GONE);
+                        // Now fetch the current user's profile
+                        db.collection("users")
+                                .whereEqualTo("email", email)
+                                .get()
+                                .addOnSuccessListener(userQuery -> {
+                                    if (!userQuery.isEmpty()) {
+                                        User user = userQuery.getDocuments().get(0).toObject(User.class);
+                                        if (user != null) {
+                                            updateUI(user);
+                                        }
+                                    } else {
+                                        Log.d("LeaderboardProfile", "No user found with email: " + email);
+                                    }
 
-                    Log.e("UserProfile", "Failed to load user profile", e);
-                    Toast.makeText(getContext(), "Failed to load profile. Please try again.", Toast.LENGTH_SHORT).show();
-                });
+                                    // Hide the loading screen
+                                    progressBar.setVisibility(View.GONE);
+                                });
+   }
 
-    }
 
     private void updateUI(User user) {
         tvUserName.setText(String.format("%s %s",
@@ -101,10 +94,11 @@ public class LeaderboardProfileFragment extends Fragment {
         tvDateJoined.setText(formattedDate);
 
         // Set badges visibility
-        ivBronzeBadge.setVisibility(user.getDonorLevel() == User.DonorLevel.BRONZE ? View.VISIBLE : View.GONE);
-        ivSilverBadge.setVisibility(user.getDonorLevel() == User.DonorLevel.SILVER? View.VISIBLE : View.GONE);
-        ivGoldBadge.setVisibility(user.getDonorLevel() == User.DonorLevel.GOLD ? View.VISIBLE : View.GONE);
-        ivPlatBadge.setVisibility(user.getDonorLevel() == User.DonorLevel.PLATINUM ? View.VISIBLE : View.GONE);
+        ivBronzeBadge.setVisibility(user.getDonorLevel().ordinal() >= User.DonorLevel.BRONZE.ordinal() ? View.VISIBLE : View.GONE);
+        ivSilverBadge.setVisibility(user.getDonorLevel().ordinal() >= User.DonorLevel.SILVER.ordinal() ? View.VISIBLE : View.GONE);
+        ivGoldBadge.setVisibility(user.getDonorLevel().ordinal() >= User.DonorLevel.GOLD.ordinal() ? View.VISIBLE : View.GONE);
+        ivPlatBadge.setVisibility(user.getDonorLevel().ordinal() >= User.DonorLevel.PLATINUM.ordinal() ? View.VISIBLE : View.GONE);
+
     }
 }
 
