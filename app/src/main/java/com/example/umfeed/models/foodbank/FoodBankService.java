@@ -2,6 +2,7 @@ package com.example.umfeed.models.foodbank;
 
 import android.util.Log;
 
+import com.example.umfeed.viewmodels.donation.UserDonationViewModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.CollectionReference;

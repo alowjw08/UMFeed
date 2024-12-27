@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- Food Item Container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/donationFoodCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#A7BEEF"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Inner Layout for Food Details -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/donationFoodImage"
+                android:layout_width="87dp"
+                android:layout_height="87dp"
+                android:layout_marginStart="4dp"
+                android:contentDescription="Food Image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/food_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.222" />
+
+            <TextView
+                android:id="@+id/donationFoodCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:text="Marie Biscuit"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/donationFoodImage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/donationFoodQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="1 pack"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/donationFoodCategory"
+                app:layout_constraintTop_toBottomOf="@id/donationFoodCategory" />
+
+
+            <TextView
+                android:id="@+id/donationFoodBank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Food Bank: KK12"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/donationFoodCategory"
+                app:layout_constraintTop_toBottomOf="@id/donationFoodQuantity" />
+
+            <TextView
+                android:id="@+id/donationDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Donated: 01 Jan 2024, 12:00"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/donationFoodCategory"
+                app:layout_constraintTop_toBottomOf="@id/donationFoodBank" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,6 +38,11 @@ public class DonationViewModel extends ViewModel {
 
         // Find the food bank by name
         Query foodBankQuery = foodBanksRef.whereEqualTo("name", foodBankName);
+
+        db.collection("users").document(userId)
+                .update("totalDonations", FieldValue.increment(1))
+                .addOnFailureListener(e -> Log.e("Error", "Failed to increment donations", e));
+
         foodBankQuery.get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
@@ -53,35 +58,10 @@ public class DonationViewModel extends ViewModel {
                         donationData.put("donationDate", FieldValue.serverTimestamp());
 
                         // Handle donationsRef
-                        donationsRef.whereEqualTo("category", category).get()
-                                .addOnSuccessListener(donationsSnapshot -> {
-                                    if (!donationsSnapshot.isEmpty()) {
-                                        // Category exists in donationsRef, increment the quantity
-                                        DocumentSnapshot donationDoc = donationsSnapshot.getDocuments().get(0);
-                                        String donationDocId = donationDoc.getId();
-
-                                        // Increment quantity in donationsRef
-                                        donationsRef.document(donationDocId).update("quantity", FieldValue.increment(quantity), "donationDate", FieldValue.serverTimestamp())
-                                                .addOnSuccessListener(aVoid -> {
-                                                    // After updating donation, handle the inventoryRef
-                                                    updateInventoryRef(donationData);
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    // Handle failure in updating donation
-                                                    donationSubmissionStatus.setValue(false);
-                                                });
-                                    } else {
-                                        // Category does not exist, add a new donation
-                                        donationsRef.add(donationData)
-                                                .addOnSuccessListener(documentReference -> {
-                                                    // After adding donation, handle the inventoryRef
-                                                    updateInventoryRef(donationData);
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    // Handle failure in adding donation
-                                                    donationSubmissionStatus.setValue(false);
-                                                });
-                                    }
+                        donationsRef.add(donationData)
+                                .addOnSuccessListener(documentReference -> {
+                                    // After adding donation, handle the inventoryRef
+                                    updateInventoryRef(donationData);
                                 })
                                 .addOnFailureListener(e -> {
                                     // Handle failure in checking existing donations

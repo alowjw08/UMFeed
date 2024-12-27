@@ -3,6 +3,8 @@ package com.example.umfeed.models.foodbank;
 import androidx.annotation.Keep;
 import com.google.firebase.Timestamp;
 
+import java.util.Objects;
+
 @Keep
 public class FoodBank {
     private String id;

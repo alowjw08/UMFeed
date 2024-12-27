@@ -161,7 +161,7 @@
 
     <fragment
         android:id="@+id/donatedItemsFragment"
-        android:name="com.example.umfeed.views.profile.DonatedItemsFragment"
+        android:name="com.example.umfeed.views.profile.UserDonationFragment"
         android:label="Donated Items" />
 
     <!-- Dialog Fragments -->
