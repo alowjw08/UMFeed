@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -22,7 +23,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.umfeed.R;
-import com.example.umfeed.viewmodels.auth.LoginViewModel;
 import com.example.umfeed.views.auth.LoginActivity;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +31,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -93,24 +97,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigation() {
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
-
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Setup bottom navigation with NavController
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
+        // Create set of top level destinations
+        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(
+                R.id.homeFragment,
+                R.id.chatFragment,
+                R.id.profileFragment
+        ));
+
+        // Configure bottom navigation behavior
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Pop back stack to start destination before navigating
+            if (topLevelDestinations.contains(item.getItemId())) {
+                navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+            }
+            return NavigationUI.onNavDestinationSelected(item, navController);
+        });
+
+        // Handle reselection
         bottomNavigationView.setOnItemReselectedListener(item -> {
-            if (item.getItemId() == R.id.homeFragment) {
-                navController.popBackStack(R.id.homeFragment, false);
+            int currentDestinationId = navController.getCurrentDestination().getId();
+            if (topLevelDestinations.contains(currentDestinationId)) {
+                // Pop to the start of the current tab's back stack
+                navController.popBackStack(currentDestinationId, false);
+            }
+        });
+
+        // Configure NavController behavior
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // Show bottom navigation only for top-level destinations
+            if (topLevelDestinations.contains(destination.getId())) {
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            } else {
+                bottomNavigationView.setVisibility(View.VISIBLE); // Keep visible but consider hiding for certain screens
             }
         });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(navController, (Openable) null) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, (Openable) null)
+                || super.onSupportNavigateUp();
     }
 
     protected void onNewIntent(Intent intent) {

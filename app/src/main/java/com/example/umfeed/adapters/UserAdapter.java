@@ -16,9 +16,6 @@ import com.bumptech.glide.Glide;
 import com.example.umfeed.R;
 import com.example.umfeed.models.user.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class UserAdapter extends ListAdapter<User, UserAdapter.UserViewHolder> {
@@ -46,27 +43,6 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.UserViewHolder> {
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
-    }
-
-    public void updateUserList(List<User> userList) {
-        // Filter out users with totalDonations < 1
-        List<User> filteredList = new ArrayList<>();
-        for (User user : userList) {
-            if (user.getTotalDonations() >= 1) {
-                filteredList.add(user);
-            }
-        }
-
-        // Sort the list by totalDonations in descending order
-        filteredList.sort(Comparator.comparingInt(User::getTotalDonations).reversed());
-
-        // Assign ranks to users
-        for (int i = 0; i < filteredList.size(); i++) {
-            filteredList.get(i).setRank(i + 1);
-        }
-
-        // Submit the sorted list to the adapter
-        submitList(filteredList);
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder {
@@ -104,9 +80,22 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.UserViewHolder> {
 //                    .into(userProfilePicture);
             //pending pfp from user part
 
-            // Set rank and card background color
-            int rank = position + 1;
+            // Rank logic based on total donations (adjusted for ties)
+            List<User> users = getCurrentList();
+            int rank = 1;
+
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getTotalDonations() > user.getTotalDonations()) {
+                    rank++;
+                } else if (users.get(i).getTotalDonations() == user.getTotalDonations() && i != position) {
+                    // Adjust rank if there are ties
+                    rank = rank;  // Keep the same rank
+                    break;
+                }
+            }
+
             userRankTextView.setText(String.valueOf(rank));
+
             // Set card background color based on rank
             switch (rank) {
                 case 1:

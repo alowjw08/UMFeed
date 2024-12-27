@@ -5,9 +5,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.example.umfeed.adapters.UserAdapter;
+import com.example.umfeed.repositories.LeaderboardRepository;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
 import com.example.umfeed.repositories.UserRepository;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import java.util.Objects;
 
@@ -133,16 +140,18 @@ public class User {
     }
 
     public int getTotalDonations() {
-        userRepository = new UserRepository();
-        if (userRepository != null) {
-            userRepository.updateTotalDonationsForUsers();
+        // Use the LeaderboardRepository to update donations for all users
+        LeaderboardRepository leaderboardRepository = new LeaderboardRepository();
+        if (leaderboardRepository != null) {
+            leaderboardRepository.updateTotalDonationsForAllUsers();  // Update donations for all users
         } else {
-            Log.e("User", "UserRepository is null");
+            Log.e("User", "LeaderboardRepository is null");
             return 0;
         }
+
+        // Return the total donations for the current user
         return this.totalDonations;
     }
-
 
     public void setTotalDonations(int totalDonations) {
         this.totalDonations = totalDonations;
@@ -165,16 +174,11 @@ public class User {
         this.lastLoginAt = lastLoginAt;
     }
 
-    public int getRank() { return this.rank+1; }
+    public int getRank() { return this.rank; }
 
     public void setRank(int rank) { this.rank = rank; }
-
     public boolean isDonor(){
         return totalDonations >= 1;
-    }
-
-    public UserBadges getCurrentBadges() {
-        return currentBadges;
     }
 
     public void setCurrentBadges(UserBadges currentBadges) {
@@ -185,7 +189,6 @@ public class User {
         private boolean bronzeDonor;
         private boolean silverDonor;
         private boolean goldDonor;
-
         private boolean platinumDonor;
 
         public UserBadges() {}
@@ -197,32 +200,16 @@ public class User {
             this.platinumDonor = platinumDonor;
         }
 
-        public boolean isBronzeDonor() {
-            return bronzeDonor;
-        }
-
         public void setBronzeDonor(boolean bronzeDonor) {
             this.bronzeDonor = bronzeDonor;
-        }
-
-        public boolean isSilverDonor() {
-            return silverDonor;
         }
 
         public void setSilverDonor(boolean silverDonor) {
             this.silverDonor = silverDonor;
         }
 
-        public boolean isGoldDonor() {
-            return goldDonor;
-        }
-
         public void setGoldDonor(boolean goldDonor) {
             this.goldDonor = goldDonor;
-        }
-
-        public boolean isPlatinumDonor() {
-            return platinumDonor;
         }
 
         public void setPlatinumDonor(boolean platinumDonor) {
