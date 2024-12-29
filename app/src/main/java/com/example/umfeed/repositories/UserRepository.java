@@ -266,4 +266,21 @@ public class UserRepository {
 
         return userLiveData;
     }
+
+    public LiveData<Result<Void>> updateProfilePicture(String profilePictureUrl) {
+        MutableLiveData<Result<Void>> resultLiveData = new MutableLiveData<>();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser == null) {
+            resultLiveData.setValue(Result.failure(new IllegalStateException("User not logged in")));
+            return resultLiveData;
+        }
+
+        executor.execute(() -> db.collection("users").document(currentUser.getUid())
+                .update("profilePicture", profilePictureUrl)
+                .addOnSuccessListener(aVoid -> resultLiveData.postValue(Result.success(null)))
+                .addOnFailureListener(e -> resultLiveData.postValue(Result.failure(e))));
+        return resultLiveData;
+    }
+
 }

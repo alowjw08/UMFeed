@@ -97,6 +97,8 @@ dependencies {
     implementation(libs.cardview.v7)
     implementation(libs.foundation.android)
     implementation(libs.recyclerview)
+    implementation("com.squareup.picasso:picasso:2.8")
+    implementation ("jp.wasabeef:picasso-transformations:2.4.0")
     annotationProcessor(libs.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

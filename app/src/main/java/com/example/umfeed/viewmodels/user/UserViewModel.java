@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.umfeed.models.Result;
 import com.example.umfeed.models.user.User;
+import com.example.umfeed.repositories.UserRepository;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserViewModel extends ViewModel {
@@ -38,4 +40,6 @@ public class UserViewModel extends ViewModel {
                     currentUser.setValue(null);
                 });
     }
+
+
 }

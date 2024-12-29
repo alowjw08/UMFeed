@@ -27,6 +27,7 @@ public class User {
     private Timestamp createdAt;
     private Timestamp lastLoginAt;
     private int rank;
+    private String profilePicture;
 
     private UserRepository userRepository;
 
@@ -38,6 +39,14 @@ public class User {
 
     public User (String email) {
         this.email = email;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public User(String firstName, String lastName, String email,
@@ -52,6 +61,7 @@ public class User {
         this.createdAt = createdAt;
         this.lastLoginAt = lastLoginAt;
         this.currentBadges = currentBadges;
+        this.profilePicture = profilePicture;
     }
 
     // Enum for Donor Level
@@ -216,4 +226,5 @@ public class User {
             this.platinumDonor = platinumDonor;
         }
     }
+
 }

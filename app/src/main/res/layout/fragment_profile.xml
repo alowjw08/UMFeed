@@ -6,77 +6,40 @@
     android:layout_height="match_parent"
     android:backgroundTint="#A7BEEF">
 
-    <ImageView
-        android:id="@+id/titleContainer2"
-        android:layout_width="220dp"
-        android:layout_height="132dp"
-        android:layout_marginTop="380dp"
-        android:layout_marginEnd="272dp"
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/textviews"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/title_container"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture" />
 
     <ImageView
-        android:id="@+id/circleBg"
-        android:layout_width="119dp"
-        android:layout_height="119dp"
+        android:id="@+id/circle_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/circle_background" />
 
     <ImageView
-        android:id="@+id/ivProfile"
+        android:id="@+id/ivProfilePicture"
         android:layout_width="119dp"
         android:layout_height="119dp"
         android:layout_marginTop="50dp"
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true"
+        android:outlineProvider="background"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/default_profile" />
-
-    <TextView
-        android:id="@+id/tvUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/textviews"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleBg" />
-
-    <ImageView
-        android:id="@+id/badge1"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="200dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/badge_1" />
-
-    <ImageView
-        android:id="@+id/badge2"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="200dp"
-        app:layout_constraintEnd_toStartOf="@+id/badge3"
-        app:layout_constraintStart_toEndOf="@+id/badge1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/badge_2" />
-
-    <ImageView
-        android:id="@+id/badge3"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="144dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/badge_3" />
 
     <ImageView
         android:id="@+id/titleContainer"
@@ -99,10 +62,51 @@
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/titleContainer"
         app:layout_constraintEnd_toEndOf="@+id/titleContainer"
-        app:layout_constraintHorizontal_bias="0.421"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleContainer"
         app:layout_constraintVertical_bias="0.504"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/buttonForgotPassword"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:backgroundTint="#A7BEEF"
+        android:text="@string/forgot_password"
+        android:textColor="#000000"
+        app:cornerRadius="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSavedRecipes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailProfile"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/buttonSavedRecipes"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#A7BEEF"
+        android:text="@string/saved_recipe"
+        android:textColor="#000000"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/functionality" />
+
+    <ImageView
+        android:id="@+id/titleContainer2"
+        android:layout_width="220dp"
+        android:layout_height="132dp"
+        android:layout_marginTop="420dp"
+        android:layout_marginEnd="268dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/title_container"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -121,56 +125,16 @@
         app:layout_constraintVertical_bias="0.513" />
 
     <Button
-        android:id="@+id/buttonForgotPassword"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="84dp"
-        android:backgroundTint="#A7BEEF"
-        android:text="@string/forgot_password"
-        android:textColor="#000000"
-        app:cornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSavedRecipes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/buttonSavedRecipes"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#A7BEEF"
-        android:text="@string/saved_recipe"
-        android:textColor="#000000"
-        app:cornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/functionality" />
-
-    <Button
-        android:id="@+id/buttonLeaderboardProfile"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:backgroundTint="#A7BEEF"
-        android:text="Leaderboard Profile"
-        android:textColor="#000000"
-        app:cornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonSavedRecipes" />
-
-    <Button
         android:id="@+id/buttonDonatedItems"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="48dp"
         android:backgroundTint="#A7BEEF"
         android:text="@string/donated_items"
         android:textColor="#000000"
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonLeaderboardProfile" />
 
@@ -178,21 +142,47 @@
         android:id="@+id/buttonLogOut"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="48dp"
         android:backgroundTint="#A7BEEF"
         android:text="@string/log_out"
         android:textColor="#000000"
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonDonatedItems" />
+
+    <Button
+        android:id="@+id/buttonLeaderboardProfile"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:backgroundTint="#A7BEEF"
+        android:text="@string/leaderboard_profile"
+        android:textColor="#000000"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonSavedRecipes" />
+
+    <Button
+        android:id="@+id/buttonUploadPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/upload_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="380dp"
         android:layout_height="106dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="-10dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/personalInformation"
         app:srcCompat="@drawable/light_container" />
@@ -201,24 +191,86 @@
         android:id="@+id/tvEmailProfile"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="304dp"
+        android:layout_marginStart="64dp"
         android:gravity="end|center_vertical"
         android:paddingHorizontal="10dp"
         android:text="@string/textview"
         android:textAlignment="textStart"
         android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        tools:ignore="RtlCompat" />
 
     <ImageView
         android:id="@+id/iconEmail"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        app:srcCompat="@drawable/ic_email" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Badges:"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/personalInformation"
-        app:srcCompat="@drawable/ic_email" />
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/ivBronzeBadge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="22dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/personalInformation"
+        app:srcCompat="@drawable/badge1" />
+
+    <ImageView
+        android:id="@+id/ivSilverBadge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="22dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/ivBronzeBadge"
+        app:layout_constraintTop_toBottomOf="@+id/personalInformation"
+        app:srcCompat="@drawable/badge2" />
+
+    <ImageView
+        android:id="@+id/ivGoldBadge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="22dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/ivSilverBadge"
+        app:layout_constraintTop_toBottomOf="@+id/personalInformation"
+        app:srcCompat="@drawable/badge3" />
+
+    <ImageView
+        android:id="@+id/ivPlatinumBadge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="22dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ivGoldBadge"
+        app:layout_constraintTop_toBottomOf="@+id/personalInformation"
+        app:srcCompat="@drawable/badge4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

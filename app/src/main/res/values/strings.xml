@@ -84,5 +84,7 @@
     <string name="donated_items">Donated Items</string>
     <string name="log_out">Log Out</string>
     <string name="textview">Your Textview Label</string>
+    <string name="upload_picture">Upload Picture</string>
+    <string name="leaderboard_profile">Leaderboard Profile</string>
 
 </resources>
