@@ -151,8 +151,10 @@ public class UserDonationViewModel extends ViewModel {
                 return currentTime - donationTime <= 30L * 24 * 60 * 60 * 1000;
             case "This Year":
                 return currentTime - donationTime <= 365L * 24 * 60 * 60 * 1000;
-            default:
+            case "All Time":
                 return true;
+            default:
+                return false;
         }
     }
 

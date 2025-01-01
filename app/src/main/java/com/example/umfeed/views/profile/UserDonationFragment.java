@@ -13,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.umfeed.R;
 import com.example.umfeed.adapters.UserDonationAdapter;
 import com.example.umfeed.models.user.Donation;
-import com.example.umfeed.viewmodels.donation.DonationViewModel;
 import com.example.umfeed.viewmodels.donation.UserDonationViewModel;
 
 import java.util.ArrayList;
@@ -157,7 +155,7 @@ public class UserDonationFragment extends Fragment {
 
     private void showDateDialog() {
         // List of date range options
-        final String[] dateOptions = {"Last 7 days", "This Month", "This Year"};
+        final String[] dateOptions = {"Last 7 days", "This Month", "This Year", "All Time"};
 
         // Create the dialog builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -177,7 +175,4 @@ public class UserDonationFragment extends Fragment {
         // Create and show the dialog
         builder.create().show();
     }
-
-
-
 }
