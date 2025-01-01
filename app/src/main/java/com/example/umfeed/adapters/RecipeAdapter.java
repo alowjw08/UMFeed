@@ -146,5 +146,4 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.RecipeViewH
             }
         }
     }
-
 }

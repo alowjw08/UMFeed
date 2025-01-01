@@ -52,7 +52,6 @@ public class DonationViewModel extends ViewModel {
                         // Prepare donation data
                         Map<String, Object> donationData = new HashMap<>();
                         donationData.put("category", category);
-//                        donationData.put("vegetarian", vegetarian);
                         donationData.put("quantity", quantity);
                         donationData.put("foodBankId", foodBankId);
                         donationData.put("donationDate", FieldValue.serverTimestamp());

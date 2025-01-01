@@ -141,15 +141,15 @@ public class ChatViewModel extends AndroidViewModel {
             isLoading.setValue(false);
         }
     }
-    public void deleteMessage(String messageId) {
-        repository.deleteMessage(messageId);
-    }
 
     public void retryMessage(ChatMessage message) {
         message.setHasError(false);
         message.setErrorMessage(null);
         repository.updateMessage(message.getMessageId(), message.getMessage(), false);
         sendMessage(message.getMessage());
+    }
+    public void deleteMessage(String messageId) {
+        repository.deleteMessage(messageId);
     }
 
     public void clearChat() {

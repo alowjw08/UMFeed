@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -202,17 +203,31 @@ public class ChatRepository {
     public void clearChat() {
         if (userId == null) return;
 
+        WriteBatch batch = db.batch();
+
         db.collection("chatHistory")
                 .document(userId)
                 .collection("messages")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        document.getReference().delete();
+                        batch.delete(document.getReference());
                     }
-                    messages.setValue(new ArrayList<>());
+
+                    // Commit the batch
+                    batch.commit()
+                            .addOnSuccessListener(aVoid -> {
+                                // Only update UI after successful deletion
+                                messages.setValue(new ArrayList<>());
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error clearing chat", e);
+                                // Optionally notify the UI layer of failure
+                            });
                 })
-                .addOnFailureListener(e -> Log.e(TAG, "Error clearing chat", e));
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching messages to clear", e);
+                });
     }
 
     public void updateMessagesList(List<ChatMessage> updatedMessages) {

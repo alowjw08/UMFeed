@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
     private StorageReference storageReference;
 
     public ProfileFragment() {
@@ -70,7 +72,8 @@ public class ProfileFragment extends Fragment {
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference("profile_pictures");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         currentUser = firebaseAuth.getCurrentUser();
 
         if (currentUser == null) {
@@ -89,14 +92,14 @@ public class ProfileFragment extends Fragment {
                 // Fetch user details
                 String name = documentSnapshot.getString("firstName");
                 String email = documentSnapshot.getString("email");
-                String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+                String profilePicture = documentSnapshot.getString("profilePicture");
 
                 // Display user details
                 tvUserName.setText(name != null ? name : "Name not available");
                 tvEmailProfile.setText(email != null ? email : "Email not available");
 
-                if (profileImageUrl != null) {
-                    Glide.with(this).load(profileImageUrl).into(ivProfilePicture);
+                if (profilePicture != null) {
+                    Glide.with(this).load(profilePicture).into(ivProfilePicture);
                 }
 
                 // Fetch badge statuses
@@ -152,24 +155,32 @@ public class ProfileFragment extends Fragment {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        String fileName = UUID.randomUUID().toString();
-        StorageReference fileRef = storageReference.child(fileName);
+        if (imageUri == null) {
+            Toast.makeText(getActivity(), "Image URI is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            String downloadUrl = uri.toString();
-            saveImageUrlToFirestore(downloadUrl);
-            Glide.with(this).load(downloadUrl).into(ivProfilePicture);
-            Toast.makeText(getActivity(), "Profile picture updated", Toast.LENGTH_SHORT).show();
-        })).addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        // Convert the selected image URI to a download URL
+        String downloadUrl = imageUri.toString();
+
+        // Save the download URL to Firestore
+        saveImageUrlToFirestore(downloadUrl);
     }
 
     private void saveImageUrlToFirestore(String downloadUrl) {
         String uid = currentUser.getUid();
         DocumentReference userRef = db.collection("users").document(uid);
-        userRef.update("profileImageUrl", downloadUrl).addOnSuccessListener(aVoid ->
-                Toast.makeText(getActivity(), "Profile updated in Firestore", Toast.LENGTH_SHORT).show()
-        ).addOnFailureListener(e ->
-                Toast.makeText(getActivity(), "Failed to update Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-        );
+
+        // Update Firestore with the new profile picture URL
+        userRef.update("profilePicture", downloadUrl)
+                .addOnSuccessListener(aVoid -> {
+                    // Update UI with the new profile picture
+                    Glide.with(this).load(downloadUrl).into(ivProfilePicture);
+                    Toast.makeText(getActivity(), "Profile picture updated successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Cloud Firestore", "Failed to update Firestore: " + e.getMessage());
+                    Toast.makeText(getActivity(), "Failed to update profile picture", Toast.LENGTH_SHORT).show();
+                });
     }
 }

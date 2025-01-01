@@ -32,8 +32,12 @@ public class Donation {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQuantity(Object quantityObj) {
+        if (quantityObj instanceof String) {
+            this.quantity = Integer.parseInt((String) quantityObj);
+        } else if (quantityObj instanceof Number) {
+            this.quantity = ((Number) quantityObj).intValue();
+        }
     }
 
     public String getFoodBankId() {

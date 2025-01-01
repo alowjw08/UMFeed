@@ -36,39 +36,6 @@ public class RecipeRepository {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         recipesRef = db.collection("recipes");
     }
-
-    public Task<QuerySnapshot> getAllRecipes() {
-        return db.collection("recipes").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                Recipe recipe = document.toObject(Recipe.class);
-                recipe.setId(document.getId()); // Set ID immediately when converting to object
-                // Update the document in the snapshot
-                document.getReference().set(recipe);
-            }
-        });
-    }
-    public Task<QuerySnapshot> getRecipesByCategory(String category) {
-        // Add logging for debugging
-        Log.d("RecipeRepository", "Filtering by category: " + category);
-
-        return db.collection("recipes")
-                .whereArrayContains("categories", category)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // Ensure IDs are set
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Recipe recipe = document.toObject(Recipe.class);
-                        recipe.setId(document.getId());
-                        // Update the document with ID
-                        document.getReference().set(recipe);
-                    }
-                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " recipes for category: " + category);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error filtering by category: " + e.getMessage());
-                });
-    }
-
     public Task<List<Recipe>> getSavedRecipes() {
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
@@ -117,18 +84,6 @@ public class RecipeRepository {
 
                     return recipes;
                 });
-    }
-
-    public Task<Void> savedRecipe (String recipeId) {
-        if (userId == null) {
-            return Tasks.forException(new IllegalStateException("User not logged in"));
-        }
-
-        SavedRecipe savedRecipe = new SavedRecipe();
-        savedRecipe.setRecipeId(recipeId);
-        savedRecipe.setSavedAt(Timestamp.now());
-
-        return db.collection("users").document(userId).collection("savedRecipes").document(recipeId).set(savedRecipe);
     }
 
     public Task<Boolean> isRecipeSaved(String recipeId) {
@@ -191,16 +146,38 @@ public class RecipeRepository {
                 .delete();
     }
 
-    public Task<Void> likeRecipe(String recipeId) {
-        DocumentReference recipeRef = db.collection("recipes").document(recipeId);
-
-        return db.runTransaction(transaction -> {
-            DocumentSnapshot snapshot = transaction.get(recipeRef);
-            long newLikes = snapshot.getLong("likes") + 1;
-            transaction.update(recipeRef, "likes", newLikes);
-            return null;
+    public Task<QuerySnapshot> getAllRecipes() {
+        return db.collection("recipes").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                Recipe recipe = document.toObject(Recipe.class);
+                recipe.setId(document.getId()); // Set ID immediately when converting to object
+                // Update the document in the snapshot
+                document.getReference().set(recipe);
+            }
         });
     }
+    public Task<QuerySnapshot> getRecipesByCategory(String category) {
+        // Add logging for debugging
+        Log.d("RecipeRepository", "Filtering by category: " + category);
+
+        return db.collection("recipes")
+                .whereArrayContains("categories", category)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Ensure IDs are set
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Recipe recipe = document.toObject(Recipe.class);
+                        recipe.setId(document.getId());
+                        // Update the document with ID
+                        document.getReference().set(recipe);
+                    }
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " recipes for category: " + category);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error filtering by category: " + e.getMessage());
+                });
+    }
+
 
     public Task<DocumentSnapshot> getRecipeById(String recipeId) {
         return db.collection("recipes").document(recipeId).get();

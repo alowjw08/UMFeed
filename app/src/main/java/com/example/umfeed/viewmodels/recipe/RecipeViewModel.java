@@ -116,13 +116,6 @@ public class RecipeViewModel extends ViewModel {
                     isLoading.setValue(false);
                 });
     }
-
-    public void likeRecipe(String recipeId) {
-        repository.likeRecipe(recipeId)
-                .addOnFailureListener(e -> {
-                    error.setValue(e.getMessage());
-                });
-    }
     public void searchRecipes(String query) {
         if (query == null || query.trim().isEmpty()) {
             loadRecipes();
