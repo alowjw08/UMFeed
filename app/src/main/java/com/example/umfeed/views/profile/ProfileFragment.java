@@ -37,7 +37,7 @@ public class ProfileFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private TextView tvUserName, tvEmailProfile;
-    private Button buttonForgotPassword, buttonLogOut, buttonSavedRecipes, buttonDonatedItems, buttonUploadPicture;
+    private Button buttonForgotPassword, buttonLogOut, buttonSavedRecipes, buttonDonatedItems, buttonUploadPicture, buttonLeaderboardProfile;
     private ImageView ivProfilePicture, ivBronzeBadge, ivSilverBadge, ivGoldBadge, ivPlatBadge;
 
     private FirebaseAuth firebaseAuth;
@@ -64,6 +64,7 @@ public class ProfileFragment extends Fragment {
         buttonSavedRecipes = view.findViewById(R.id.buttonSavedRecipes);
         buttonDonatedItems = view.findViewById(R.id.buttonDonatedItems);
         buttonUploadPicture = view.findViewById(R.id.buttonUploadPicture);
+        buttonLeaderboardProfile = view.findViewById(R.id.buttonLeaderboardProfile);
         ivBronzeBadge = view.findViewById(R.id.ivBronzeBadge);
         ivSilverBadge = view.findViewById(R.id.ivSilverBadge);
         ivGoldBadge = view.findViewById(R.id.ivGoldBadge);
@@ -135,6 +136,12 @@ public class ProfileFragment extends Fragment {
 
         // Upload picture button
         buttonUploadPicture.setOnClickListener(v -> openImageChooser());
+
+        buttonLeaderboardProfile.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("email", currentUser.getEmail()); // Pass the user's email
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_leaderboardProfileFragment, bundle);
+        });
 
         return view;
     }

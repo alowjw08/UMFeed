@@ -6,13 +6,10 @@ import com.example.umfeed.models.user.User;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -156,56 +153,28 @@ public class LeaderboardRepository {
     }
 
     public void updateTotalDonationsForAllUsers() {
-        // Get all users from the 'users' collection and their donations
+        // Get all users from the 'users' collection
         db.collection("users").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots != null) {
-                        // Create a map to store userId and total donations
-                        Map<String, Integer> userDonationsMap = new HashMap<>();
-
                         // Iterate through each user document
                         for (DocumentSnapshot userSnapshot : queryDocumentSnapshots) {
                             String userId = userSnapshot.getId();
 
-                            // Add userId to map with an initial count of 0
-                            userDonationsMap.put(userId, 0);
+                            // Get the donations collection for this user
+                            db.collection("users")
+                                    .document(userId)
+                                    .collection("donations")
+                                    .get()
+                                    .addOnSuccessListener(donationsSnapshot -> {
+                                        updateRanksForAllUsers();
+                                    })
+                                    .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting donations", e));
                         }
-
-                        // Fetch all donations for all users
-                        db.collectionGroup("donations").get()
-                                .addOnSuccessListener(donationsSnapshot -> {
-                                    if (donationsSnapshot != null) {
-                                        // Count donations per user
-                                        for (DocumentSnapshot donation : donationsSnapshot) {
-                                            String userId = donation.getReference()
-                                                    .getParent().getParent().getId(); // Assumes donations are under /users/{userId}/donations
-                                            userDonationsMap.put(userId, userDonationsMap.getOrDefault(userId, 0) + 1);
-                                        }
-
-                                        // Update all users' totalDonations in bulk
-                                        WriteBatch batch = db.batch();
-                                        for (Map.Entry<String, Integer> entry : userDonationsMap.entrySet()) {
-                                            String userId = entry.getKey();
-                                            int totalDonations = entry.getValue();
-                                            batch.update(db.collection("users").document(userId), "totalDonations", totalDonations);
-                                        }
-
-                                        // Commit the batch
-                                        batch.commit()
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.d("LeaderboardRepository", "All total donations updated successfully.");
-                                                    // After updating donations, update ranks
-                                                    updateRanksForAllUsers();
-                                                })
-                                                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error updating total donations in batch", e));
-                                    }
-                                })
-                                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting donations", e));
                     }
                 })
                 .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting users", e));
     }
-
 
     public static class LeaderboardData {
         private final List<User> users;
@@ -237,5 +206,7 @@ public class LeaderboardRepository {
         }
     }
 }
+
+
 
 
