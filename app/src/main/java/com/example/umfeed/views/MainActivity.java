@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation();
         observeAuthState();
         askNotificationPermission();
+        askStoragePermission();
     }
 
     private void observeAuthState() {
@@ -199,4 +200,59 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private final ActivityResultLauncher<String> requestStoragePermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // Permission granted for storage
+                    Toast.makeText(this, "Storage permission granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Storage permission denied. Images may not load.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    private void askStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // For Android 13 and above, request READ_MEDIA_IMAGES for accessing media
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "Storage permission granted for images.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Show rationale if needed and request permission
+                new AlertDialog.Builder(this)
+                        .setTitle("Storage Permission Required")
+                        .setMessage("We need access to your images to load media.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            requestStoragePermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            Toast.makeText(this, "Storage permission is required to load images.", Toast.LENGTH_SHORT).show();
+                        })
+                        .create()
+                        .show();
+            }
+        } else {
+            // For devices lower than Android 13, fallback to older permissions
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "Storage permission granted for images.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Show rationale and request permission
+                new AlertDialog.Builder(this)
+                        .setTitle("Storage Permission Required")
+                        .setMessage("We need access to your storage to load images.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            requestStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            Toast.makeText(this, "Storage permission is required to load images.", Toast.LENGTH_SHORT).show();
+                        })
+                        .create()
+                        .show();
+            }
+        }
+    }
+
 }
