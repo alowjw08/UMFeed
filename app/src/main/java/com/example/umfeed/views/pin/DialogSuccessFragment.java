@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.example.umfeed.R;
 import com.example.umfeed.databinding.FragmentDialogSuccessBinding;
+import com.example.umfeed.repositories.UserRepository;
 import com.example.umfeed.viewmodels.pin.DialogSuccessViewModel;
 
 public class DialogSuccessFragment extends DialogFragment {
@@ -36,6 +37,7 @@ public class DialogSuccessFragment extends DialogFragment {
     private DialogSuccessViewModel viewModel;
     private FragmentDialogSuccessBinding binding;
     private String pendingAction = null;
+    private UserRepository userRepository;
 
     // Single method to handle all actions
     private synchronized void executeAction(String action) {
@@ -85,6 +87,7 @@ public class DialogSuccessFragment extends DialogFragment {
 
     public void onDonate() {
         executeAction(ACTION_DONATE);
+        userRepository.totalDonationIncrement();
     }
 
     public void onDonationError() {
@@ -103,6 +106,7 @@ public class DialogSuccessFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(DialogSuccessViewModel.class);
+        userRepository = new UserRepository();
 
         // Execute any pending action
         if (pendingAction != null) {

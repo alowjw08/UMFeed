@@ -14,7 +14,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.umfeed.models.user.User;
 
@@ -267,20 +269,23 @@ public class UserRepository {
         return userLiveData;
     }
 
-    public LiveData<Result<Void>> updateProfilePicture(String profilePictureUrl) {
-        MutableLiveData<Result<Void>> resultLiveData = new MutableLiveData<>();
-        FirebaseUser currentUser = auth.getCurrentUser();
+    public void totalDonationIncrement() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser == null) {
-            resultLiveData.setValue(Result.failure(new IllegalStateException("User not logged in")));
-            return resultLiveData;
+            Log.e("UserRepository", "Cannot increment donations: No user logged in");
+            return;
         }
 
-        executor.execute(() -> db.collection("users").document(currentUser.getUid())
-                .update("profilePicture", profilePictureUrl)
-                .addOnSuccessListener(aVoid -> resultLiveData.postValue(Result.success(null)))
-                .addOnFailureListener(e -> resultLiveData.postValue(Result.failure(e))));
-        return resultLiveData;
+        DocumentReference userRef = db.collection("users").document(currentUser.getUid());
+
+        userRef.update("totalDonations", FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Donation", "Total donations incremented successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Donation", "Failed to increment donations", e);
+                });
     }
 
 }

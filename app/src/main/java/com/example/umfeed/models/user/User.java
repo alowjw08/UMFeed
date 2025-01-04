@@ -28,8 +28,9 @@ public class User {
     private Timestamp lastLoginAt;
     private int rank;
     private String profilePicture;
+    private Boolean donor;
+    private String donorLevel;
 
-    private UserRepository userRepository;
 
     // Nested badges object
     private UserBadges currentBadges;
@@ -62,6 +63,8 @@ public class User {
         this.lastLoginAt = lastLoginAt;
         this.currentBadges = currentBadges;
         this.profilePicture = profilePicture;
+        this.donor = false;
+        this.donorLevel = "NONE";
     }
 
     // Enum for Donor Level
