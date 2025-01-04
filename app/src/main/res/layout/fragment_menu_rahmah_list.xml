@@ -16,7 +16,7 @@
     <!-- Allergen Spinner -->
 
     <View
-        android:id="@+id/backgroundView"
+        android:id="@+id/ConstraintLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#E8F0FE"
@@ -31,10 +31,10 @@
         android:id="@+id/TVMenuRahmah"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="sans-serif-medium"
         android:text="Menu Rahmah"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textColor="@color/main_theme_blue"
+        android:textColor="@color/black"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

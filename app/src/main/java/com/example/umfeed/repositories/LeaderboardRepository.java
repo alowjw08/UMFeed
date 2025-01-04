@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.umfeed.models.user.User;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -34,33 +35,23 @@ public class LeaderboardRepository {
     }
 
     public void fetchLeaderboardData(Consumer<LeaderboardData> callback, Consumer<Exception> errorCallback) {
+        // Fetch top users in batches with pre-sorted data from Firestore
         db.collection("users")
+                .orderBy("totalDonations", Query.Direction.DESCENDING)
+                .limit(50)  // Adjust the batch size as needed
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     // Parse only donors for the leaderboard
                     List<User> users = parseDonors(queryDocumentSnapshots);
                     int totalDonations = users.stream().mapToInt(User::getTotalDonations).sum();
 
-                    // Sort users by total donations in descending order
-                    users.sort(Comparator.comparingInt(User::getTotalDonations).reversed());
-
-                    // Set ranks with equal ranks for users with the same total donations
+                    // Assign ranks directly based on Firestore's sorting
                     int currentRank = 1;
                     for (int i = 0; i < users.size(); i++) {
-                        // If this user has the same donation total as the previous user, they get the same rank
-                        if (i > 0 && users.get(i).getTotalDonations() == users.get(i - 1).getTotalDonations()) {
-                            users.get(i).setRank(users.get(i - 1).getRank());
-                        } else {
-                            users.get(i).setRank(currentRank);
-                        }
-
-                        // Only increment the rank if the current user's donation total is different from the previous user
-                        if (i == users.size() - 1 || users.get(i).getTotalDonations() != users.get(i + 1).getTotalDonations()) {
-                            currentRank = users.get(i).getRank() + 1;  // Set the rank for the next distinct total donations
-                        }
+                        users.get(i).setRank(currentRank++);
                     }
 
-                    // Calculate recipient count (Check reservations for all users, including non-donors)
+                    // Avoid redundant recipient count calculations
                     calculateRecipientCount(queryDocumentSnapshots.getDocuments(), recipientCount -> {
                         LeaderboardData leaderboardData = new LeaderboardData(users, users.size(), totalDonations, recipientCount);
                         callback.accept(leaderboardData);
@@ -72,6 +63,7 @@ public class LeaderboardRepository {
                     errorCallback.accept(e);
                 });
     }
+
 
     private void calculateRecipientCount(List<DocumentSnapshot> allDocuments, Consumer<Integer> callback) {
         AtomicInteger recipientCount = new AtomicInteger(0);
@@ -116,7 +108,7 @@ public class LeaderboardRepository {
                                 .get()
                                 .addOnSuccessListener(reservationQuerySnapshot -> {
                                     // Pass the result (whether there are any reservations)
-                                    callback.accept(reservationQuerySnapshot.size() > 0);
+                                    callback.accept(!reservationQuerySnapshot.isEmpty());
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e(TAG, "Error checking reservations", e);
@@ -167,7 +159,18 @@ public class LeaderboardRepository {
                                     .collection("donations")
                                     .get()
                                     .addOnSuccessListener(donationsSnapshot -> {
-                                        updateRanksForAllUsers();
+                                        // Count the number of donations for the user
+                                        int totalDonations = donationsSnapshot.size();
+
+                                        // Update the totalDonations field in the user's document
+                                        db.collection("users")
+                                                .document(userId)
+                                                .update("totalDonations", totalDonations)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // After updating donations, update rank
+                                                    updateRanksForAllUsers();
+                                                })
+                                                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error updating total donations", e));
                                     })
                                     .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting donations", e));
                         }

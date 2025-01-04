@@ -23,11 +23,13 @@ import com.example.umfeed.adapters.UserAdapter;
 
 public class LeaderboardListFragment extends Fragment {
 
-    private TextView TVDonorsSum, TVTotalDonations, TVRecipientsSum;
+    private TextView TVDonorsSum, TVTotalDonations, TVRecipientsSum, loadingText;
     private RecyclerView leaderboardRecyclerView;
     private ProgressBar progressBar;
     private FirebaseFirestore db;
     private UserAdapter leaderboardAdapter;
+
+    public View loadingView;
 
     public LeaderboardListFragment() {
         // Required empty public constructor
@@ -44,6 +46,8 @@ public class LeaderboardListFragment extends Fragment {
         TVRecipientsSum = rootView.findViewById(R.id.TVRecipientsSum);
         leaderboardRecyclerView = rootView.findViewById(R.id.LeaderboardRecyclerView);
         progressBar = rootView.findViewById(R.id.progressBar);
+        loadingText = rootView.findViewById(R.id.loadingText);
+        loadingView = rootView.findViewById(R.id.loadingView);
 
         // Set up RecyclerView
         leaderboardRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,13 +65,28 @@ public class LeaderboardListFragment extends Fragment {
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
 
+        // Show loading views
+        showLoading(loadingText, progressBar, loadingView);
+
+        // Load leaderboard data
         loadLeaderboardData();
 
         return rootView;
     }
 
-    private void loadLeaderboardData() {
+    private void showLoading(TextView loadingText, ProgressBar progressBar, View loadingView) {
+        loadingText.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        loadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading(TextView loadingText, ProgressBar progressBar, View loadingView) {
+        loadingText.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        loadingView.setVisibility(View.GONE);
+    }
+
+    private void loadLeaderboardData() {
         LeaderboardRepository repository = new LeaderboardRepository();
 
         repository.fetchLeaderboardData(data -> {
@@ -76,15 +95,17 @@ public class LeaderboardListFragment extends Fragment {
             TVRecipientsSum.setText(String.valueOf(data.getRecipientCount()));
 
             leaderboardAdapter.submitList(data.getUsers());
-            progressBar.setVisibility(View.GONE);
+            hideLoading(loadingText, progressBar, loadingView);
         }, error -> {
             Log.e("Leaderboard", "Failed to load leaderboard data", error);
             Toast.makeText(getContext(), "Failed to load data.", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE);
         });
     }
 
 }
+
+
+
 
 
 
