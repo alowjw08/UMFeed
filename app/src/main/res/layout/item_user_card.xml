@@ -17,23 +17,11 @@
         android:layout_height="113dp"
         android:minHeight="200dp">
 
-        <ImageView
-            android:id="@+id/IVUserProfilePicture"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintCircleRadius="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.07"
-            app:layout_constraintStart_toEndOf="@+id/TVRank"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.491"
-            tools:srcCompat="@tools:sample/avatars" />
-
         <TextView
             android:id="@+id/TVUserName"
             android:layout_width="183dp"
             android:layout_height="36dp"
+            android:layout_marginEnd="96dp"
             android:fontFamily="sans-serif-condensed"
             android:text="First Last"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -41,10 +29,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.619"
-            app:layout_constraintStart_toEndOf="@+id/IVUserProfilePicture"
-            app:layout_constraintTop_toTopOf="@+id/IVUserProfilePicture"
-            app:layout_constraintVertical_bias="0.061" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/TVRank"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.207" />
 
         <TextView
             android:id="@+id/TVDonation"
@@ -56,10 +44,10 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/TVUserName"
-            app:layout_constraintHorizontal_bias="0.122"
+            app:layout_constraintHorizontal_bias="0.125"
             app:layout_constraintStart_toEndOf="@+id/TVNumberOfDonations"
-            app:layout_constraintTop_toTopOf="@+id/TVNumberOfDonations"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/TVUserName"
+            app:layout_constraintVertical_bias="0.264" />
 
         <TextView
             android:id="@+id/TVNumberOfDonations"
@@ -72,7 +60,7 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/TVUserName"
-            app:layout_constraintHorizontal_bias="0.104"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/TVUserName"
             app:layout_constraintTop_toTopOf="@+id/TVUserName"
             app:layout_constraintVertical_bias="0.642" />

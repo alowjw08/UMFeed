@@ -5,15 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDE7E7"
-    tools:context=".views.MenuRahmahList">
-
-    <!-- Background -->
-
-    <!-- Switch for Halal Status -->
-
-    <!-- Switch for Vegetarian Status -->
-
-    <!-- Allergen Spinner -->
+    tools:context=".views.menu_rahmah.MenuRahmahListFragment">
 
     <View
         android:id="@+id/ConstraintLayout"
@@ -22,7 +14,18 @@
         android:background="#E8F0FE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/headerBackground2"
+        android:layout_width="0dp"
+        android:layout_height="99dp"
+        android:background="@drawable/rounded_bottom_corners"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -34,7 +37,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="Menu Rahmah"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
