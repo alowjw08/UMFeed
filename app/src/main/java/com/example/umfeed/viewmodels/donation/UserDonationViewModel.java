@@ -63,6 +63,12 @@ public class UserDonationViewModel extends ViewModel {
         donationsRef.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     isLoading.setValue(false);
+
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        allDonations.clear();
+                        return;
+                    }
+
                     List<Donation> donations = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Donation donation = doc.toObject(Donation.class);
