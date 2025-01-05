@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment {
 
     private TextView tvUserName, tvEmailProfile;
     private Button buttonForgotPassword, buttonLogOut, buttonSavedRecipes, buttonDonatedItems, buttonUploadPicture, buttonLeaderboardProfile;
-    private ImageView ivProfilePicture, ivBronzeBadge, ivSilverBadge, ivGoldBadge, ivPlatBadge;
+    private ImageView ivProfilePicture;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
@@ -65,10 +65,6 @@ public class ProfileFragment extends Fragment {
         buttonDonatedItems = view.findViewById(R.id.buttonDonatedItems);
         buttonUploadPicture = view.findViewById(R.id.buttonUploadPicture);
         buttonLeaderboardProfile = view.findViewById(R.id.buttonLeaderboardProfile);
-        ivBronzeBadge = view.findViewById(R.id.ivBronzeBadge);
-        ivSilverBadge = view.findViewById(R.id.ivSilverBadge);
-        ivGoldBadge = view.findViewById(R.id.ivGoldBadge);
-        ivPlatBadge = view.findViewById(R.id.ivPlatinumBadge);
 
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -102,20 +98,6 @@ public class ProfileFragment extends Fragment {
                 if (profilePicture != null) {
                     Glide.with(this).load(profilePicture).into(ivProfilePicture);
                 }
-
-                // Fetch badge statuses
-                boolean bronzeDonor = documentSnapshot.getBoolean("currentBadges.bronzeDonor") != null
-                        && documentSnapshot.getBoolean("currentBadges.bronzeDonor");
-                boolean silverDonor = documentSnapshot.getBoolean("currentBadges.silverDonor") != null
-                        && documentSnapshot.getBoolean("currentBadges.silverDonor");
-                boolean goldDonor = documentSnapshot.getBoolean("currentBadges.goldDonor") != null
-                        && documentSnapshot.getBoolean("currentBadges.goldDonor");
-
-                // Display badges based on their status
-                ivBronzeBadge.setVisibility(bronzeDonor ? View.VISIBLE : View.GONE);
-                ivSilverBadge.setVisibility(silverDonor ? View.VISIBLE : View.GONE);
-                ivGoldBadge.setVisibility(goldDonor ? View.VISIBLE : View.GONE);
-
             } else {
                 Toast.makeText(getActivity(), "User not found", Toast.LENGTH_SHORT).show();
             }

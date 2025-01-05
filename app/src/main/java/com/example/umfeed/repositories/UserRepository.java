@@ -287,5 +287,4 @@ public class UserRepository {
                     Log.e("Donation", "Failed to increment donations", e);
                 });
     }
-
 }
