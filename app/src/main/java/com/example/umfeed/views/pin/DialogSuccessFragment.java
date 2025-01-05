@@ -87,7 +87,7 @@ public class DialogSuccessFragment extends DialogFragment {
 
     public void onDonate() {
         executeAction(ACTION_DONATE);
-        userRepository.totalDonationIncrement();
+//        userRepository.totalDonationIncrement();
     }
 
     public void onDonationError() {
