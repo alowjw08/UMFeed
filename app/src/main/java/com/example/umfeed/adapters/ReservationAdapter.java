@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
@@ -111,6 +112,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+            dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kuala_Lumpur"));
             reservationDateText.setText(String.format("Reserved: %s",
                     dateFormat.format(reservation.getReservationDate().toDate())));
         }
