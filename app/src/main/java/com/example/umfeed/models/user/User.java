@@ -153,14 +153,14 @@ public class User {
     }
 
     public int getTotalDonations() {
-        // Use the LeaderboardRepository to update donations for all users
-        LeaderboardRepository leaderboardRepository = new LeaderboardRepository();
-        if (leaderboardRepository != null) {
-            leaderboardRepository.updateTotalDonationsForAllUsers();  // Update donations for all users
-        } else {
-            Log.e("User", "LeaderboardRepository is null");
-            return 0;
-        }
+//        // Use the LeaderboardRepository to update donations for all users
+//        LeaderboardRepository leaderboardRepository = new LeaderboardRepository();
+//        if (leaderboardRepository != null) {
+//            leaderboardRepository.updateTotalDonationsForAllUsers();  // Update donations for all users
+//        } else {
+//            Log.e("User", "LeaderboardRepository is null");
+//            return 0;
+//        }
 
         // Return the total donations for the current user
         return this.totalDonations;

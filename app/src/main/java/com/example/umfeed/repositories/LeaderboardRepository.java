@@ -136,7 +136,7 @@ public class LeaderboardRepository {
                         users.get(i).setRank(i + 1); // Local rank calculation
                     }
 
-                    updateTotalDonationsForAllUsers();
+//                    updateTotalDonationsForAllUsers();
 
                 })
                 .addOnFailureListener(e -> {
@@ -144,40 +144,40 @@ public class LeaderboardRepository {
                 });
     }
 
-    public void updateTotalDonationsForAllUsers() {
-        // Get all users from the 'users' collection
-        db.collection("users").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots != null) {
-                        // Iterate through each user document
-                        for (DocumentSnapshot userSnapshot : queryDocumentSnapshots) {
-                            String userId = userSnapshot.getId();
-
-                            // Get the donations collection for this user
-                            db.collection("users")
-                                    .document(userId)
-                                    .collection("donations")
-                                    .get()
-                                    .addOnSuccessListener(donationsSnapshot -> {
-                                        // Count the number of donations for the user
-                                        int totalDonations = donationsSnapshot.size();
-
-                                        // Update the totalDonations field in the user's document
-                                        db.collection("users")
-                                                .document(userId)
-                                                .update("totalDonations", totalDonations)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    // After updating donations, update rank
-                                                    updateRanksForAllUsers();
-                                                })
-                                                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error updating total donations", e));
-                                    })
-                                    .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting donations", e));
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting users", e));
-    }
+//    public void updateTotalDonationsForAllUsers() {
+//        // Get all users from the 'users' collection
+//        db.collection("users").get()
+//                .addOnSuccessListener(queryDocumentSnapshots -> {
+//                    if (queryDocumentSnapshots != null) {
+//                        // Iterate through each user document
+//                        for (DocumentSnapshot userSnapshot : queryDocumentSnapshots) {
+//                            String userId = userSnapshot.getId();
+//
+//                            // Get the donations collection for this user
+//                            db.collection("users")
+//                                    .document(userId)
+//                                    .collection("donations")
+//                                    .get()
+//                                    .addOnSuccessListener(donationsSnapshot -> {
+//                                        // Count the number of donations for the user
+//                                        int totalDonations = donationsSnapshot.size();
+//
+//                                        // Update the totalDonations field in the user's document
+//                                        db.collection("users")
+//                                                .document(userId)
+//                                                .update("totalDonations", totalDonations)
+//                                                .addOnSuccessListener(aVoid -> {
+//                                                    // After updating donations, update rank
+//                                                    updateRanksForAllUsers();
+//                                                })
+//                                                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error updating total donations", e));
+//                                    })
+//                                    .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting donations", e));
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(e -> Log.e("LeaderboardRepository", "Error getting users", e));
+//    }
 
     public static class LeaderboardData {
         private final List<User> users;
