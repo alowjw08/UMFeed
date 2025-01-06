@@ -43,6 +43,15 @@ public class LeaderboardRepository {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     // Parse only donors for the leaderboard
                     List<User> users = parseDonors(queryDocumentSnapshots);
+
+                    // Log the number of users fetched
+                    Log.d(TAG, "Number of users fetched: " + users.size());
+
+                    // Log details of each user
+                    for (User user : users) {
+                        Log.d(TAG, "User details: " + user.toString());
+                    }
+
                     int totalDonations = users.stream().mapToInt(User::getTotalDonations).sum();
 
                     // Assign ranks directly based on Firestore's sorting
