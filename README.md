@@ -1,6 +1,6 @@
 # UMFeed - A Mobile Application to Fight Hunger and Promote Nutrition
 
-UMFeed is a mobile application developed as part of the WIA2007 Mobile Application Development course. The app is designed to address critical issues of hunger, food insecurity, and poor nutrition - aligned with the United Nations Sustainable Development Goals (SDG 2 and SDG 3). It specifically targets vulnerable groups such as Malaysia’s B40 community, aiming to enhance access to affordable, nutritious food while promoting sustainable food practices.
+UMFeed is a mobile application created as part of an advanced mobile development project. The app tackles pressing challenges like hunger, food insecurity, and poor nutrition in line with key United Nations Sustainable Development Goals (SDG 2 and SDG 3). It is designed to serve vulnerable communities—particularly Malaysia’s B40 group—by improving access to affordable, nutritious meals and encouraging sustainable food practices.
 
 ## Key Features & Functional Modules
 
